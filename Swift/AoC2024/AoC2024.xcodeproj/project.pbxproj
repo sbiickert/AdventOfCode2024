@@ -1,0 +1,445 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3708A83D2CAB29370002C0D4 /* AoCGrid2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8332CAB29370002C0D4 /* AoCGrid2D.swift */; };
+		3708A83E2CAB29370002C0D4 /* AoCInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8342CAB29370002C0D4 /* AoCInput.swift */; };
+		3708A83F2CAB29370002C0D4 /* AoCSolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8352CAB29370002C0D4 /* AoCSolution.swift */; };
+		3708A8402CAB29370002C0D4 /* AoCSpatial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8362CAB29370002C0D4 /* AoCSpatial.swift */; };
+		3708A8412CAB29370002C0D4 /* AoCString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8372CAB29370002C0D4 /* AoCString.swift */; };
+		3708A8422CAB29370002C0D4 /* AoCUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8382CAB29370002C0D4 /* AoCUtil.swift */; };
+		3708A8432CAB29370002C0D4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A83B2CAB29370002C0D4 /* main.swift */; };
+		3708A8452CAB29610002C0D4 /* Day00.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8442CAB29610002C0D4 /* Day00.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3708A80D2CAB28420002C0D4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		3708A80F2CAB28420002C0D4 /* AoC2024 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AoC2024; sourceTree = BUILT_PRODUCTS_DIR; };
+		3708A82C2CAB290B0002C0D4 /* AoC2024Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AoC2024Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3708A8332CAB29370002C0D4 /* AoCGrid2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoCGrid2D.swift; sourceTree = "<group>"; };
+		3708A8342CAB29370002C0D4 /* AoCInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoCInput.swift; sourceTree = "<group>"; };
+		3708A8352CAB29370002C0D4 /* AoCSolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoCSolution.swift; sourceTree = "<group>"; };
+		3708A8362CAB29370002C0D4 /* AoCSpatial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoCSpatial.swift; sourceTree = "<group>"; };
+		3708A8372CAB29370002C0D4 /* AoCString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoCString.swift; sourceTree = "<group>"; };
+		3708A8382CAB29370002C0D4 /* AoCUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoCUtil.swift; sourceTree = "<group>"; };
+		3708A83B2CAB29370002C0D4 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		3708A8442CAB29610002C0D4 /* Day00.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day00.swift; sourceTree = "<group>"; };
+		3708A8462CAB29BA0002C0D4 /* AoC2024.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AoC2024.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		3708A82D2CAB290B0002C0D4 /* AoC2024Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AoC2024Tests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3708A80C2CAB28420002C0D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3708A8292CAB290B0002C0D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3708A8062CAB28420002C0D4 = {
+			isa = PBXGroup;
+			children = (
+				3708A8102CAB28420002C0D4 /* Products */,
+				3708A83C2CAB29370002C0D4 /* AoC2024 */,
+				3708A82D2CAB290B0002C0D4 /* AoC2024Tests */,
+			);
+			sourceTree = "<group>";
+		};
+		3708A8102CAB28420002C0D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3708A80F2CAB28420002C0D4 /* AoC2024 */,
+				3708A82C2CAB290B0002C0D4 /* AoC2024Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3708A8392CAB29370002C0D4 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				3708A8332CAB29370002C0D4 /* AoCGrid2D.swift */,
+				3708A8342CAB29370002C0D4 /* AoCInput.swift */,
+				3708A8352CAB29370002C0D4 /* AoCSolution.swift */,
+				3708A8362CAB29370002C0D4 /* AoCSpatial.swift */,
+				3708A8372CAB29370002C0D4 /* AoCString.swift */,
+				3708A8382CAB29370002C0D4 /* AoCUtil.swift */,
+			);
+			path = Libraries;
+			sourceTree = "<group>";
+		};
+		3708A83A2CAB29370002C0D4 /* Solutions */ = {
+			isa = PBXGroup;
+			children = (
+				3708A8442CAB29610002C0D4 /* Day00.swift */,
+			);
+			path = Solutions;
+			sourceTree = "<group>";
+		};
+		3708A83C2CAB29370002C0D4 /* AoC2024 */ = {
+			isa = PBXGroup;
+			children = (
+				3708A8462CAB29BA0002C0D4 /* AoC2024.entitlements */,
+				3708A83B2CAB29370002C0D4 /* main.swift */,
+				3708A8392CAB29370002C0D4 /* Libraries */,
+				3708A83A2CAB29370002C0D4 /* Solutions */,
+			);
+			path = AoC2024;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3708A80E2CAB28420002C0D4 /* AoC2024 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3708A8162CAB28430002C0D4 /* Build configuration list for PBXNativeTarget "AoC2024" */;
+			buildPhases = (
+				3708A80B2CAB28420002C0D4 /* Sources */,
+				3708A80C2CAB28420002C0D4 /* Frameworks */,
+				3708A80D2CAB28420002C0D4 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AoC2024;
+			packageProductDependencies = (
+			);
+			productName = AoC2024;
+			productReference = 3708A80F2CAB28420002C0D4 /* AoC2024 */;
+			productType = "com.apple.product-type.tool";
+		};
+		3708A82B2CAB290B0002C0D4 /* AoC2024Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3708A8302CAB290B0002C0D4 /* Build configuration list for PBXNativeTarget "AoC2024Tests" */;
+			buildPhases = (
+				3708A8282CAB290B0002C0D4 /* Sources */,
+				3708A8292CAB290B0002C0D4 /* Frameworks */,
+				3708A82A2CAB290B0002C0D4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3708A82D2CAB290B0002C0D4 /* AoC2024Tests */,
+			);
+			name = AoC2024Tests;
+			packageProductDependencies = (
+			);
+			productName = AoC2024Tests;
+			productReference = 3708A82C2CAB290B0002C0D4 /* AoC2024Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3708A8072CAB28420002C0D4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					3708A80E2CAB28420002C0D4 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					3708A82B2CAB290B0002C0D4 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = 3708A80A2CAB28420002C0D4 /* Build configuration list for PBXProject "AoC2024" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3708A8062CAB28420002C0D4;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3708A8102CAB28420002C0D4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3708A80E2CAB28420002C0D4 /* AoC2024 */,
+				3708A82B2CAB290B0002C0D4 /* AoC2024Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3708A82A2CAB290B0002C0D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3708A80B2CAB28420002C0D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3708A83D2CAB29370002C0D4 /* AoCGrid2D.swift in Sources */,
+				3708A83E2CAB29370002C0D4 /* AoCInput.swift in Sources */,
+				3708A83F2CAB29370002C0D4 /* AoCSolution.swift in Sources */,
+				3708A8402CAB29370002C0D4 /* AoCSpatial.swift in Sources */,
+				3708A8452CAB29610002C0D4 /* Day00.swift in Sources */,
+				3708A8412CAB29370002C0D4 /* AoCString.swift in Sources */,
+				3708A8422CAB29370002C0D4 /* AoCUtil.swift in Sources */,
+				3708A8432CAB29370002C0D4 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3708A8282CAB290B0002C0D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3708A8142CAB28430002C0D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3708A8152CAB28430002C0D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		3708A8172CAB28430002C0D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AoC2024/AoC2024.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TQU5FGEV2A;
+				ENABLE_HARDENED_RUNTIME = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3708A8182CAB28430002C0D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AoC2024/AoC2024.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TQU5FGEV2A;
+				ENABLE_HARDENED_RUNTIME = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		3708A8312CAB290B0002C0D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TQU5FGEV2A;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.biickert.ii.AoC2024Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3708A8322CAB290B0002C0D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TQU5FGEV2A;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.biickert.ii.AoC2024Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3708A80A2CAB28420002C0D4 /* Build configuration list for PBXProject "AoC2024" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3708A8142CAB28430002C0D4 /* Debug */,
+				3708A8152CAB28430002C0D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3708A8162CAB28430002C0D4 /* Build configuration list for PBXNativeTarget "AoC2024" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3708A8172CAB28430002C0D4 /* Debug */,
+				3708A8182CAB28430002C0D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3708A8302CAB290B0002C0D4 /* Build configuration list for PBXNativeTarget "AoC2024Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3708A8312CAB290B0002C0D4 /* Debug */,
+				3708A8322CAB290B0002C0D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3708A8072CAB28420002C0D4 /* Project object */;
+}
