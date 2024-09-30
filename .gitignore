@@ -1,0 +1,5 @@
+
+*.pyc
+Perl/.pls-tmp-*
+PHP/vendor
+Input/*challenge*
