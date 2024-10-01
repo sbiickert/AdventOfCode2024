@@ -96,3 +96,24 @@ class AoCUtil {
         return running
     }
 }
+
+
+struct Fraction: Equatable {
+	let numerator:Int
+	let denominator:Int
+
+	init(numerator: Int, denominator: Int) {
+		self.numerator = numerator
+		self.denominator = denominator
+	}
+	
+	init(_ numerator: Int, _ denominator:Int) {
+		self.numerator = numerator
+		self.denominator = denominator
+	}
+	
+	func reduce() -> Fraction {
+		let gcd = AoCUtil.gcd(numerator, denominator)
+		return Fraction(numerator: numerator/gcd, denominator: denominator/gcd)
+	}
+}

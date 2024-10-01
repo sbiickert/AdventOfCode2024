@@ -46,7 +46,31 @@ struct AoCUtilTests {
 		#expect(AoCUtil.trueMod(num: 10, mod: 3) == 1)
 		#expect(AoCUtil.trueMod(num: 11, mod: 3) == 2)
 		#expect(AoCUtil.trueMod(num: 12, mod: 3) == 0)
+		
 		#expect(AoCUtil.trueMod(num: -1, mod: 3) == 2)
 		#expect(-1 % 3 == -1)
+	}
+	
+	@Test func test_gcd() async throws {
+		#expect(AoCUtil.gcd(2, 4) == 2)
+		#expect(AoCUtil.gcd(15, 20) == 5)
+		#expect(AoCUtil.gcd(13, 20) == 1)
+	}
+	
+	@Test func test_lcm() async throws {
+		#expect(AoCUtil.lcm(2, 4) == 4)
+		#expect(AoCUtil.lcm(15, 20) == 60)
+		#expect(AoCUtil.lcm(13, 20) == 260)
+		#expect(AoCUtil.lcm(values: [2,3,4]) == 12)
+		#expect(AoCUtil.lcm(values: [3,4,13]) == 156)
+	}
+	
+	@Test func test_reduceFraction() async throws {
+		let fractions:[[Int]] = [[2, 4], [2, 6], [2, 8], [3,13]]
+		var reduced: [Fraction] = []
+		for f in fractions {
+			reduced.append(Fraction(numerator: f[0], denominator: f[1]).reduce())
+		}
+		#expect(reduced == [Fraction(1, 2), Fraction(1, 3), Fraction(1, 4), Fraction(3, 13)])
 	}
 }
