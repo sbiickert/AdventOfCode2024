@@ -3,4 +3,5 @@
 Perl/.pls-tmp-*
 PHP/vendor
 Input/*challenge*
-*.DS_Store
+*/.DS_Store
+.DS_Store
