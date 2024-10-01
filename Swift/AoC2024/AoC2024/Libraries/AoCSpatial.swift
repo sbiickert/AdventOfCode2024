@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Algorithms
 
 enum AoCAdjacencyRule {
 	case rook
@@ -370,8 +371,8 @@ struct AoCPos2D: Hashable, CustomDebugStringConvertible {
 
 struct AoCExtent2D: Hashable, Equatable, CustomDebugStringConvertible {
 	static func build(from coords: [AoCCoord2D]) -> AoCExtent2D? {
-		if let (xmin, xmax) = AoCUtil.minMaxOf(array: (coords.map { $0.x })),
-		   let (ymin, ymax) = AoCUtil.minMaxOf(array: (coords.map { $0.y })) {
+		if let (xmin, xmax) = (coords.map { $0.x }).minAndMax(),
+		   let (ymin, ymax) = (coords.map { $0.y }).minAndMax() {
 			return AoCExtent2D(min: AoCCoord2D(x: xmin, y: ymin), max: AoCCoord2D(x: xmax, y: ymax))
 		}
 		return nil

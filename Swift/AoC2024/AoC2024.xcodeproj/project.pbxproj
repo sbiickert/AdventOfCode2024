@@ -15,6 +15,15 @@
 		3708A8422CAB29370002C0D4 /* AoCUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8382CAB29370002C0D4 /* AoCUtil.swift */; };
 		3708A8432CAB29370002C0D4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A83B2CAB29370002C0D4 /* main.swift */; };
 		3708A8452CAB29610002C0D4 /* Day00.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8442CAB29610002C0D4 /* Day00.swift */; };
+		37D996B42CABAAA50017B3F1 /* AoCGrid2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8332CAB29370002C0D4 /* AoCGrid2D.swift */; };
+		37D996B52CABAAA50017B3F1 /* AoCInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8342CAB29370002C0D4 /* AoCInput.swift */; };
+		37D996B62CABAAA50017B3F1 /* AoCSolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8352CAB29370002C0D4 /* AoCSolution.swift */; };
+		37D996B72CABAAA50017B3F1 /* AoCSpatial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8362CAB29370002C0D4 /* AoCSpatial.swift */; };
+		37D996B82CABAAA50017B3F1 /* AoCString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8372CAB29370002C0D4 /* AoCString.swift */; };
+		37D996B92CABAAA50017B3F1 /* AoCUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8382CAB29370002C0D4 /* AoCUtil.swift */; };
+		37D996BA2CABAAF30017B3F1 /* Day00.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3708A8442CAB29610002C0D4 /* Day00.swift */; };
+		37D996BE2CAC4BD80017B3F1 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 37D996BD2CAC4BD80017B3F1 /* Algorithms */; };
+		37D996C02CAC4BDF0017B3F1 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 37D996BF2CAC4BDF0017B3F1 /* Algorithms */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -56,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37D996BE2CAC4BD80017B3F1 /* Algorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37D996C02CAC4BDF0017B3F1 /* Algorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,9 +83,10 @@
 		3708A8062CAB28420002C0D4 = {
 			isa = PBXGroup;
 			children = (
-				3708A8102CAB28420002C0D4 /* Products */,
 				3708A83C2CAB29370002C0D4 /* AoC2024 */,
+				3708A8102CAB28420002C0D4 /* Products */,
 				3708A82D2CAB290B0002C0D4 /* AoC2024Tests */,
+				37D996BC2CAC4BD80017B3F1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -119,6 +131,13 @@
 			path = AoC2024;
 			sourceTree = "<group>";
 		};
+		37D996BC2CAC4BD80017B3F1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -136,6 +155,7 @@
 			);
 			name = AoC2024;
 			packageProductDependencies = (
+				37D996BD2CAC4BD80017B3F1 /* Algorithms */,
 			);
 			productName = AoC2024;
 			productReference = 3708A80F2CAB28420002C0D4 /* AoC2024 */;
@@ -158,6 +178,7 @@
 			);
 			name = AoC2024Tests;
 			packageProductDependencies = (
+				37D996BF2CAC4BDF0017B3F1 /* Algorithms */,
 			);
 			productName = AoC2024Tests;
 			productReference = 3708A82C2CAB290B0002C0D4 /* AoC2024Tests.xctest */;
@@ -190,6 +211,9 @@
 			);
 			mainGroup = 3708A8062CAB28420002C0D4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				37D996BB2CABACB80017B3F1 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3708A8102CAB28420002C0D4 /* Products */;
 			projectDirPath = "";
@@ -231,6 +255,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37D996BA2CABAAF30017B3F1 /* Day00.swift in Sources */,
+				37D996B42CABAAA50017B3F1 /* AoCGrid2D.swift in Sources */,
+				37D996B52CABAAA50017B3F1 /* AoCInput.swift in Sources */,
+				37D996B62CABAAA50017B3F1 /* AoCSolution.swift in Sources */,
+				37D996B72CABAAA50017B3F1 /* AoCSpatial.swift in Sources */,
+				37D996B82CABAAA50017B3F1 /* AoCString.swift in Sources */,
+				37D996B92CABAAA50017B3F1 /* AoCUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,6 +471,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		37D996BB2CABACB80017B3F1 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		37D996BD2CAC4BD80017B3F1 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 37D996BB2CABACB80017B3F1 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+		37D996BF2CAC4BDF0017B3F1 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 37D996BB2CABACB80017B3F1 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3708A8072CAB28420002C0D4 /* Project object */;
 }
