@@ -8,6 +8,8 @@
 import Foundation
 
 extension String {
+	// Allows code to use subscrip
+	// e.g. let char = str[3]
 	subscript(offset: Int) -> Character {
 		get {
 			self[index(startIndex, offsetBy: offset)]
