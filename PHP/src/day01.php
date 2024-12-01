@@ -25,19 +25,14 @@ echo "Part Two: $result2\n";
 
 
 function solvePartOne(array $data):int {
-	$distances = array_map(fn ($i): int => abs($data[0][$i] - $data[1][$i]), range(0, count($data[0])-1));
+	$func = fn ($i): int => abs($data[0][$i] - $data[1][$i]);
+	$distances = array_map($func, range(0, count($data[0])-1));
 	$total = array_sum($distances);
 	return $total;
 }
 
 function solvePartTwo(array $data):int  {
-	$freq = array();
-	foreach ($data[1] as $num) {
-		if (!array_key_exists($num, $freq)) {
-			$freq[$num] = 0;
-		}
-		$freq[$num] += 1;
-	}
+	$freq = array_count_values($data[1]);
 	$sim_score = 0;
 	foreach ($data[0] as $num) {
 		if (array_key_exists($num, $freq)) {
