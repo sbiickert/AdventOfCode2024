@@ -1,8 +1,6 @@
 //
 //  Day00.swift
-//  AoC 2023
-//
-//  Created by Simon Biickert on 2023-04-26.
+//  AoC 2024
 //
 
 import Foundation

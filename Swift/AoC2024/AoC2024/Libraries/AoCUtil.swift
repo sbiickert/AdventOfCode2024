@@ -95,6 +95,25 @@ class AoCUtil {
         }
         return running
     }
+	
+	static func pivotMatrix(_ matrix: [[Any]]) -> [[Any]] {
+		guard !matrix.isEmpty else { return [] }
+		let nrow = matrix.count
+		let ncol = matrix[0].count
+		
+		var pivot: [[Any]] = []
+		for _ in 0..<ncol {
+			pivot.append([Any](repeating: 0, count: nrow))
+		}
+		
+		for row in 0..<nrow {
+			for col in 0..<ncol {
+				pivot[col][row] = matrix[row][col]
+			}
+		}
+		
+		return pivot
+	}
 }
 
 
@@ -117,3 +136,4 @@ struct Fraction: Equatable {
 		return Fraction(numerator: numerator/gcd, denominator: denominator/gcd)
 	}
 }
+
