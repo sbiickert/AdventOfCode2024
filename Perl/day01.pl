@@ -27,7 +27,7 @@ my @list2 = ();
 make_lists(@input);
 
 solve_part_one();
-#solve_part_two(@input);
+solve_part_two();
 
 exit( 0 );
 
@@ -35,15 +35,26 @@ sub solve_part_one(@input) {
 	my $distance = 0;
 	for my $i (0..$#list1) {
 		my $d = abs($list2[$i] - $list1[$i]);
-		#p $d;
 		$distance += $d;
 	}
 	say "Part One: The total distance is $distance";
 }
 
-sub solve_part_two(@input) {
+sub solve_part_two() {
+	# Turn List 2 into a frequency map
+	my %map = {};
+	for my $num (@list2) {
+		$map{$num} ++;
+	}
 
-	say "Part One: ";
+	my $similarity_score = 0;
+	for my $num (@list1) {
+		if (exists $map{$num}) {
+			my $sim = $num * $map{$num};
+			$similarity_score += $sim;
+		}
+	}
+	say "Part Two: The similarity score is $similarity_score";
 }
 
 sub make_lists(@input) {
