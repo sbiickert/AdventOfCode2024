@@ -10,3 +10,5 @@ Input/*challenge*
 /Swift/AoC2024/AoC2024.xcodeproj/xcshareddata
 .DS_Store
 Perl/.DS_Store
+.DS_Store
+PHP/src/.DS_Store

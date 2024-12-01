@@ -93,3 +93,21 @@ function lcm(array $values): int {
 	
 	return $running;
 }
+
+function pivot_matrix(array $matrix): array {
+	$nrows = count($matrix);
+	$ncols = count($matrix[0]);
+	
+	$pivot = array();
+	for ($i = 0; $i < $ncols; $i++) {
+		array_push($pivot, array());
+	}
+	
+	for ($row = 0; $row < $nrows; $row++) {
+		for ($col = 0; $col < $ncols; $col++) {
+			$pivot[$col][$row] = $matrix[$row][$col];
+		}
+	}
+		
+	return $pivot;
+}
