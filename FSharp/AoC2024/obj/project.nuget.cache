@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "hZJd+uOwUTM=",
+  "success": true,
+  "projectFilePath": "/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/FSharp/AoC2024/AoC2024.fsproj",
+  "expectedPackageFiles": [
+    "/Users/sjb/.nuget/packages/fsharp.core/8.0.403/fsharp.core.8.0.403.nupkg.sha512"
+  ],
+  "logs": []
+}

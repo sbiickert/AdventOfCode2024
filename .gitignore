@@ -6,3 +6,5 @@ Input/*challenge*
 */.DS_Store
 .DS_Store
 .DS_Store
+/Raku/lib/.precomp
+/Swift/AoC2024/AoC2024.xcodeproj/xcshareddata

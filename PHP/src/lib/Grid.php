@@ -156,11 +156,11 @@ class Grid2D {
 		return $neighbors;
 	}
 	
-	public function print(array $markers=null, bool $invertY=false): void {
+	public function print(array|null $markers=null, bool $invertY=false): void {
 		echo $this->toString($markers, $invertY);
 	}
 	
-	public function toString(array $markers=null, bool $invertY=false): string {
+	public function toString(array|null $markers=null, bool $invertY=false): string {
 		$str = '';
 		$ext = $this->getExtent();
 		$yMin = $ext->yMin();
