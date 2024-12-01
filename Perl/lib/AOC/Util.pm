@@ -13,7 +13,7 @@ our @ISA = qw( Exporter );
 #our @EXPORT_OK = qw(a b c);
 our @EXPORT = qw(read_input read_grouped_input approx_equal
 				 $MAX_INT $MIN_INT
-				 reduce gcd lcm);
+				 reduce gcd lcm pivot_matrix);
 
 # Read Input
 
@@ -134,6 +134,27 @@ sub lcm(@values) {
 		$running = $running / gcd($running, $next) * $next;
 	}
 	return $running
+}
+
+
+# Pivot Matrix
+
+# Takes an array with at least two dimensions and swaps rows and columns
+# e.g. a 2 x 10 matrix becomes a 10 x 2 matrix
+sub pivot_matrix(@matrix) {
+	my @pivot = ();
+
+	my $nrow = scalar(@matrix);
+	my $ncol = scalar(@{$matrix[0]});
+
+	for my $i (0..$ncol-1) { push(@pivot, []); }
+
+	for my $row (0..$nrow-1) {
+		for my $col (0..$ncol-1) {
+			$pivot[$col][$row] = $matrix[$row][$col];
+		}
+	}
+	return @pivot;
 }
 
 1;
