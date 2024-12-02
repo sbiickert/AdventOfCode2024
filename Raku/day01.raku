@@ -22,7 +22,7 @@ exit( 0 );
 
 sub solve_part_one() {
 	(0..@list1.elems-1) ==> map( -> $x { abs(@list1[$x] - @list2[$x]); })
-						==> reduce(&infix:<+>)
+						==> sum() #reduce(&infix:<+>)
 						==> my $total;
 	say "Part One: $total";
 }
