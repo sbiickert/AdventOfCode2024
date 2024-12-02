@@ -13,36 +13,47 @@ my @input = read_input("$INPUT_PATH/$INPUT_FILE");
 say "Advent of Code 2024, Day 2: Red-Nosed Reports";
 
 solve_part_one(@input);
-#solve_part_two(@input);
+solve_part_two(@input);
 
 exit( 0 );
 
 sub solve_part_one(@input) {
-	my $safe_count = 0;
-	for @input -> $line {
-		my @nums = split(' ', $line);
-		my $is_safe = True;
-		my $direction = 0; # Unset to start
-		for (1..@nums.elems-1) -> $i {
-			my $diff = @nums[$i] - @nums[$i-1];
-			if abs($diff) < 1 || abs($diff) > 3 {
-				$is_safe = False;
-				last;
-			}
-			my $current_direction = $diff > 0 ?? 1 !! -1;
-			if $direction == 0 {
-				$direction = $current_direction;
-			}
-			if $current_direction != $direction {
-				$is_safe = False;
-				last;
-			}
-		}
-		$safe_count += 1 if $is_safe;
-	}
-	say "Part One: Number of safe reports is $safe_count";
+	@input ==> map( -> $line {split(' ', $line)} )
+		   ==> grep( &is_report_safe )
+		   ==> my @safe;
+	say "Part One: Number of safe reports is " ~ @safe.elems;
 }
 
 sub solve_part_two(@input) {
+	@input ==> map( -> $line {split(' ', $line)} )
+		   ==> grep( &is_report_unsafe )
+		   ==> my @unsafe;
 	
+	my $safe_count = @input.elems - @unsafe.elems;
+	say "Part Two: Number of safe reports is " ~ $safe_count;
+}
+
+sub is_report_unsafe(@report --> Bool) {
+	!is_report_safe(@report);
+}
+
+sub is_report_safe(@report --> Bool) {
+	my $is_safe = True;
+	my $direction = 0; # Unset to start
+	for (1..@report.elems-1) -> $i {
+		my $diff = @report[$i] - @report[$i-1];
+		if abs($diff) < 1 || abs($diff) > 3 {
+			$is_safe = False;
+			last;
+		}
+		my $current_direction = $diff > 0 ?? 1 !! -1;
+		if $direction == 0 {
+			$direction = $current_direction;
+		}
+		if $current_direction != $direction {
+			$is_safe = False;
+			last;
+		}
+	}
+	$is_safe;
 }
