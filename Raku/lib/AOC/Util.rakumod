@@ -65,6 +65,29 @@ sub approx_equal(Rat $float1, Rat $float2, Rat $threshold = 0.001) returns Bool 
 }
 
 
+# Pivot Matrix
+
+# Takes an array with at least two dimensions and swaps rows and columns
+# e.g. a 2 x 10 matrix becomes a 10 x 2 matrix
+sub pivot_matrix(@matrix) is export {
+	my @pivot = ();
+
+	my $nrow = @matrix.elems;
+	my $ncol = @(@matrix[0]).elems;
+
+	for (0..$ncol-1) -> $i {
+		push(@pivot, []);
+	}
+
+	for (0..$nrow-1) -> $row {
+		for (0..$ncol-1) -> $col {
+			@pivot[$col][$row] = @matrix[$row][$col];
+		}
+	}
+	return @pivot;
+}
+
+
 # DON'T NEED: lcm and gcd are built-in operators!!
 # reduce: numerator and denominator are methods on the Rat type
 
