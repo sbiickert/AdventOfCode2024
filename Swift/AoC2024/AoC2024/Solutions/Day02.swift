@@ -21,12 +21,31 @@ class Day02: AoCSolution {
 		let reports = input.textLines.map { Report(source: $0) }
 		
 		let safeCount1 = solvePartOne(reports)
-		return AoCResult(part1: "\(safeCount1)", part2: "sync")
+		let safeCount2 = solvePartTwo(reports)
+		return AoCResult(part1: "\(safeCount1)", part2: "\(safeCount2)")
 	}
 	
 	private func solvePartOne(_ reports: [Report]) -> Int {
 		let safeReports = reports.filter { $0.isSafe }
 		return safeReports.count
+	}
+	
+	private func solvePartTwo(_ reports: [Report]) -> Int {
+		let unsafeReports = reports.filter { $0.isUnsafe }
+		var safeCount = reports.count - unsafeReports.count
+		
+		for unsafeReport in unsafeReports {
+			for skip in 0..<unsafeReport.values.count {
+				var dampenedValues = unsafeReport.values
+				dampenedValues.remove(at: skip)
+				if Report.isSafe(values: dampenedValues) {
+					safeCount += 1
+					break
+				}
+			}
+		}
+		
+		return safeCount
 	}
 }
 
