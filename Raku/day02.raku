@@ -28,8 +28,26 @@ sub solve_part_two(@input) {
 	@input ==> map( -> $line {split(' ', $line)} )
 		   ==> grep( &is_report_unsafe )
 		   ==> my @unsafe;
-	
+
 	my $safe_count = @input.elems - @unsafe.elems;
+
+	for @unsafe -> @u {
+		#dd @u;
+		my $is_safe = False;
+		for (0..@u.elems-1) -> $skip {
+			my @slice_list = ();
+			for (0..@u.elems-1) -> $i {
+				@slice_list.push($i) if $i != $skip;
+			}
+			my @dampened = @u[@slice_list];
+			#dd @dampened;
+			$is_safe = is_report_safe(@dampened);
+			if $is_safe { last; }
+		}
+		if $is_safe { $safe_count += 1; }
+	}
+		
+
 	say "Part Two: Number of safe reports is " ~ $safe_count;
 }
 
