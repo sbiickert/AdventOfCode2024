@@ -36,37 +36,35 @@ sub solve_part_two(@input) {
 	my $on = True;
 	for @input -> $line {
 		given $line {
+			# Have to keep the original matches and locations
 			my @mul_matches = m:global/ mul \( (\d+) \, (\d+) \) /;
 			my @mul = @mul_matches.map( -> $m { $m.from } );
 			
-			my @do_matches = m:global/ do \( \) /;
-			my @do = @do_matches.map( -> $m { $m.from } );
+			m:global/ do \( \) /
+				==> map( -> $m { $m.from } )
+				==> my @do;
 			
-			my @dont_matches = m:global/ don \'t \( \) /;
-			my @dont = @dont_matches.map( -> $m { $m.from } );
+			m:global/ don \'t \( \) /
+				==> map( -> $m { $m.from } )
+				==> my @dont;
 
-			@do.push(100000); #arbitrary after string end
-			@dont.push(100000); # ditto
+			# arbitrary indexes after string end
+			@do.push(100000);
+			@dont.push(100000);
 
 			while @mul.elems > 0 {
 				if @mul.first < @do.first && @mul.first < @dont.first {
-					my $m = @mul_matches.shift();
-					@mul.shift();
-					my $product = $m[0] * $m[1];
-					if $on {
-						$sum += $product;
-					}
-					#say "$on\t$product\t" ~ ($on ?? $product !! 0);
+					my $m = @mul_matches.shift(); # Match
+					@mul.shift(); # Discard index
+					$sum += $m[0] * $m[1] if $on;
 				}
 				elsif @do.first < @dont.first {
 					$on = True;
-					#say "on " ~ @do.first;
-					@do.shift();
+					@do.shift(); # Discard index
 				}
 				else {
 					$on = False;
-					#say "off " ~ @dont.first;
-					@dont.shift();
+					@dont.shift(); # Discard index
 				}
 			}
 		}
