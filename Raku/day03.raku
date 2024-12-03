@@ -21,11 +21,11 @@ sub solve_part_one(@input) {
 	my $sum = 0;
 	for @input -> $line {
 		given $line {
-			my @matches = m:global/ mul \( (\d+) \, (\d+) \) /;
-			for @matches -> $m {
-				#say "Multiply $m[0] by $m[1]";
-				$sum += $m[0] * $m[1];
-			}
+			m:global/ mul \( (\d+) \, (\d+) \) /
+				==> map( -> $m { $m[0] * $m[1] })
+				==> sum()
+				==> my @line_sum;
+			$sum += @line_sum.first;
 		}
 	}
 	say "Part One: the sum is $sum";
