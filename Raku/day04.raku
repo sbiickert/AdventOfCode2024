@@ -26,16 +26,12 @@ sub solve_part_one(Grid $puzzle) {
 	my $xmas_count = 0;
 	for $puzzle.coords('X') -> $x {
 		#say "X $x";
-		for $puzzle.neighbors($x) -> $m {
-			if $puzzle.get($m) eq 'M' {
-				#say "M $m";
-				my $d = $x.delta($m);
-				my $a = $m.add($d);
-				my $s = $a.add($d);
-				if $puzzle.get($a) eq 'A' && $puzzle.get($s) eq 'S' {
-					$xmas_count += 1;
-				}
-			}
+		for adjacent_dirs(AdjacencyRule::QUEEN) -> $dir {
+			my $m = $x.offset($dir);
+			my $a = $m.offset($dir);
+			my $s = $a.offset($dir);
+			my $word = ('X', $puzzle.get($m), $puzzle.get($a), $puzzle.get($s)).join('');
+			$xmas_count += 1 if $word eq 'XMAS';
 		}
 	}
 	say "Part One: The number of XMAS is $xmas_count";
@@ -55,5 +51,5 @@ sub solve_part_two(Grid $puzzle) {
 			$xmas_count += 1;
 		}
 	}
-	say "Part One: The number of XMAS is $xmas_count";	
+	say "Part Two: The number of XMAS is $xmas_count";	
 }
