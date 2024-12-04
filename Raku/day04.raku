@@ -18,7 +18,7 @@ $puzzle.load(@input);
 #$puzzle.print();
 
 solve_part_one($puzzle);
-#solve_part_two(@input);
+solve_part_two($puzzle);
 
 exit( 0 );
 
@@ -41,6 +41,19 @@ sub solve_part_one(Grid $puzzle) {
 	say "Part One: The number of XMAS is $xmas_count";
 }
 
-sub solve_part_two(@input) {
-	
+sub solve_part_two(Grid $puzzle) {
+	my $xmas_count = 0;
+	$puzzle.set_rule(AdjacencyRule::BISHOP);
+	my $valid = ('MMSS', 'MSSM', 'SSMM', 'SMMS');
+	for $puzzle.coords('A') -> $a {
+		#say "A $a";
+		$puzzle.neighbors($a) ==> map( -> $n { $puzzle.get($n) } )
+			==> join('')
+			==> my $neighbor_string;
+		#say $neighbor_string;
+		if $neighbor_string[0] (elem) $valid {
+			$xmas_count += 1;
+		}
+	}
+	say "Part One: The number of XMAS is $xmas_count";	
 }

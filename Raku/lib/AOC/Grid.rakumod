@@ -9,7 +9,7 @@ role GridGlyph is export {
 class Grid is export {
 	has %!data = Hash.new;
 	has $.default = '.';
-	has AOC::Geometry::AdjacencyRule $.rule is required;
+	has AOC::Geometry::AdjacencyRule $.rule is required is rw;
 	has Extent $!extent;
 	
 	submethod TWEAK {
@@ -59,6 +59,10 @@ class Grid is export {
 			my $temp = $.extent.expand_to_fit($key);
 			$!extent = $temp;
 		}
+	}
+	
+	method set_rule(AdjacencyRule $r) {
+		self.rule = $r;
 	}
 	
 	method clear(Coord $key, Bool :$reset_extent = False) {
