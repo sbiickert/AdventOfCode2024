@@ -25,12 +25,11 @@ exit( 0 );
 sub solve_part_one(Grid $puzzle) {
 	my $xmas_count = 0;
 	for $puzzle.coords('X') -> $x {
-		#say "X $x";
 		for adjacent_dirs(AdjacencyRule::QUEEN) -> $dir {
-			my $m = $x.offset($dir);
-			my $a = $m.offset($dir);
-			my $s = $a.offset($dir);
-			my $word = ('X', $puzzle.get($m), $puzzle.get($a), $puzzle.get($s)).join('');
+			($x, $x.offset($dir, 1), $x.offset($dir, 2), $x.offset($dir, 3))
+				==> map( -> $coord {$puzzle.get($coord)} )
+				==> join('')
+				==> my $word;
 			$xmas_count += 1 if $word eq 'XMAS';
 		}
 	}
@@ -40,7 +39,7 @@ sub solve_part_one(Grid $puzzle) {
 sub solve_part_two(Grid $puzzle) {
 	my $xmas_count = 0;
 	$puzzle.set_rule(AdjacencyRule::BISHOP);
-	my $valid = ('MMSS', 'MSSM', 'SSMM', 'SMMS');
+	my $valid = set <MMSS MSSM SSMM SMMS>;
 	for $puzzle.coords('A') -> $a {
 		#say "A $a";
 		$puzzle.neighbors($a) ==> map( -> $n { $puzzle.get($n) } )
@@ -51,5 +50,5 @@ sub solve_part_two(Grid $puzzle) {
 			$xmas_count += 1;
 		}
 	}
-	say "Part Two: The number of XMAS is $xmas_count";	
+	say "Part Two: The number of X-MAS is $xmas_count";	
 }

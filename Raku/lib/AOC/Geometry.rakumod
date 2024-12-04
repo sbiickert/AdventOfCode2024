@@ -125,9 +125,14 @@ class Coord is export {
 		return @result;
 	}
 
-	method offset(Str $dir --> Coord) {
+	method offset(Str $dir, Int $size = 1 --> Coord) {
+		return self.clone if $size == 0;
 		my $resolved_dir = resolve_offset_alias($dir);
-		return self.add(Coord.get_offset($resolved_dir));
+		my $off = Coord.get_offset($resolved_dir);
+		if (abs($size) > 1) {
+			$off = Coord.from_ints($off.x * $size, $off.y * $size);
+		}
+		return self.add($off);
 	}
 	
 	method delta(Coord $other --> Coord) {
