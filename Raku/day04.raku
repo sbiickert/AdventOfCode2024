@@ -14,7 +14,6 @@ say "Advent of Code 2024, Day 4: Ceres Search";
 
 my $puzzle = Grid.new(default => '.', rule => AdjacencyRule::QUEEN);
 $puzzle.load(@input);
-
 #$puzzle.print();
 
 solve_part_one($puzzle);
@@ -39,16 +38,12 @@ sub solve_part_one(Grid $puzzle) {
 sub solve_part_two(Grid $puzzle) {
 	my $xmas_count = 0;
 	$puzzle.set_rule(AdjacencyRule::BISHOP);
-	my $valid = set <MMSS MSSM SSMM SMMS>;
+	my $valid_set = set <MMSS MSSM SSMM SMMS>;
 	for $puzzle.coords('A') -> $a {
-		#say "A $a";
 		$puzzle.neighbors($a) ==> map( -> $n { $puzzle.get($n) } )
 			==> join('')
-			==> my $neighbor_string;
-		#say $neighbor_string;
-		if $neighbor_string[0] (elem) $valid {
-			$xmas_count += 1;
-		}
+			==> my @neighbor_string;
+		$xmas_count += 1 if @neighbor_string[0] (elem) $valid_set;
 	}
 	say "Part Two: The number of X-MAS is $xmas_count";	
 }
