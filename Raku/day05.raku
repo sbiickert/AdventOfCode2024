@@ -22,31 +22,23 @@ solve_part_two();
 exit( 0 );
 
 sub solve_part_one() {
-	my $sum_middle = 0;
-
-	for @updates -> @u {
-		if is_update_correct(@u) {
-			my $mid = (@u.elems-1) / 2;
-			$sum_middle += @u[$mid];
-		}
-	}
+	@updates
+		==> grep(&is_update_correct)
+		==> map( -> @u { @u[(@u.elems-1)/2] } ) # remove all but the middle value
+		==> sum()
+		==> my $sum_middle;	
 
 	say "Part One: the sum of middle pages is $sum_middle";
 }
 
 sub solve_part_two() {
-	my $sum_middle = 0;
-
 	@updates
 		==> grep(&is_update_incorrect)
 		==> map( -> @u { correct_update(@u) })
-		==> my @corrected;
+		==> map( -> @u { @u[(@u.elems-1)/2] } ) # remove all but the middle value
+		==> sum()
+		==> my $sum_middle;	
 
-	for @corrected -> @u {
-		my $mid = (@u.elems-1) / 2;
-		$sum_middle += @u[$mid];
-	}
-	
 	say "Part Two: the sum of middle pages in corrected updates is $sum_middle";
 }
 
@@ -70,6 +62,7 @@ sub is_page_at_index_correct(@u, $i --> Bool) {
 		my $num = Int(@u[$i]);
 		my $set = %following{@u[$j]};
 		if $num (elem) $set {
+			# This page is followed by a page that should be before it
 			$is_correct = False;
 			last;
 		}
@@ -80,17 +73,14 @@ sub is_page_at_index_correct(@u, $i --> Bool) {
 sub correct_update(@u --> Array) {
 	my @result = @u.map( -> $page {$page.Int} );
 
-	#say @result;
-	my $is_correct = False;
+	my $is_correct = is_update_correct(@result);
 	my $i = 0;
 	while !$is_correct {
 		if !is_page_at_index_correct(@result, $i) {
 			# Simple, bubble page towards end
-			#say "Moving page at $i";
 			my $temp = @result[$i];
 			@result[$i] = @result[$i+1];
 			@result[$i+1] = $temp;
-			#say @result;
 		}
 		$is_correct = is_update_correct(@result);
 		$i = ($i + 1) % @result.elems;
@@ -103,27 +93,19 @@ sub parse_following(@input) {
 	my %result = ();
 	for @input -> $line {
 		$line ~~ m/ (\d+) \| (\d+) /;
-		my $key = Int($0);
-		my $val = Int($1);
-		if %result{$key}:exists == False {
-			%result{$key} = ().SetHash;
-		}
-		(%result{$key}).set($val);
+		my ($key, $val) = (Int($0), Int($1));
+		push(%result{$key}, $val);
 	}
 	for %result.keys -> $key {
 		%result{$key} = %result{$key}.Set();
 	}
-	#dd %result;
 	return %result;
 }
 
 sub parse_updates(@input) {
-	my @result = ();
-	for @input -> $line {
-		my @pages = $line.split(',');
-		#dd @pages;
-		@result.push(@pages);
-	}
-	return @result;
+	@input
+		==> map( -> $line { $line.split(',') })
+		==> my @result;
+	@result;
 }
 
