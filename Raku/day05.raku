@@ -37,10 +37,10 @@ sub solve_part_one() {
 sub solve_part_two() {
 	my $sum_middle = 0;
 
-	my @to_correct = @updates.grep(&is_update_incorrect);
-	#dd @to_correct;
-	my @corrected = @to_correct.map( -> @u { correct_update(@u) });
-	#dd @corrected;
+	@updates
+		==> grep(&is_update_incorrect)
+		==> map( -> @u { correct_update(@u) })
+		==> my @corrected;
 
 	for @corrected -> @u {
 		my $mid = (@u.elems-1) / 2;
@@ -87,7 +87,9 @@ sub correct_update(@u --> Array) {
 		if !is_page_at_index_correct(@result, $i) {
 			# Simple, bubble page towards end
 			#say "Moving page at $i";
-			@result = @result[0..$i-1, $i+1, $i, $i+2..@result.elems-1].flat;
+			my $temp = @result[$i];
+			@result[$i] = @result[$i+1];
+			@result[$i+1] = $temp;
 			#say @result;
 		}
 		$is_correct = is_update_correct(@result);
