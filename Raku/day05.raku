@@ -81,8 +81,8 @@ sub correct_update(@u --> Array) {
 			my $temp = @result[$i];
 			@result[$i] = @result[$i+1];
 			@result[$i+1] = $temp;
+			$is_correct = is_update_correct(@result);
 		}
-		$is_correct = is_update_correct(@result);
 		$i = ($i + 1) % @result.elems;
 	}
 
