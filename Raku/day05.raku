@@ -13,10 +13,11 @@ my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE");
 say "Advent of Code 2024, Day 5: Print Queue";
 
 my %following = parse_following(@input[0]);
+#dd %following;
 my @updates = parse_updates(@input[1]);
 
 solve_part_one();
-#solve_part_two(@input);
+solve_part_two();
 
 exit( 0 );
 
@@ -24,23 +25,8 @@ sub solve_part_one() {
 	my $sum_middle = 0;
 
 	for @updates -> @u {
-		my $is_correct = True;
-
-		for 0 .. @u.elems-2 -> $i {
-			for $i+1 .. @u.elems-1 -> $j {
-				my $num = Int(@u[$i]);
-				my $set = %following{@u[$j]};
-				if $num (elem) $set {
-					$is_correct = False;
-					last;
-				}
-			}
-			last if !$is_correct;
-		}
-
-		if $is_correct {
+		if is_update_correct(@u) {
 			my $mid = (@u.elems-1) / 2;
-			#say @u ~ " is correct";
 			$sum_middle += @u[$mid];
 		}
 	}
@@ -48,8 +34,67 @@ sub solve_part_one() {
 	say "Part One: the sum of middle pages is $sum_middle";
 }
 
-sub solve_part_two(@input) {
+sub solve_part_two() {
+	my $sum_middle = 0;
+
+	my @to_correct = @updates.grep(&is_update_incorrect);
+	#dd @to_correct;
+	my @corrected = @to_correct.map( -> @u { correct_update(@u) });
+	#dd @corrected;
+
+	for @corrected -> @u {
+		my $mid = (@u.elems-1) / 2;
+		$sum_middle += @u[$mid];
+	}
 	
+	say "Part Two: the sum of middle pages in corrected updates is $sum_middle";
+}
+
+sub is_update_incorrect(@u --> Bool) {
+	!is_update_correct(@u);
+}
+
+sub is_update_correct(@u --> Bool) {
+	my $is_correct = True;
+
+	for 0 .. @u.elems-2 -> $i {
+		$is_correct = is_page_at_index_correct(@u, $i);
+		last if !$is_correct;
+	}
+	$is_correct;
+}
+
+sub is_page_at_index_correct(@u, $i --> Bool) {
+	my $is_correct = True;
+	for $i+1 .. @u.elems-1 -> $j {
+		my $num = Int(@u[$i]);
+		my $set = %following{@u[$j]};
+		if $num (elem) $set {
+			$is_correct = False;
+			last;
+		}
+	}
+	$is_correct;
+}
+
+sub correct_update(@u --> Array) {
+	my @result = @u.map( -> $page {$page.Int} );
+
+	#say @result;
+	my $is_correct = False;
+	my $i = 0;
+	while !$is_correct {
+		if !is_page_at_index_correct(@result, $i) {
+			# Simple, bubble page towards end
+			#say "Moving page at $i";
+			@result = @result[0..$i-1, $i+1, $i, $i+2..@result.elems-1].flat;
+			#say @result;
+		}
+		$is_correct = is_update_correct(@result);
+		$i = ($i + 1) % @result.elems;
+	}
+
+	return @result;
 }
 
 sub parse_following(@input) {
