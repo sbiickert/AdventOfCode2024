@@ -30,36 +30,35 @@ sub solve_part_one(@input) {
 
 sub solve_part_two(@input, @path) {
 	my @block_points = ();
+	my $map = Grid.new(rule => AdjacencyRule::ROOK); $map.load(@input);
+	my $start = $map.coords('^').first;
+
 	# for every point on the vanilla path (except the start)
 	# replace the point with an obstacle and see if it loops
+	my $i = 0;
 	for @path -> $coord {
-		my $map = Grid.new(rule => AdjacencyRule::ROOK); $map.load(@input);
-		my $start = $map.coords('^').first;
 		next if $coord eqv $start; # can't put an obstacle here
 		$map.set($coord, '#');
-		my $end_pos = walk($map);
+		my $end_pos = walk($map, False);
+		$map.clear($coord);
 		if $map.extent.contains($end_pos.coord) {
 			@block_points.push($coord);
 		}
+		$i++;
+		say $i if $i % 50 == 0;
 	}
-
-	#my $map = Grid.new(rule => AdjacencyRule::ROOK); $map.load(@input);
-	#for @block_points -> $bp {
-	#	$map.set($bp, 'O');
-	#}
-	#$map.print();
 
 	say "Part Two: the number of potential obstacles is " ~ @block_points.elems;
 }
 
-sub walk(Grid $map --> Position) {
+sub walk(Grid $map, Bool $mark_path=True --> Position) {
 	my $start = $map.coords('^').first;
 	my $pos = Position.new( coord => $start, dir => 'N' );
 	my $ext = $map.extent();
 	my %positions = ($pos => 1);
 	
 	while $ext.contains($pos.coord) {
-		$map.set($pos.coord, 'X');
+		$map.set($pos.coord, 'X') if $mark_path;
 		my $coord_in_front = $pos.coord.offset($pos.dir);
 		if $map.get($coord_in_front) eq "#" {
 			$pos = $pos.turn('CW');
