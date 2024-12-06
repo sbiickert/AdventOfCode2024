@@ -42,18 +42,22 @@ class Day06: AoCSolution {
 		map.load(data: input)
 		
 		var blockPoints = [AoCCoord2D]()
-		var i = 0
+		var workItems = [DispatchWorkItem]()
 		for coord in visited {
 			if coord == start { continue }
-			map.setValue("#", at: coord)
-			let end_pos = walk(map: map, markPath: false)
-			map.clear(at: coord)
-			if map.extent!.contains(end_pos.location) {
-				blockPoints.append(coord)
+			let dwi = DispatchWorkItem { [self] in
+				let localMap = AoCGrid2D()
+				localMap.load(data: input)
+				localMap.setValue("#", at: coord)
+				let end_pos = walk(map: localMap, markPath: false)
+				if map.extent!.contains(end_pos.location) {
+					blockPoints.append(coord)
+				}
 			}
-			i += 1
-			if i % 50 == 0 { print("\(i)") }
+			DispatchQueue.global().async(execute: dwi)
+			workItems.append(dwi)
 		}
+		for dwi in workItems { dwi.wait() }
 		
 		return "The number of potential obstacles is \(blockPoints.count)."
 	}
