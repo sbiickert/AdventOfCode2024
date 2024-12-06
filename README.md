@@ -16,3 +16,9 @@ I was toying with the idea of learning F# in the last couple of weeks leading up
 Why these languages? Mostly because I've got some history with them. At this point I've done AOC puzzles with all of them and I have a standard toolkit that I've created and tested. When things get tough later in the month, it's possible that I will switch languages. Swift has the best debugger and I know how to do parallel processing if I need to burn electrons. Raku is at the top of the list mostly because it represents a challenge, both because I'm least familiar with it, and because I've got the nano editor set up for it. I can do this challenge on the Raspberry Pi if I feel like it.
 
 Day 1 I did in four of the languages (not Python) just to get everything warmed up. Raku took the longest, but in the end I liked the solution the best. We'll see how the rest of the month progresses.
+
+## Day 6 - Surprisingly Okay
+
+The Raku experiment is ongoing. There have been issues with the language being obtuse about types in a way that Perl never does, and barfing when I tried doing parallel computing for the first time. But I would say that it's been successful. My favourite part is the feed ==> operator. I am trying to use functional programming patterns when I can, and using the feed operator to chain multiple actions together without intermediate variables really makes for clean code.
+
+Today's part 2 took 180 seconds to run on my MacBook, and I wanted to light up all the cores to trim that, but my experiments with Promises kept giving me a MoarVM panic error. So I think I will re-implement in Swift and use GCD instead. I've already got my stars.
