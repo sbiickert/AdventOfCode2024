@@ -27,7 +27,17 @@ class Day07: AoCSolution {
 	}
 	
 	func solvePart1(_ equations: [Equation]) -> String {
-		let possible = equations.filter(isEquationPossible1)
+		var possible = [Equation]()
+		var workItems = [DispatchWorkItem]()
+		for equation in equations {
+			let dwi = DispatchWorkItem {
+				if self.isEquationPossible1(equation) { possible.append(equation) }
+			}
+			DispatchQueue.global().async(execute: dwi)
+			workItems.append(dwi)
+		}
+		for dwi in workItems { dwi.wait() }
+
 		var sum = 0
 		for equation in possible {
 			sum += equation.answer
@@ -37,7 +47,17 @@ class Day07: AoCSolution {
 	
 	
 	func solvePart2(_ equations: [Equation]) -> String {
-		let possible = equations.filter(isEquationPossible2)
+		var possible = [Equation]()
+		var workItems = [DispatchWorkItem]()
+		for equation in equations {
+			let dwi = DispatchWorkItem {
+				if self.isEquationPossible2(equation) { possible.append(equation) }
+			}
+			DispatchQueue.global().async(execute: dwi)
+			workItems.append(dwi)
+		}
+		for dwi in workItems { dwi.wait() }
+
 		var sum = 0
 		for equation in possible {
 			sum += equation.answer
