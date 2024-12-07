@@ -31,7 +31,7 @@ class Day07: AoCSolution {
 		var workItems = [DispatchWorkItem]()
 		for equation in equations {
 			let dwi = DispatchWorkItem {
-				if self.isEquationPossible1(equation) { possible.append(equation) }
+				if equation.isEquationPossible() { possible.append(equation) }
 			}
 			DispatchQueue.global().async(execute: dwi)
 			workItems.append(dwi)
@@ -51,42 +51,18 @@ class Day07: AoCSolution {
 		var workItems = [DispatchWorkItem]()
 		for equation in equations {
 			let dwi = DispatchWorkItem {
-				if self.isEquationPossible2(equation) { possible.append(equation) }
+				if equation.isEquationPossible(allowConcatenation: true) { possible.append(equation) }
 			}
 			DispatchQueue.global().async(execute: dwi)
 			workItems.append(dwi)
 		}
 		for dwi in workItems { dwi.wait() }
-
+		
 		var sum = 0
 		for equation in possible {
 			sum += equation.answer
 		}
 		return "The sum of possible answers is \(sum)."
-	}
-	
-	func isEquationPossible1(_ equation: Equation) -> Bool {
-		if equation.numbers.count == 1 {
-			return equation.answer == equation.numbers[0]
-		}
-		let mulEquation = equation.reducedWithMultiplication
-		if isEquationPossible1(mulEquation) { return true }
-		let addEquation = equation.reducedWithAddition
-		if isEquationPossible1(addEquation) { return true }
-		return false
-	}
-	
-	func isEquationPossible2(_ equation: Equation) -> Bool {
-		if equation.numbers.count == 1 {
-			return equation.answer == equation.numbers[0]
-		}
-		let conEquation = equation.reducedWithConcatenation
-		if isEquationPossible2(conEquation) { return true }
-		let mulEquation = equation.reducedWithMultiplication
-		if isEquationPossible2(mulEquation) { return true }
-		let addEquation = equation.reducedWithAddition
-		if isEquationPossible2(addEquation) { return true }
-		return false
 	}
 }
 
@@ -109,15 +85,28 @@ struct Equation {
 		return "\(self.answer) = \(self.numbers)"
 	}
 	
+	func isEquationPossible(allowConcatenation ac: Bool = false) -> Bool {
+		if numbers.count == 1 {
+			return answer == numbers[0]
+		}
+		if ac {
+			let conEquation = self.reducedWithConcatenation
+			if conEquation.isEquationPossible(allowConcatenation: true) { return true }
+		}
+		let mulEquation = self.reducedWithMultiplication
+		if mulEquation.isEquationPossible(allowConcatenation: ac) { return true }
+		let addEquation = self.reducedWithAddition
+		if addEquation.isEquationPossible(allowConcatenation: ac) { return true }
+		return false
+	}
+
 	var reducedWithMultiplication: Equation {
 		var mutableNumbers = numbers
 		let n0 = mutableNumbers.popLast()!
 		let n1 = mutableNumbers.popLast()!
 		let product = n0 * n1
 		mutableNumbers.append(product)
-		let eq = Equation(answer: self.answer, numbers: mutableNumbers)
-//		print(eq.description)
-		return eq
+		return Equation(answer: self.answer, numbers: mutableNumbers)
 	}
 	
 	var reducedWithAddition: Equation {
@@ -126,9 +115,7 @@ struct Equation {
 		let n1 = mutableNumbers.popLast()!
 		let sum = n0 + n1
 		mutableNumbers.append(sum)
-		let eq = Equation(answer: self.answer, numbers: mutableNumbers)
-//		print(eq.description)
-		return eq
+		return Equation(answer: self.answer, numbers: mutableNumbers)
 	}
 	
 	var reducedWithConcatenation: Equation {
@@ -137,8 +124,6 @@ struct Equation {
 		let n1 = mutableNumbers.popLast()!
 		let concat = Int("\(n0)\(n1)")!
 		mutableNumbers.append(concat)
-		let eq = Equation(answer: self.answer, numbers: mutableNumbers)
-//		print(eq.description)
-		return eq
+		return Equation(answer: self.answer, numbers: mutableNumbers)
 	}
 }
