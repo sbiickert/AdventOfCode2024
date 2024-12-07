@@ -7,9 +7,9 @@
 
 import Foundation
 
-let s = Day06()
+let s = Day07()
 let i = AoCInput.inputsFor(solution: s)
 var rTest = s.solve(i[1])
-print(rTest)
+print("\(rTest.description)")
 let rChallenge = s.solve(i[0])
-print(rChallenge)
+print("\(rChallenge.description)")

@@ -23,7 +23,6 @@ sub solve_part_one(@input) {
 	my @possibles = @input.grep(&is_value_possible1);
 	my $sum = 0;
 	for @possibles -> @poss {
-		#say "Possible: " ~ @poss.raku;
 		$sum += @poss.first;
 	}
 
@@ -32,22 +31,20 @@ sub solve_part_one(@input) {
 }
 
 sub solve_part_two(@input, @part_one_possibles) {
-	@part_one_possibles = map( -> @poss {@poss} ); # Seq to Array
-	#dd @part_one_possibles;
-	my @unsolved = ();
-	for @input -> @equation {
-		if (@equation.Seq (elem) @part_one_possibles) == False {
-			@unsolved.push(@equation);
-		}
-	}
-	#dd @unsolved;
-	my @possibles = @unsolved.grep(&is_value_possible2);
+	@input = @input.map( -> @poss {@poss} ); # Seq to Array
+	@part_one_possibles = @part_one_possibles.map( -> @poss {@poss} ); # Seq to Array
+	
+	# Don't re-solve equations with known answers from Part One
+	my @unsolved = (@input (-) @part_one_possibles);
+	@unsolved = @unsolved.map( -> $pair {$pair.keys.first} );
+
+	my @possibles = @unsolved.grep(&is_value_possible2).List;
+
 	my $sum = 0;
 	for @part_one_possibles -> @poss {
 		$sum += @poss.first;
 	}
-	for @possibles -> @poss {
-		#say "Possible: " ~ @poss.raku;
+	for @possibles.List -> @poss {
 		$sum += @poss.first;
 	}
 
@@ -55,9 +52,7 @@ sub solve_part_two(@input, @part_one_possibles) {
 }
 
 sub is_value_possible1(@arr --> Bool) {
-	#dd @arr;
 	if @arr.elems == 2 {
-		#say "Break";
 		return @arr[0] == @arr[1];
 	}
 	my @mul_arr = (@arr.first, @arr[1] * @arr[2], @arr[3..*]).flat;
@@ -67,15 +62,13 @@ sub is_value_possible1(@arr --> Bool) {
 }
 
 sub is_value_possible2(@arr --> Bool) {
-	#dd @arr;
 	if @arr.elems == 2 {
-		#say "Break";
 		return @arr[0] == @arr[1];
 	}
+	my @con_arr = (@arr.first, @arr[1] ~ @arr[2], @arr[3..*]).flat;
+	if is_value_possible2(@con_arr) { return True; }
 	my @mul_arr = (@arr.first, @arr[1] * @arr[2], @arr[3..*]).flat;
 	if is_value_possible2(@mul_arr) { return True; }
 	my @add_arr = (@arr.first, @arr[1] + @arr[2], @arr[3..*]).flat;
-	if is_value_possible2(@add_arr) { return True; }
-	my @con_arr = (@arr.first, @arr[1] ~ @arr[2], @arr[3..*]).flat;
-	is_value_possible2(@con_arr);
+	is_value_possible2(@add_arr)
 }

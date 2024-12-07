@@ -10,6 +10,13 @@ import Foundation
 struct AoCResult {
 	let part1: String?
 	let part2: String?
+	
+	var description: String {
+		"Part 1: \(part1 ?? "")\nPart 2: \(part2 ?? "")"
+	}
+	var debugDescription: String {
+		return description
+	}
 }
 
 class AoCSolution {
