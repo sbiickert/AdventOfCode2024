@@ -27,41 +27,35 @@ class Day07: AoCSolution {
 	}
 	
 	func solvePart1(_ equations: [Equation]) -> String {
-		var possible = [Equation]()
+		var sum = 0
+		
 		var workItems = [DispatchWorkItem]()
 		for equation in equations {
 			let dwi = DispatchWorkItem {
-				if equation.isEquationPossible() { possible.append(equation) }
+				if equation.isEquationPossible() { sum += equation.answer }
 			}
 			DispatchQueue.global().async(execute: dwi)
 			workItems.append(dwi)
 		}
 		for dwi in workItems { dwi.wait() }
 
-		var sum = 0
-		for equation in possible {
-			sum += equation.answer
-		}
 		return "The sum of possible answers is \(sum)."
 	}
 	
 	
 	func solvePart2(_ equations: [Equation]) -> String {
-		var possible = [Equation]()
+		var sum = 0
+
 		var workItems = [DispatchWorkItem]()
 		for equation in equations {
 			let dwi = DispatchWorkItem {
-				if equation.isEquationPossible(allowConcatenation: true) { possible.append(equation) }
+				if equation.isEquationPossible(allowConcatenation: true) { sum += equation.answer }
 			}
 			DispatchQueue.global().async(execute: dwi)
 			workItems.append(dwi)
 		}
 		for dwi in workItems { dwi.wait() }
-		
-		var sum = 0
-		for equation in possible {
-			sum += equation.answer
-		}
+
 		return "The sum of possible answers is \(sum)."
 	}
 }
