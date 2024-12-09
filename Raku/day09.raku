@@ -37,9 +37,10 @@ sub solve_part_one($input) {
 sub solve_part_two($input) {
 	my @map = create_file_map($input);
 	my $b = @map.elems-1;
+	my $index_of_first_gap = 1;
 	while True {
-		last if $b < 1;
-		my $a = 0;
+		last if $b < $index_of_first_gap;
+		my $a = $index_of_first_gap;
 		while @map[$b]{'id'} eq '.' { $b-- }
 		while (@map[$a]{'id'} ne '.' ||
 			@map[$a]{'size'} < @map[$b]{'size'}) &&
@@ -60,6 +61,9 @@ sub solve_part_two($input) {
 			$b++;
 			@map[$b]{'size'} = @map[$b]{'size'} - $size_diff;
 		}
+		
+		while @map[$index_of_first_gap]{'id'} ne '.' { $index_of_first_gap++ }
+
 		$b--;
 	}
 	
@@ -82,7 +86,6 @@ multi sub create_disk_map_from_str(Str $str --> Array) {
 		for 1..$c -> $i {
 			@map.push($append_char);
 		}
-		#dd @map;
 		$is_file = !$is_file;
 	}
 	@map;
@@ -105,12 +108,12 @@ sub create_file_map($str --> Array) {
 	my @map = ();
 	my $id = 0;
 	for @chars -> $c {
-		my %file = (id => '.', size => $c);
+		my %file = (id => '.', size => Int($c));
 		if $is_file {
-			%file = (id => $id, size => $c);
+			%file = (id => $id, size => Int($c));
 			$id++;
 		}
-		@map.push(%file);
+		@map.push(%file) if %file{'size'} > 0; # Avoid zero-size files/gaps
 		$is_file = !$is_file;
 	}	
 	@map;
