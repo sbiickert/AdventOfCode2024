@@ -12,14 +12,13 @@ my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2024, Day 9: Disk Fragmenter";
 
-my @disk_map = create_disk_map(@input[0].first);
-
-solve_part_one(@disk_map);
-#solve_part_two(@input);
+solve_part_one(@input[0].first);
+solve_part_two(@input[0].first);
 
 exit( 0 );
 
-sub solve_part_one(@map) {
+sub solve_part_one($input) {
+	my @map = create_disk_map_from_str($input);
 	my $a = 0;
 	my $b = @map.elems-1;
 	while True {
@@ -31,20 +30,45 @@ sub solve_part_one(@map) {
 		#say @map.join('');
 	}
 
-	my $checksum = 0;
-	for 0..@map.elems-1 -> $i {
-		last if @map[$i] eq '.';
-		$checksum += $i * @map[$i];
-	}
-
+	my $checksum = calc_checksum(@map);
 	say "Part One: the checksum is $checksum";
 }
 
-sub solve_part_two(@input) {
+sub solve_part_two($input) {
+	my @map = create_file_map($input);
+	my $b = @map.elems-1;
+	while True {
+		last if $b < 1;
+		my $a = 0;
+		while @map[$b]{'id'} eq '.' { $b-- }
+		while (@map[$a]{'id'} ne '.' ||
+			@map[$a]{'size'} < @map[$b]{'size'}) &&
+			$a < $b { $a++ }
+		if $a >= $b {
+			# No place to move file
+			$b--;
+			next;
+		}
+			
+		my %temp = @map[$a];
+		@map[$a] = @map[$b];
+		@map[$b] = %temp;
+		my $size_diff = @map[$b]{'size'} - @map[$a]{'size'};
+		if $size_diff > 0 {
+			my %gap = (id => '.', size => $size_diff);
+			@map.splice($a+1, 0, %gap);
+			$b++;
+			@map[$b]{'size'} = @map[$b]{'size'} - $size_diff;
+		}
+		$b--;
+	}
 	
+	my @disk_map = create_disk_map_from_fm(@map);
+	my $checksum = calc_checksum(@disk_map);
+	say "Part One: the checksum is $checksum";	
 }
 
-sub create_disk_map($str --> Array) {
+multi sub create_disk_map_from_str(Str $str --> Array) {
 	my @chars = $str.split('', :skip-empty);
 	my $is_file = True;
 	my @map = ();
@@ -61,6 +85,42 @@ sub create_disk_map($str --> Array) {
 		#dd @map;
 		$is_file = !$is_file;
 	}
-	say "Created map.";
 	@map;
+}
+
+multi sub create_disk_map_from_fm(@file_map --> Array) {
+	# Create disk map from file map
+	my @map = ();
+	for @file_map -> %file {
+		for 1..%file{'size'} {
+			@map.push(%file{'id'});
+		}
+	}
+	@map;
+}
+
+sub create_file_map($str --> Array) {
+	my @chars = $str.split('', :skip-empty);
+	my $is_file = True;
+	my @map = ();
+	my $id = 0;
+	for @chars -> $c {
+		my %file = (id => '.', size => $c);
+		if $is_file {
+			%file = (id => $id, size => $c);
+			$id++;
+		}
+		@map.push(%file);
+		$is_file = !$is_file;
+	}	
+	@map;
+}
+
+sub calc_checksum(@map --> Int) {
+	my $checksum = 0;
+	for 0..@map.elems-1 -> $i {
+		next if @map[$i] eq '.';
+		$checksum += $i * @map[$i];
+	}
+	$checksum;
 }
