@@ -12,7 +12,7 @@ my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2024, Day 11: Plutonian Pebbles";
 
-solve_part_one(@input[1].first);
+solve_part_one(@input[2].first);
 #solve_part_two(@input);
 
 exit( 0 );
@@ -64,12 +64,12 @@ class Stone {
 
 sub solve_part_one(Str $input) {
 	my $stone = parse_stones($input);
-	for 1..25 -> $i {
-		#$stone.print_stones();
+	for 1..10 -> $i {
+		$stone.print_stones();
 		say $i;
 		$stone = blink($stone);
 	}
-	#$stone.print_stones();
+	$stone.print_stones();
 	say $stone.count_stones();
 }
 
