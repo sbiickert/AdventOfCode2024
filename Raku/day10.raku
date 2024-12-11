@@ -41,10 +41,10 @@ sub score_and_rate_trail(Grid $map, Coord $th, %nines) {
 		%nines{$th} = 1;
 		return 1;
 	}
-	my $rating = 0;
-	my @n = $map.neighbors($th).grep( -> $n {$map.get($n) eq $elev+1});
-	for @n -> $next {
-		$rating += score_and_rate_trail($map, $next, %nines);
-	}
-	$rating;
+	$map.neighbors($th)
+		==> grep( -> $n { $map.get($n) eq $elev+1 })
+		==> map( -> $n {score_and_rate_trail($map, $n, %nines);})
+		==> sum()
+		==> my @rating;
+	@rating.first;
 }
