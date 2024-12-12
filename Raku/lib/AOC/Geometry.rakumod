@@ -189,6 +189,42 @@ class Position is export {
 	}
 }
 
+class Segment is export {
+	has Coord $.from;
+	has Coord $.to;
+	
+	method Str { $.from ~ "->" ~ $.to }
+	
+	multi method gist(Segment:U:) { self.^name }
+	multi method gist(Segment:D:) { self.Str }
+	
+	multi infix:<eqv>(Segment $l, Segment $r) {
+		$l.from eqv $r.from && $l.to eq $r.to;
+	}
+	
+	method is_horizontal(--> Bool) {
+		$.from.y == $.to.y;
+	}
+	
+	method is_vertical(--> Bool) {
+		$.from.x == $.to.x;
+	}
+	
+	method direction(--> Str) {
+		if $.is_horizontal {
+			return $.from.x < $.to.x ?? 'E' !! 'W';
+		}
+		elsif $.is_vertical {
+			return $.from.y < $.to.y ?? 'S' !!'N';
+		}
+		
+		if ($.from.x < $.to.x) {
+			return $.from.y < $.to.y ?? 'SE' !! 'NE';
+		}
+		return $.from.y < $.to.y ?? 'SW' !! 'NW';
+	}
+}
+
 
 class Extent1D is export {
 	has Range $.range;
