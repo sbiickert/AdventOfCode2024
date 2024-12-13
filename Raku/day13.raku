@@ -17,7 +17,8 @@ class Button {...}
 
 my @machines = @input.map( -> @lines { ClawMachine.new(lines => @lines) });
 
-solve_part_one(@machines);
+my $cost1 = solve_part(@machines, 100);
+say "Part One: total tokens spent is $cost1";
 
 my $p2_shift = 10000000000000;
 my $offset = Coord.new(x => $p2_shift, y => $p2_shift);
@@ -25,7 +26,8 @@ for @machines -> $machine {
 	$machine.prize_location = $machine.prize_location.add($offset);
 }
 
-solve_part_two(@machines);
+my $cost2 = solve_part(@machines, $p2_shift); # Arbitrary number larger than the press count
+say "Part Two: total tokens spent is $cost2";	
 
 exit( 0 );
 
@@ -90,32 +92,16 @@ class ClawMachine {
 		return $loc;
 	}
 
-	method is_overshoot(Coord $loc --> Bool) {
-		return $loc.x > $.prize_location.x || $loc.y > $.prize_location.y;
-	}
-
 	method is_win(Coord $loc --> Bool) {
 		return $loc eqv $.prize_location;
 	}
 }
 
-sub solve_part_one(@machines) {
+sub solve_part(@machines, Int $press_limit) {
 	my $cost = 0;
 	for @machines -> $machine {
-		my $calc = $machine.calc_cheapest_play(100);
+		my $calc = $machine.calc_cheapest_play($press_limit);
 		$cost += $calc > 0 ?? $calc !! 0;
 	}
-
-	say "Part One: total tokens spent is $cost";
+	$cost;
 }
-
-sub solve_part_two(@input) {
-	my $cost = 0;
-	for @machines -> $machine {
-		my $calc = $machine.calc_cheapest_play($p2_shift); # Arbitrary big number
-		$cost += $calc > 0 ?? $calc !! 0;
-	}
-
-	say "Part Two: total tokens spent is $cost";	
-}
-
