@@ -51,7 +51,6 @@ class ClawMachine {
 	}
 
 	method find_cheapest_play(--> Int) {
-		#say "Aiming for " ~ $.prize_location;
 		my $a_count = 0;
 		my $b_count = 100;
 		my $claw = self.claw_location($a_count, $b_count);
@@ -64,12 +63,38 @@ class ClawMachine {
 				$a_count++;
 				$claw = self.claw_location($a_count, $b_count);
 			}
+			#say "$a_count $b_count $claw";
 		}
 
+		if self.is_win($claw) && $a_count <= 100 && $b_count <= 100 {
+			say "Actual: $a_count, $b_count";
+			my $tokens = $a_count * $.a.cost + $b_count * $.b.cost;
+			return $tokens;
+		}
+		say "No win.";
+		-1;
+	}
+
+	method calc_cheapest_play(--> Int) {
+		say "Aiming for " ~ $.prize_location;
+		say "A move: " ~ $.a.move ~ " B move: " ~ $.b.move;
+		my $r_a = $.a.move.y / $.a.move.x; # Slope of A button presses
+		my $r_b = $.b.move.y / $.b.move.x; # Slope of B button presses
+		# A line intercepting prize
+		my $y_intercept_a = $.prize_location.y - ($r_a * $.prize_location.x); 
+		my $x = $y_intercept_a / ($r_b - $r_a); # B line crosses A line at X
+
+		my $b_count = Int($x / $.b.move.x);
+		my $a_count = Int(($.prize_location.x - $x) / $.a.move.x);
+
+		my $claw = self.claw_location($a_count, $b_count);
+		
+		say "Calculated: $a_count, $b_count -> $claw";
 		if self.is_win($claw) && $a_count <= 100 && $b_count <= 100 {
 			my $tokens = $a_count * $.a.cost + $b_count * $.b.cost;
 			return $tokens;
 		}
+		say "No win.";
 		-1;
 	}
 
@@ -94,8 +119,11 @@ sub solve_part_one(@machines) {
 	my $cost = 0;
 	for @machines -> $machine {
 		#say $machine.prize_location;
+		my $calc = $machine.calc_cheapest_play();
 		my $val = $machine.find_cheapest_play(); # Returns -1 for no win
-		$cost += $val > 0 ?? $val !! 0;
+		say "$calc, $val";
+		say "DIFFERENCE!" if $calc != $val;
+		$cost += $calc > 0 ?? $calc !! 0;
 	}
 
 	say "Part One: total tokens spent is $cost";
