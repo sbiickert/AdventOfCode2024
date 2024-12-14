@@ -43,12 +43,24 @@ sub solve_part_one(@robots, Extent $space) {
 }
 
 sub solve_part_two(@robots, Extent $space) {
+	my $center = Extent.new(min => Coord.new(x => 25, y => 25), max => Coord.new(x => 75, y => 75));
+	my $robot_count = @robots.elems;
+	
 	for (101..10000) -> $iter {
+		my $center_count = 0;
 		for @robots -> $robot {
 			$robot.move_in($space);
+			$center_count += 1 if $center.contains($robot.pos);
 		}
-		say $iter;
-		draw_space(@robots, $space);
+		if $center_count > $robot_count / 2 {
+			# 1/2 the robots in 1/4 the space. The tree sorta centered
+			say "$iter\a"; # bell
+			draw_space(@robots, $space);
+
+			say "Part Two: the Xmas tree appeared on iteration $iter.";
+			return;
+		}
+		elsif $iter %% 1000 { say $iter }
 	}
 }
 
