@@ -67,7 +67,7 @@ class Grid is export {
 	
 	method clear(Coord $key, Bool :$reset_extent = False) {
 		%!data{$key.Str}:delete;
-		self!reset_extent;
+		self!reset_extent if $reset_extent;
 	}
 	
 	method extent(--> Extent) { return $!extent; }
