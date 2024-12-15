@@ -29,7 +29,6 @@ sub solve_part_one(Grid $map, @moves) {
 			$robot = $robot.offset($move);
 		}
 	}
-	#$map.print;
 
 	my $gps = sum_gps($map);
 
@@ -38,16 +37,12 @@ sub solve_part_one(Grid $map, @moves) {
 
 sub solve_part_two(Grid $map, @moves) {
 	my $robot = $map.coords('@')[0];
-	#$map.print;
 	for @moves -> $move {
-		#say $move;
 		if can_push_wide_box($map, [$robot], $move) {
 			push_wide_box($map, [$robot], $move);
 			$robot = $robot.offset($move);
 		}
-		#else { say "Can't move" }
 	}
-	#$map.print;
 
 	my $gps = sum_gps($map);
 
@@ -55,7 +50,6 @@ sub solve_part_two(Grid $map, @moves) {
 }
 
 sub push_box(Grid $map, Coord $loc, Str $dir --> Bool) {
-	#die $loc if !$map.extent.contains($loc);
 	my $offset = $loc.offset($dir);
 	my $adj = $map.get($offset);
 	if $adj eq '.' {
@@ -126,7 +120,6 @@ sub sum_gps($map --> Int) {
 sub parse_input(@input) {
 	my $grid = Grid.new(default => '.', rule => AdjacencyRule::ROOK);
 	$grid.load(@input[0]);
-#	$grid.print;
 
 	my $all_moves = @input[1].join;
 	my @moves = $all_moves.split('', :skip-empty);
