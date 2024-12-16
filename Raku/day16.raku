@@ -6,8 +6,8 @@ use AOC::Geometry;
 use AOC::Grid;
 
 my $INPUT_PATH = '../Input';
-my $INPUT_FILE = 'day16_test.txt';
-#my $INPUT_FILE = 'day16_challenge.txt';
+#my $INPUT_FILE = 'day16_test.txt';
+my $INPUT_FILE = 'day16_challenge.txt';
 my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE", 0);
 
 say "Advent of Code 2024, Day 16: Reindeer Maze";
@@ -35,26 +35,35 @@ sub solve_parts(Grid $maze) {
 	my $path = Path.new(p => $start_pos, steps => [$start_pos]);
 	$maze.get($start).enter($path);
 
-	my @next = ($path);
-	while @next.elems > 0 {
-		my @paths = @next;
-		@next = ();
+	my %next = ($path.Str => $path);
+	my $best_score = 110000; # Based on first part 
+	
+	while %next.elems > 0 {
+		my @paths = %next.values;
+		%next = ();
 		for @paths -> $p {
 			my $offset = $p.pos.coord.offset($p.pos.dir);
 			if $maze.get_glyph($offset) ne '#' {
 				my $fwd = $p.move_forward;
-				@next.push($fwd) if $maze.get($offset).enter($fwd);
+				if $fwd.score <= $best_score && $maze.get($offset).enter($fwd) {
+					$fwd = $fwd.merge(%next{$fwd.Str}) if %next{$fwd.Str}:exists;
+					%next{$fwd.Str} = $fwd;
+					if ($fwd.pos.coord eqv $end) {
+						$best_score = $fwd.score;
+						say "New best: $best_score";
+					}
+				}
 			}
 			# Turns
 			my $tracker = $maze.get($p.pos.coord);
 			my $cw = $p.turn('CW');
-			@next.push($cw) if $tracker.enter($cw);
+					$cw = $cw.merge(%next{$cw.Str}) if %next{$cw.Str}:exists;
+			%next{$cw.Str} = $cw if $cw.score <= $best_score && $tracker.enter($cw);
 			my $ccw = $p.turn('CCW');
-			@next.push($ccw) if $tracker.enter($ccw);
-			#my $rev = $cw.turn('CW');
-			#@next.push($rev) if $tracker.enter($rev);
+					$ccw = $ccw.merge(%next{$ccw.Str}) if %next{$ccw.Str}:exists;
+			%next{$ccw.Str} = $ccw if $ccw.score <= $best_score && $tracker.enter($ccw);
 		}
-		say @next.elems;
+		say %next.elems;
 	}
 	
 	my $end_tracker = $maze.get($end);
@@ -139,6 +148,11 @@ class CostTracker does GridGlyph {
 
 	method enter(Path $p --> Bool) {
 		my $current_score = self.cost_for(dir => $p.pos.dir);
+		
+		my $opposite = $p.pos.turn('CW').turn('CW');
+		my $opposite_cost = self.cost_for(dir => $opposite.dir);
+		if $opposite_cost > 0 && $opposite_cost < $p.score { return False }
+		
 		if $current_score >= 0 && $current_score <= $p.score {
 			if $current_score < $p.score { return False }
 			#merge paths
