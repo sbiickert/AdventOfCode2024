@@ -6,9 +6,9 @@ use AOC::Geometry;
 use AOC::Grid;
 
 my $INPUT_PATH = '../Input';
-#my $INPUT_FILE = 'day16_test.txt';
-my $INPUT_FILE = 'day16_challenge.txt';
-my @input = read_input("$INPUT_PATH/$INPUT_FILE");
+my $INPUT_FILE = 'day16_test.txt';
+#my $INPUT_FILE = 'day16_challenge.txt';
+my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE", 0);
 
 say "Advent of Code 2024, Day 16: Reindeer Maze";
 
@@ -16,7 +16,7 @@ class Path {...}
 class CostTracker {...}
 
 my $maze = Grid.new(default => 'x', rule => AdjacencyRule::ROOK);
-$maze.load(@input);
+$maze.load(@input).first;
 
 my $start = $maze.coords('S')[0];
 my $end = $maze.coords('E')[0];
@@ -26,14 +26,13 @@ for $maze.coords('.') -> $c {
 	$maze.set($c, CostTracker.new);
 }
 
-solve_part_one($maze);
-#solve_part_two(@input);
+solve_parts($maze);
 
 exit( 0 );
 
-sub solve_part_one(Grid $maze) {
+sub solve_parts(Grid $maze) {
 	my $start_pos = Position.new(coord => $start, dir => 'E');
-	my $path = Path.new(p => $start_pos);
+	my $path = Path.new(p => $start_pos, steps => [$start_pos]);
 	$maze.get($start).enter($path);
 
 	my @next = ($path);
@@ -47,13 +46,13 @@ sub solve_part_one(Grid $maze) {
 				@next.push($fwd) if $maze.get($offset).enter($fwd);
 			}
 			# Turns
-			my $cw = $p.turn('CW');
-			my $ccw = $p.turn('CCW');
-			my $rev = $cw.turn('CW');
 			my $tracker = $maze.get($p.pos.coord);
+			my $cw = $p.turn('CW');
 			@next.push($cw) if $tracker.enter($cw);
+			my $ccw = $p.turn('CCW');
 			@next.push($ccw) if $tracker.enter($ccw);
-			@next.push($rev) if $tracker.enter($rev);
+			#my $rev = $cw.turn('CW');
+			#@next.push($rev) if $tracker.enter($rev);
 		}
 		say @next.elems;
 	}
@@ -62,6 +61,13 @@ sub solve_part_one(Grid $maze) {
 	my $lc_path = $end_tracker.get_lowest_cost_path;
 
 	say "Part One: the lowest cost path has a score of " ~ $lc_path.score;
+
+	my @tiles = $lc_path.unique_tiles;
+	for @tiles -> $t {
+		$maze.set($t, 'X');
+	}
+	#$maze.print;
+	say "Part Two: there are " ~ @tiles.elems ~ " tiles on best paths";
 }
 
 
@@ -83,16 +89,39 @@ class Path does GridGlyph {
 
 	method move_forward(--> Path) {
 		my $new_pos = $.pos.move_forward;
-		my @new_steps = $.steps;
+		my @new_steps = @.steps;
 		@new_steps.push($new_pos);
 		return Path.new(p => $new_pos, score => $.score + 1, steps => @new_steps);
 	}
 
 	method turn(Str $dir --> Path) {
 		my $new_pos = $.pos.turn($dir);
-		my @new_steps = $.steps;
+		my @new_steps = @.steps;
 		@new_steps.push($new_pos);
 		return Path.new(p => $new_pos, score => $.score + 1000, steps => @new_steps);		
+	}
+
+	method merge(Path $other --> Path) {
+		my %uni = Hash.new;
+		for @.steps -> $s {
+			%uni{$s.Str} = $s if $s.Str ne '';
+		}
+		for $other.steps -> $s {
+			%uni{$s.Str} = $s if $s.Str ne '';
+		}
+		
+		my @new_steps = %uni.values;
+		return Path.new(p => $.pos, score => $.score, steps => @new_steps);
+	}
+
+	method unique_tiles(--> Array) {
+		my %uni = Hash.new;
+		for @.steps -> $s {
+			%uni{$s.coord.Str} = $s.coord;
+		}
+		
+		my @tiles = %uni.values;
+		@tiles;
 	}
 }
 
@@ -104,13 +133,28 @@ class CostTracker does GridGlyph {
 	}
 
 	method glyph(--> Str) {
-		%.paths.elems.Str;
+		#%.paths.elems.Str;
+		'.'
 	}
 
 	method enter(Path $p --> Bool) {
 		my $current_score = self.cost_for(dir => $p.pos.dir);
-		if $current_score > 0 && $current_score <= $p.score { return False }
-		%.paths{$p.pos.dir} = $p;
+		if $current_score >= 0 && $current_score <= $p.score {
+			if $current_score < $p.score { return False }
+			#merge paths
+			if $current_score == $p.score {
+				my $merged = $p.merge(self.paths{$p.pos.dir});
+#				if $p.pos.coord eqv Coord.from_ints(13,1) {
+#					say "Merge: " ~ %.paths{$p.pos.dir};
+#					say "With: " ~ $p;
+#					say "Result: " ~ $merged;
+#				}
+				%.paths{$p.pos.dir} = $merged;
+			}
+		}
+		else {
+			%.paths{$p.pos.dir} = $p;
+		}
 		True;
 	}
 
