@@ -36,7 +36,7 @@ sub solve_parts(Grid $maze) {
 	$maze.get($start).enter($path);
 
 	my %next = ($path.Str => $path);
-	my $best_score = 110000; # Based on first part 
+	my $best_score = 106000; # Based on first part 
 	
 	while %next.elems > 0 {
 		my @paths = %next.values;
@@ -57,10 +57,10 @@ sub solve_parts(Grid $maze) {
 			# Turns
 			my $tracker = $maze.get($p.pos.coord);
 			my $cw = $p.turn('CW');
-					$cw = $cw.merge(%next{$cw.Str}) if %next{$cw.Str}:exists;
+			$cw = $cw.merge(%next{$cw.Str}) if %next{$cw.Str}:exists;
 			%next{$cw.Str} = $cw if $cw.score <= $best_score && $tracker.enter($cw);
 			my $ccw = $p.turn('CCW');
-					$ccw = $ccw.merge(%next{$ccw.Str}) if %next{$ccw.Str}:exists;
+			$ccw = $ccw.merge(%next{$ccw.Str}) if %next{$ccw.Str}:exists;
 			%next{$ccw.Str} = $ccw if $ccw.score <= $best_score && $tracker.enter($ccw);
 		}
 		say %next.elems;
@@ -79,10 +79,6 @@ sub solve_parts(Grid $maze) {
 	say "Part Two: there are " ~ @tiles.elems ~ " tiles on best paths";
 }
 
-
-sub solve_part_two(@input) {
-	
-}
 
 class Path does GridGlyph {
 	has $.score: Int;
@@ -158,11 +154,6 @@ class CostTracker does GridGlyph {
 			#merge paths
 			if $current_score == $p.score {
 				my $merged = $p.merge(self.paths{$p.pos.dir});
-#				if $p.pos.coord eqv Coord.from_ints(13,1) {
-#					say "Merge: " ~ %.paths{$p.pos.dir};
-#					say "With: " ~ $p;
-#					say "Result: " ~ $merged;
-#				}
 				%.paths{$p.pos.dir} = $merged;
 			}
 		}
