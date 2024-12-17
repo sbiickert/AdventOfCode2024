@@ -50,14 +50,15 @@ sub solve_part_two(%state) {
 	say "Part Two: the output equalled input program when A was $a";	
 }
 
+#https://www.reddit.com/r/adventofcode/comments/1hg38ah/comment/m2hilky/
 sub solve_part_two_fast(%state) {
 	my @pgm = %state{'program'}.flat;
-	say @pgm.join(',');
+	#say @pgm.join(',');
 	my $puter = Triputer.new;
 	my $a = 0;
 
 	for (0..@pgm.end-1) -> $i {
-		say "shift";
+		#say "shift";
 		my $test = @pgm[(@pgm.end-$i-1)..*].join(',');
 		$a = $a +< 3;
 		$a -= 8;
@@ -68,15 +69,16 @@ sub solve_part_two_fast(%state) {
 			$puter.run;
 			my $out = $puter.output.join(',');
 			
-			say "$a: $out    $test";
+			#say "$a: $out    $test";
 			if $out eq $test {
 				last;
 			}
 		}
-		say $a;
+		#say $a;
 	}
 
-	say $puter.output.join(',');
+	#say $a;
+	#say $puter.output.join(',');
 
 	say "Part Two: the output equalled input program when A was $a";
 }
