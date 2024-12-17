@@ -6,8 +6,8 @@ use AOC::Util;
 #use AOC::Grid;
 
 my $INPUT_PATH = '../Input';
-my $INPUT_FILE = 'day17_test.txt';
-#my $INPUT_FILE = 'day17_challenge.txt';
+#my $INPUT_FILE = 'day17_test.txt';
+my $INPUT_FILE = 'day17_challenge.txt';
 my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE", 0);
 
 say "Advent of Code 2024, Day 17: Chronospatial Computer";
@@ -17,7 +17,7 @@ class Triputer {...}
 my %state = parse_input(@input);
 
 solve_part_one(%state);
-solve_part_two(%state);
+solve_part_two_fast(%state);
 
 exit( 0 );
 
@@ -32,13 +32,53 @@ sub solve_part_one(%state) {
 }
 
 sub solve_part_two(%state) {
+	# Works for test, killed after 136750000 iterations on challenge
+	my $GOAL = %state{'program'}.join(',');
 	my $puter = Triputer.new;
-	$puter.load(%state);
-	$puter.run;
+	my $a = 0;
+	while $puter.output.join(',') ne $GOAL {
+		$a++;
+		say $a if $a %% 10000;
+		%state{'A'} = $a;
+		$puter.load(%state);
+		$puter.run;
+	}
 
-	my $output = $puter.output.join(',');
+	say $puter.output.join(',');
+	say $GOAL;
 
-	say "Part One: the output is $output";	
+	say "Part Two: the output equalled input program when A was $a";	
+}
+
+sub solve_part_two_fast(%state) {
+	my @pgm = %state{'program'}.flat;
+	say @pgm.join(',');
+	my $puter = Triputer.new;
+	my $a = 0;
+
+	for (0..@pgm.end-1) -> $i {
+		say "shift";
+		my $test = @pgm[(@pgm.end-$i-1)..*].join(',');
+		$a = $a +< 3;
+		$a -= 8;
+		while True {
+			++$a;
+			%state{'A'} = $a;
+			$puter.load(%state);
+			$puter.run;
+			my $out = $puter.output.join(',');
+			
+			say "$a: $out    $test";
+			if $out eq $test {
+				last;
+			}
+		}
+		say $a;
+	}
+
+	say $puter.output.join(',');
+
+	say "Part Two: the output equalled input program when A was $a";
 }
 
 sub parse_input(@input --> Hash) {
