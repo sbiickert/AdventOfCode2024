@@ -13,7 +13,6 @@ my @input = read_input("$INPUT_PATH/$INPUT_FILE");
 say "Advent of Code 2024, Day 18: RAM Run";
 
 my @bytes = parse_falling_bytes(@input);
-#say @bytes.map(-> $b { $b.Str }).join("\n");
 
 my $byte_count = @input.elems <= 25 ?? 12 !! 1024;
 my $size = @input.elems <= 25 ?? 6 !! 70;
@@ -29,17 +28,23 @@ sub solve_part_one(@danger, Int $byte_count, Int $grid_size) {
 }
 
 sub solve_part_two(@danger, Int $start_byte_count, Int $grid_size) {
-	my $b = 0;
-	for ($start_byte_count..@danger.end) -> $byte_count {
-		say $byte_count ~ ' ' ~ @danger[$byte_count-1].Str;
-		my $length = find_path_length(@danger, $byte_count, $grid_size);
+	my $b = -1;
+	# Binary search
+	my $low = $start_byte_count - 1;
+	my $high = @danger.end;
+	while $low < $high-1 {
+		my $search = Int(($high + $low) / 2);
+		#say "$search $low/$high " ~ @danger[$search].Str;
+		my $length = find_path_length(@danger, $search, $grid_size);
 		if $length == -1 {
-			$b = $byte_count-1;
-			last;
+			$high = $search;
+		}
+		else {
+			$low = $search;
 		}
 	}
 
-	my $blocking_byte = @danger[$b];
+	my $blocking_byte = @danger[$low];
 
 	say "Part Two: the coords of the blocking byte are " ~ $blocking_byte.x ~ ',' ~ $blocking_byte.y;
 }
@@ -51,8 +56,6 @@ sub find_path_length(@danger, Int $byte_count, Int $grid_size) {
 	for (0..$byte_count-1) -> $i {
 		$grid.clear(@danger[$i]);
 	}
-
-#	$grid.print;
 
 	my $start = Coord.from_ints(0,0);
 	my $end = Coord.from_ints($grid_size, $grid_size);
@@ -78,11 +81,8 @@ sub find_path_length(@danger, Int $byte_count, Int $grid_size) {
 
 		$step++;
 		@coords = %next.values;
-		#say @coords.elems;
-		#$grid.print;
 	}
 
-	#$grid.print;
 	$at_end ?? $step !! -1;
 }
 
