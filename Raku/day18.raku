@@ -19,11 +19,32 @@ my $byte_count = @input.elems <= 25 ?? 12 !! 1024;
 my $size = @input.elems <= 25 ?? 6 !! 70;
 
 solve_part_one(@bytes, $byte_count, $size);
-#solve_part_two(@input);
+solve_part_two(@bytes, $byte_count, $size);
 
 exit( 0 );
 
 sub solve_part_one(@danger, Int $byte_count, Int $grid_size) {
+	my $length = find_path_length(@danger, $byte_count, $grid_size);
+	say "Part One: the min steps to reach end is $length";
+}
+
+sub solve_part_two(@danger, Int $start_byte_count, Int $grid_size) {
+	my $b = 0;
+	for ($start_byte_count..@danger.end) -> $byte_count {
+		say $byte_count ~ ' ' ~ @danger[$byte_count-1].Str;
+		my $length = find_path_length(@danger, $byte_count, $grid_size);
+		if $length == -1 {
+			$b = $byte_count-1;
+			last;
+		}
+	}
+
+	my $blocking_byte = @danger[$b];
+
+	say "Part Two: the coords of the blocking byte are " ~ $blocking_byte.x ~ ',' ~ $blocking_byte.y;
+}
+
+sub find_path_length(@danger, Int $byte_count, Int $grid_size) {
 	my $ext = Extent.from_ints(0,0,$grid_size,$grid_size);
 	my $grid = Grid.new(default => '#', rule => AdjacencyRule::ROOK);
 	for $ext.all_coords -> $coord { $grid.set($coord, '.') }
@@ -57,15 +78,12 @@ sub solve_part_one(@danger, Int $byte_count, Int $grid_size) {
 
 		$step++;
 		@coords = %next.values;
-		say @coords.elems;
-		$grid.print;
+		#say @coords.elems;
+		#$grid.print;
 	}
 
-	say "Part One: the min steps to reach end is $step";
-}
-
-sub solve_part_two(@input) {
-	
+	#$grid.print;
+	$at_end ?? $step !! -1;
 }
 
 sub parse_falling_bytes(@input --> Array) {
