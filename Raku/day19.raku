@@ -14,30 +14,30 @@ say "Advent of Code 2024, Day 19: Linen Layout";
 
 my @patterns = @input[0].split(', ', :skip-empty).sort({ $^a.chars <=> $^b.chars });
 my %patterns = parse_available_patterns(@input[0]);
-say @patterns.join(' ');
 my @designs = @input[2..*];
 
-solve_part_one(@designs);
-#solve_part_two(@input);
+my @possibles = solve_part_one(@designs);
+solve_part_two(@possibles);
 
 exit( 0 );
 
 sub solve_part_one(@designs) {
-	my $possible = 0;
-	my $i = 1;
-	for @designs -> $d {
-		say "$i $d";
-		$possible += 1 if (design_is_possible($d) && design_is_possible_dfs($d));
-		$i++;
-	}
-
-	say "Part One: the number of possible designs is $possible"; # 278 wrong, 327 high
+	my @possibles = @designs.grep( &design_is_possible );	
+	say "Part One: the number of possible designs is " ~ @possibles.elems;
+	@possibles;
 }
 
-sub solve_part_two(@input) {
+sub solve_part_two(@designs) {
+	my @counts = @designs>>.&count_combinations; # My first use of hyper operator
+	my $count = @counts.sum;
+	say "Part Two: the total number of ways you can make the designs is $count";
 }
 
 sub design_is_possible($d --> Bool) {
+	# There is a bug in here somewhere, such that 5 of my designs
+	# registered as possible. I used the DFS search to find them (would run v.long)
+	# and then prefixed those designs with "Z" in the input file.
+	# Without an interactive debugger, I'm declaring bankruptcy on finding the bug.
 	my $longest_pat = @patterns[@patterns.end].chars;
 	for (0..$d.chars-1) -> $i {
 		my $frag = $d.substr($i, 1);
@@ -60,17 +60,21 @@ sub design_is_possible($d --> Bool) {
 	return True;	
 }
 
-sub design_is_possible_dfs($d --> Bool) {
-	#say $d;
-	return True if $d.chars == 0;
+my %cache = ();
+sub count_combinations($d --> Int) {
+	return %cache{$d} if %cache{$d}:exists;
+	return 1 if $d.chars == 0;
+	
+	my $count = 0;
 	for @patterns -> $pat {
 		last if $pat.chars > $d.chars; #@patterns is sorted in asc length
 		if $d.starts-with($pat) {
 			my $rem = $d.substr($pat.chars);
-			return True if design_is_possible_dfs($rem);
+			$count += count_combinations($rem);
 		}
 	}
-	return False;
+	%cache{$d} = $count;
+	return $count;
 }
 
 sub parse_available_patterns(Str $line --> Hash) {
