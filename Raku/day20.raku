@@ -18,15 +18,14 @@ my $start = $track.coords('S')[0];
 my $end = $track.coords('E')[0];
 
 #$track.print;
+my @course = walk_track($track);
 
-
-solve_part_one($track);
-#solve_part_two(@input);
+solve_part_one($track, @course);
+solve_part_two($track, @course);
 
 exit( 0 );
 
-sub solve_part_one(Grid $track) {
-	my @course = walk_track($track);
+sub solve_part_one(Grid $track, @course) {
 	say "track length: " ~ @course.elems;
 	my $limit = @course.elems < 100 ?? 1 !! 100;
 	my %cheats = ();
@@ -36,7 +35,28 @@ sub solve_part_one(Grid $track) {
 			my $md = @course[$i].manhattanDistanceTo(@course[$j]);
 			my $saved = $j - $i - $md;
 			if (1 < $md <= 2) && $saved >= $limit {
-				my $key = shortcut_between(@course[$i], @course[$j], $track);
+				my $key = @course[$i] ~ ',' ~ @course[$j];
+				%cheats{$key} = $saved;
+			}
+		}
+		if $i %% 500 { say $i }
+	}
+
+	summarize_savings(%cheats);
+
+	say "Part One: there are " ~ %cheats.elems ~ " cheats"; # 6810 too high
+}
+
+sub solve_part_two(Grid $track, @course) {
+	my $limit = @course.elems < 100 ?? 50 !! 100;
+	my %cheats = ();
+
+	for (0..@course.end-1) -> $i {
+		for ($i+1..@course.end) -> $j {
+			my $md = @course[$i].manhattanDistanceTo(@course[$j]);
+			my $saved = $j - $i - $md;
+			if (1 < $md <= 20) && $saved >= $limit {
+				my $key = @course[$i] ~ ',' ~ @course[$j];
 				%cheats{$key} = $saved;
 #				my @shortcuts = shortcuts_between(@course[$i],@course[$j], $track);
 #				for @shortcuts -> $key {
@@ -47,20 +67,20 @@ sub solve_part_one(Grid $track) {
 		if $i %% 500 { say $i }
 	}
 
+	summarize_savings(%cheats);
+
+	say "Part Two: there are " ~ %cheats.elems ~ " cheats";
+}
+
+sub summarize_savings(%cheats) {
 	my %savings = ();
 	for %cheats.kv -> $key,$saved {
 		%savings{$saved} += 1;
 	}
 
-	for %savings.keys.sort -> $saved {
+	for %savings.keys.sort({$^a <=> $^b}) -> $saved {
 		say %savings{$saved} ~ " cheats saved $saved";
 	} 
-
-	say "Part One: there are " ~ %cheats.elems ~ " cheats"; # 6810 too high
-}
-
-sub solve_part_two(@input) {
-	
 }
 
 sub walk_track(Grid $track --> Array) {
