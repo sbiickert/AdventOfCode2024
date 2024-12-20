@@ -6,8 +6,8 @@ use AOC::Geometry;
 use AOC::Grid;
 
 my $INPUT_PATH = '../Input';
-my $INPUT_FILE = 'day20_test.txt';
-#my $INPUT_FILE = 'day20_challenge.txt';
+#my $INPUT_FILE = 'day20_test.txt';
+my $INPUT_FILE = 'day20_challenge.txt';
 my @input = read_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2024, Day 20: Race Condition";
@@ -17,7 +17,7 @@ $track.load(@input);
 my $start = $track.coords('S')[0];
 my $end = $track.coords('E')[0];
 
-$track.print;
+#$track.print;
 
 
 solve_part_one($track);
@@ -27,30 +27,32 @@ exit( 0 );
 
 sub solve_part_one(Grid $track) {
 	my @course = walk_track($track);
+	say "track length: " ~ @course.elems;
 	my $limit = @course.elems < 100 ?? 1 !! 100;
 	my %cheats = ();
 
 	for (0..@course.end-1) -> $i {
-		my $best_saved = 0;
-		my $best_key = '';
 		for ($i+1..@course.end) -> $j {
 			my $md = @course[$i].manhattanDistanceTo(@course[$j]);
 			my $saved = $j - $i - $md;
-			if (1 < $md <= 3) && $saved > 0 {
+			if (1 < $md <= 2) && $saved > 0 {
 				my @shortcuts = shortcuts_between(@course[$i],@course[$j], $track);
 				for @shortcuts -> $key {
-					if $saved > $best_saved {
-						$best_saved = $saved;
-						$best_key = $key;
-					}
+					%cheats{$key} = $saved;
 				}
 			}
-			if $best_saved > 0 {
-				say "save $best_saved $best_key";
-				%cheats{$best_key} = $best_saved;
-			}
 		}
+		if $i %% 100 { say $i }
 	}
+
+	my %savings = ();
+	for %cheats.kv -> $key,$saved {
+		%savings{$saved} += 1;
+	}
+
+	for %savings.keys.sort -> $saved {
+		say %savings{$saved} ~ " cheats saved $saved";
+	} 
 
 	say "Part One: there are " ~ %cheats.elems ~ " cheats";
 }
@@ -124,7 +126,7 @@ sub shortcuts_between(Coord $c1, Coord $c2, Grid $track --> Array) {
 		next if $val0 ne '#';
 		my $p1 = $c1.add(@path[1]);
 		my $val1 = $track.get($p1);
-		next if $md == 3 && $val1 ne '#';
+		next if $val1 eq '#';
 		@shortcuts.push("$p0,$p1");
 	}
 	@shortcuts;
