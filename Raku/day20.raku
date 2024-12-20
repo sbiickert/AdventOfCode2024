@@ -35,14 +35,16 @@ sub solve_part_one(Grid $track) {
 		for ($i+1..@course.end) -> $j {
 			my $md = @course[$i].manhattanDistanceTo(@course[$j]);
 			my $saved = $j - $i - $md;
-			if (1 < $md <= 2) && $saved > 0 {
-				my @shortcuts = shortcuts_between(@course[$i],@course[$j], $track);
-				for @shortcuts -> $key {
-					%cheats{$key} = $saved;
-				}
+			if (1 < $md <= 2) && $saved >= $limit {
+				my $key = shortcut_between(@course[$i], @course[$j], $track);
+				%cheats{$key} = $saved;
+#				my @shortcuts = shortcuts_between(@course[$i],@course[$j], $track);
+#				for @shortcuts -> $key {
+#					%cheats{$key} = $saved;
+#				}
 			}
 		}
-		if $i %% 100 { say $i }
+		if $i %% 500 { say $i }
 	}
 
 	my %savings = ();
@@ -54,7 +56,7 @@ sub solve_part_one(Grid $track) {
 		say %savings{$saved} ~ " cheats saved $saved";
 	} 
 
-	say "Part One: there are " ~ %cheats.elems ~ " cheats";
+	say "Part One: there are " ~ %cheats.elems ~ " cheats"; # 6810 too high
 }
 
 sub solve_part_two(@input) {
@@ -78,6 +80,14 @@ sub walk_track(Grid $track --> Array) {
 	@course;
 }
 
+sub shortcut_between(Coord $c1, Coord $c2, Grid $track --> Str) {
+	my $dx = $c2.x - $c1.x;
+	my $dy = $c2.y - $c1.y;
+	my $cheat_coord = Coord.from_ints($c1.x + Int($dx/2), $c1.y + Int($dy/2));
+	die if $track.get($cheat_coord) ne '#';
+	"$c2,$cheat_coord";
+}
+
 ####3###
 ###323##
 ##32#23#
@@ -85,7 +95,6 @@ sub walk_track(Grid $track --> Array) {
 ##32#23#
 ###323##
 ####3###
-
 my %paths = ();
 sub init_paths() {
 	%paths = (
