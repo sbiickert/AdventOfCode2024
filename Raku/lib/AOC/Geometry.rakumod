@@ -145,8 +145,9 @@ class Coord is export {
 	}
 	
 	method manhattanDistanceTo(Coord $other --> Int) {
-		my $delta = $.delta($other);
-		return abs($delta.x) + abs($delta.y);
+		#my $delta = $.delta($other);
+		#return abs($delta.x) + abs($delta.y);
+		return abs($other.x - $.x) + abs($other.y - $.y);
 	}
 }
 

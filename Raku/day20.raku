@@ -20,56 +20,38 @@ my $end = $track.coords('E')[0];
 #$track.print;
 my @course = walk_track($track);
 
-solve_part_one($track, @course);
-solve_part_two($track, @course);
+solve_parts($track, @course);
 
 exit( 0 );
 
-sub solve_part_one(Grid $track, @course) {
-	say "track length: " ~ @course.elems;
-	my $limit = @course.elems < 100 ?? 1 !! 100;
-	my %cheats = ();
+sub solve_parts(Grid $track, @course) {
+	#say "track length: " ~ @course.elems;
+	my $limit_p1 = @course.elems < 100 ?? 1 !! 100;
+	my $limit_p2 = @course.elems < 100 ?? 50 !! 100;
+	my %cheats_p1 = ();
+	my %cheats_p2 = ();
 
 	for (0..@course.end-1) -> $i {
-		for ($i+1..@course.end) -> $j {
+		for ($i+2..@course.end) -> $j {
 			my $md = @course[$i].manhattanDistanceTo(@course[$j]);
 			my $saved = $j - $i - $md;
-			if (1 < $md <= 2) && $saved >= $limit {
+			if (1 < $md <= 2) && $saved >= $limit_p1 {
 				my $key = @course[$i] ~ ',' ~ @course[$j];
-				%cheats{$key} = $saved;
+				%cheats_p1{$key} = $saved;
+			}
+			if (1 < $md <= 20) && $saved >= $limit_p2 {
+				my $key = @course[$i] ~ ',' ~ @course[$j];
+				%cheats_p2{$key} = $saved;
 			}
 		}
-		if $i %% 500 { say $i }
+		#if $i %% 500 { say $i }
 	}
 
-	summarize_savings(%cheats);
+	#summarize_savings(%cheats_p1);
+	say "Part One: there are " ~ %cheats_p1.elems ~ " cheats";
 
-	say "Part One: there are " ~ %cheats.elems ~ " cheats"; # 6810 too high
-}
-
-sub solve_part_two(Grid $track, @course) {
-	my $limit = @course.elems < 100 ?? 50 !! 100;
-	my %cheats = ();
-
-	for (0..@course.end-1) -> $i {
-		for ($i+1..@course.end) -> $j {
-			my $md = @course[$i].manhattanDistanceTo(@course[$j]);
-			my $saved = $j - $i - $md;
-			if (1 < $md <= 20) && $saved >= $limit {
-				my $key = @course[$i] ~ ',' ~ @course[$j];
-				%cheats{$key} = $saved;
-#				my @shortcuts = shortcuts_between(@course[$i],@course[$j], $track);
-#				for @shortcuts -> $key {
-#					%cheats{$key} = $saved;
-#				}
-			}
-		}
-		if $i %% 500 { say $i }
-	}
-
-	summarize_savings(%cheats);
-
-	say "Part Two: there are " ~ %cheats.elems ~ " cheats";
+	#summarize_savings(%cheats_p2);
+	say "Part Two: there are " ~ %cheats_p2.elems ~ " cheats";
 }
 
 sub summarize_savings(%cheats) {
@@ -100,63 +82,11 @@ sub walk_track(Grid $track --> Array) {
 	@course;
 }
 
-sub shortcut_between(Coord $c1, Coord $c2, Grid $track --> Str) {
-	my $dx = $c2.x - $c1.x;
-	my $dy = $c2.y - $c1.y;
-	my $cheat_coord = Coord.from_ints($c1.x + Int($dx/2), $c1.y + Int($dy/2));
-	die if $track.get($cheat_coord) ne '#';
-	"$c2,$cheat_coord";
-}
-
-####3###
-###323##
-##32#23#
-#32#S#23
-##32#23#
-###323##
-####3###
-my %paths = ();
-sub init_paths() {
-	%paths = (
-	"0,-2" =>  [[mk_c(0,-1), mk_c(0,-2)]],
-	"1,-1" =>  [[mk_c(0,-1), mk_c(1,-1)],[mk_c(1,0),mk_c(1,-1)]],
-	"2,0" =>   [[mk_c(1,0), mk_c(2,0)]],
-	"1,1" =>   [[mk_c(0,1), mk_c(1,1)],[mk_c(1,0),mk_c(1,1)]],
-	"0,2" =>   [[mk_c(0,1), mk_c(0,2)]],
-	"-1,1" =>  [[mk_c(0,1), mk_c(-1,1)],[mk_c(-1,0),mk_c(-1,1)]],
-	"-2,0" =>  [[mk_c(-1,0), mk_c(-2,0)]],
-	"-1,-1" => [[mk_c(0,-1), mk_c(-1,-1)],[mk_c(-1,0),mk_c(-1,-1)]]);
-	%paths{"0,-3"}  = %paths{"0,-2"};
-	%paths{"1,-2"}  = %paths{"1,-1"};
-	%paths{"2,-1"}  = %paths{"1,-1"};
-	%paths{"3,0"}   = %paths{"2,0"};
-	%paths{"2,1"}   = %paths{"1,1"};
-	%paths{"1,2"}   = %paths{"1,1"};
-	%paths{"0,3"}   = %paths{"0,2"};
-	%paths{"-1,2"}  = %paths{"-1,1"};
-	%paths{"-2,1"}  = %paths{"-1,1"};
-	%paths{"-3,0"}  = %paths{"-2,0"};
-	%paths{"-2,-1"} = %paths{"-1,-1"};
-	%paths{"-1,-2"} = %paths{"-1,-1"};
-}
-sub mk_c(Int $x, Int $y) { Coord.new(x => $x, y => $y) }
-
-sub shortcuts_between(Coord $c1, Coord $c2, Grid $track --> Array) {
-	if %paths.elems == 0 { init_paths() }
-	my $md = $c1.manhattanDistanceTo($c2);
-	my $dx = $c2.x - $c1.x;
-	my $dy = $c2.y - $c1.y;
-	my @paths = %paths{"$dx,$dy"};
-	if (@paths[0][0] ~~ Coord) == False { @paths = @paths[0].map(-> $p {$p}) }
-	my @shortcuts = ();
-	for @paths -> @path {
-		my $p0 = $c1.add(@path[0]);
-		my $val0 = $track.get($p0);
-		next if $val0 ne '#';
-		my $p1 = $c1.add(@path[1]);
-		my $val1 = $track.get($p1);
-		next if $val1 eq '#';
-		@shortcuts.push("$p0,$p1");
-	}
-	@shortcuts;
-}
+# Was a sanity check for part one
+#sub shortcut_between(Coord $c1, Coord $c2, Grid $track --> Str) {
+#	my $dx = $c2.x - $c1.x;
+#	my $dy = $c2.y - $c1.y;
+#	my $cheat_coord = Coord.from_ints($c1.x + Int($dx/2), $c1.y + Int($dy/2));
+#	die if $track.get($cheat_coord) ne '#';
+#	"$c2,$cheat_coord";
+#}
