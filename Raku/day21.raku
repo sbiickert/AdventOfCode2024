@@ -10,117 +10,54 @@ class DirPad {...}
 class NumPad {...}
 
 my $INPUT_PATH = '../Input';
-#my $INPUT_FILE = 'day21_test.txt';
-my $INPUT_FILE = 'day21_challenge.txt';
+my $INPUT_FILE = 'day21_test.txt';
+#my $INPUT_FILE = 'day21_challenge.txt';
 my @input = read_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2024, Day 21: Keypad Conundrum";
 
-solve_part_one(@input);
-#solve_part_two(@input);
+my $pad = Pad.new;
+
+my $complexity1 = solve_part(@input, 3);
+say "Part One: the sum of complexity is $complexity1";
+my $complexity2 = solve_part(@input, 5);
+say "Part Two: the sum of complexity is $complexity2";
 
 exit( 0 );
 
-sub solve_part_one(@input) {
-	my $numpad = NumPad.new;
-	my $dirpad = DirPad.new;
+sub solve_part(@input, $n_robots --> Int) {
 	my $sum = 0;
 	for @input -> $code {
-	#for ('379A') -> $code {
 		say "Code: $code";
-		my @numpad_moves = $numpad.enter_code($code);
-		my $m = @numpad_moves.join('');
-		say $m;
-		my @dirpad_moves = $dirpad.enter_code($m);
-		$m = @dirpad_moves.join('');
-		say $m;
-		@dirpad_moves = $dirpad.enter_code($m);
-		$m = @dirpad_moves.join('');
-		say $m;
-		my $numeric = Int($code.substr(0..$code.chars-2));
-		my $complexity = $numeric * $m.chars;
-		say "$complexity is $numeric times " ~ $m.chars;
-		$sum += $complexity;
-
-		# Debugging
-		#say "Mine:";
-		#debug_moves($m);
-		#say "Eric's:";
-		#debug_moves("<v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A");
+		$sum += calc_score($code, $n_robots);
 	}
-	my %results = ();
-
-
-	say "Part One: the sum of complexity is $sum"; # 248686 too high
+	$sum;
 }
 
-sub solve_part_two(@input) {
-	
+sub calc_score(Str $code, Int $robots --> Int) {
+	my $numeric = Int($code.substr(0..$code.chars-2));
+	my $length = calc_length($code, $robots);  
+	$numeric * $length;
 }
 
-sub debug_moves(Str $m) {
-	my $numpad = NumPad.new;
-	my $dirpad = DirPad.new;
-	say $m;
-	my $o = $dirpad.output($m);
-	say $o;
-	$o = $dirpad.output($o);
-	say $o;
-	$o = $numpad.output($o);
-	say $o;
+sub calc_length(Str $seq, Int $depth --> Int) {
+	my $m = $seq;
+	#say $m;
+	for (1..$depth) -> $i {
+		my @pad_moves = $pad.enter_code($m);
+		$m = @pad_moves.join('');
+		#say $m;
+	}
+	$m.chars;
 }
+
 
 class Pad {
 	has Grid $.pad;
 	has %.paths;
-	
-	method move(Str $from, Str $to --> Str) {
-		return 'A' if $from eq $to;
-		return %.paths{"$from,$to"};
-	}
 
-	method key_coord(Str $key --> Coord) {
-		return $.pad.coords($key).first;
-	}
-
-	method enter_code(Str $code --> Array) {
-		self.print;
-		my @chars = $code.split('', :skip-empty);
-		@chars.unshift('A');
-		say @chars.join(',');
-		my @moves = ();
-		for (1..$code.chars) -> $i {
-			@moves.push(self.move(@chars[$i-1], @chars[$i]));
-		}
-		@moves;
-	}
-
-	method output(Str $code --> Str) {
-		my $pos = self.key_coord('A');
-		my @chars = $code.split('', :skip-empty);
-		my $result = '';
-		for @chars -> $ch {
-			if $ch eq 'A' {
-				$result ~= $.pad.get($pos);
-			}
-			else {
-				$pos = $pos.offset($ch);
-			}
-		}
-		$result;
-	}
-
-	method print() {
-		$.pad.print;
-	}
-}
-
-class DirPad is Pad {
-	method new(--> DirPad) {
-		my $pad = Grid.new(default => 'X', rule => AdjacencyRule::ROOK);
-		my @layout = ('X^A', '<v>');
-		$pad.load(@layout);
-		my %p = (
+	submethod TWEAK() {
+		%!paths = (
 			'<,^' => ">^A",
 			'^,<' => "v<A",
 			'<,v' => ">A",
@@ -140,18 +77,7 @@ class DirPad is Pad {
 			'v,A' => "^>A",
 			'A,v' => "<vA",
 			'>,A' => "^A",
-			'A,>' => "vA");
-		
-		return self.bless(pad => $pad, paths => %p);
-	}
-}
-
-class NumPad is Pad {
-	method new(--> NumPad) {
-		my $pad = Grid.new(default => 'X', rule => AdjacencyRule::ROOK);
-		my @layout = ('789', '456', '123', 'X0A');
-		$pad.load(@layout);
-		my %p  = (
+			'A,>' => "vA",
 			'A,0' => "<A",
 			'0,A' => ">A",
 			'A,1' => "^<<A",
@@ -262,7 +188,62 @@ class NumPad is Pad {
 			'9,7' => "<<A",
 			'8,9' => ">A",
 			'9,8' => "<A");
+	}
+	
+	method move(Str $from, Str $to --> Str) {
+		return 'A' if $from eq $to;
+		return %.paths{"$from,$to"};
+	}
 
-		return self.bless(pad => $pad, paths => %p);
+	method key_coord(Str $key --> Coord) {
+		return $.pad.coords($key).first;
+	}
+
+	method enter_code(Str $code --> Array) {
+		my @chars = $code.split('', :skip-empty);
+		@chars.unshift('A');
+		#say @chars.join(',');
+		my @moves = ();
+		for (1..$code.chars) -> $i {
+			@moves.push(self.move(@chars[$i-1], @chars[$i]));
+		}
+		@moves;
+	}
+
+	method output(Str $code --> Str) {
+		my $pos = self.key_coord('A');
+		my @chars = $code.split('', :skip-empty);
+		my $result = '';
+		for @chars -> $ch {
+			if $ch eq 'A' {
+				$result ~= $.pad.get($pos);
+			}
+			else {
+				$pos = $pos.offset($ch);
+			}
+		}
+		$result;
+	}
+
+	method print() {
+		$.pad.print;
+	}
+}
+
+class DirPad is Pad {
+	method new(--> DirPad) {
+		my $pad = Grid.new(default => 'X', rule => AdjacencyRule::ROOK);
+		my @layout = ('X^A', '<v>');
+		$pad.load(@layout);
+		return self.bless(pad => $pad);
+	}
+}
+
+class NumPad is Pad {
+	method new(--> NumPad) {
+		my $pad = Grid.new(default => 'X', rule => AdjacencyRule::ROOK);
+		my @layout = ('789', '456', '123', 'X0A');
+		$pad.load(@layout);
+		return self.bless(pad => $pad);
 	}
 }
