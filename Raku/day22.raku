@@ -36,7 +36,7 @@ sub solve_part_two(@buyers) {
 			%all_patterns{$pattern} = 1;
 		}
 	}
-	say %all_patterns.elems;
+	#say %all_patterns.elems;
 	my $max = 0;
 	my $max_pattern = '';
 	for %all_patterns.keys -> $pattern {
@@ -45,7 +45,7 @@ sub solve_part_two(@buyers) {
 		if $sum > $max {
 			$max = $sum;
 			$max_pattern = $pattern;
-			say "$max_pattern $max";
+			#say "$max_pattern $max";
 		}
 	}
 
