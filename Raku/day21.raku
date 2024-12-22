@@ -10,8 +10,8 @@ class DirPad {...}
 class NumPad {...}
 
 my $INPUT_PATH = '../Input';
-my $INPUT_FILE = 'day21_test.txt';
-#my $INPUT_FILE = 'day21_challenge.txt';
+#my $INPUT_FILE = 'day21_test.txt';
+my $INPUT_FILE = 'day21_challenge.txt';
 my @input = read_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2024, Day 21: Keypad Conundrum";
@@ -20,15 +20,15 @@ my $pad = Pad.new;
 
 my $complexity1 = solve_part(@input, 3);
 say "Part One: the sum of complexity is $complexity1";
-my $complexity2 = solve_part(@input, 5);
-say "Part Two: the sum of complexity is $complexity2";
+my $complexity2 = solve_part(@input, 26);
+say "Part Two: the sum of complexity is $complexity2"; # 118152621365344 too low
 
 exit( 0 );
 
 sub solve_part(@input, $n_robots --> Int) {
 	my $sum = 0;
 	for @input -> $code {
-		say "Code: $code";
+		#say "Code: $code";
 		$sum += calc_score($code, $n_robots);
 	}
 	$sum;
@@ -40,17 +40,35 @@ sub calc_score(Str $code, Int $robots --> Int) {
 	$numeric * $length;
 }
 
+# https://www.reddit.com/r/adventofcode/comments/1hj2odw/comment/m36j01x/
+my %cache = ();
 sub calc_length(Str $seq, Int $depth --> Int) {
-	my $m = $seq;
-	#say $m;
-	for (1..$depth) -> $i {
-		my @pad_moves = $pad.enter_code($m);
-		$m = @pad_moves.join('');
-		#say $m;
+	my $cache_key = "$seq,$depth";
+	return %cache{$cache_key} if %cache{$cache_key}:exists;
+
+	my $length = 0;
+	if $depth == 0 {
+		$length = $seq.chars;
 	}
-	$m.chars;
+	else {
+		my $current = 'A';
+		my @chars = $seq.split('', :skip-empty);
+		for @chars -> $next {
+			my $len = get_move_count($current, $next, $depth);
+			$current = $next;
+			$length += $len;
+		}
+	}
+
+	%cache{$cache_key} = $length;
+	$length;
 }
 
+sub get_move_count(Str $current, Str $next, Int $depth --> Int) {
+	return 1 if $current eq $next;
+	my $new_seq = $pad.paths{"$current,$next"};
+	return calc_length($new_seq, $depth-1);
+}
 
 class Pad {
 	has Grid $.pad;
