@@ -14,30 +14,22 @@ say "Advent of Code 2024, Day 22: Monkey Market";
 
 class Buyer {...}
 
-#solve_part_one(@input);
-solve_part_two(@input);
+my @secrets = @input.map( -> $i {Int($i)} );
+my @buyers = @secrets.map( -> $s { Buyer.new(secret => $s) } );
+
+solve_part_one(@buyers);
+solve_part_two(@buyers);
 
 exit( 0 );
 
-sub solve_part_one(@input) {
-	my $sum = 0;
-	my @nums = @input.map({.Int});
-	for @nums -> $n {
-		my $num = $n;
-		for (1..2000) -> $i {
-			$num = pseudo($num);
-		}
-		$sum += $num;
-	}
-
+sub solve_part_one(@buyers) {
+	@buyers ==> map({.secret_2000})
+		==> sum()
+		==> my $sum;
 	say "Part One: the sum of the 2000th numbers is $sum";
 }
 
-sub solve_part_two(@input) {
-#	my @secrets = (1,2,3,2024);
-	my @secrets = @input.map( -> $i {Int($i)} );
-	my @buyers = @secrets.map( -> $s { Buyer.new(secret => $s) } );
-	say "Gathering patterns...";
+sub solve_part_two(@buyers) {
 	my %all_patterns = ();
 	for @buyers -> $b {
 		for $b.pattern_price.keys -> $pattern {
@@ -53,7 +45,7 @@ sub solve_part_two(@input) {
 		if $sum > $max {
 			$max = $sum;
 			$max_pattern = $pattern;
-			#say "$max_pattern $max";
+			say "$max_pattern $max";
 		}
 	}
 
@@ -73,7 +65,8 @@ sub pseudo(Int $in --> Int) {
 class Buyer {
 	has Int $.secret;
 	has %.pattern_price;
-	has @.price_patterns;
+	has Int $.secret_2000;
+#	has @.price_patterns;
 
 	submethod TWEAK() {
 		my @secrets = ($!secret);
@@ -88,15 +81,17 @@ class Buyer {
 			@prices.push($price);
 			@diffs.push(@prices[*-1] - @prices[*-2]);
 			if @diffs.elems < 4 { next }
+			if @diffs.tail < 1 { next }
 			my $pattern = @diffs[*-4..*-1].join(',');
 			if %pattern_price{$pattern}:exists == False {
 				%pattern_price{$pattern} = $price;
-				my $c = @price_patterns[$price] ~~ Array ?? @price_patterns[$price].elems !! 0;
-				@price_patterns[$price][$c] = $pattern;
+#				my $c = @price_patterns[$price] ~~ Array ?? @price_patterns[$price].elems !! 0;
+#				@price_patterns[$price][$c] = $pattern;
 			}
 		}
 		%!pattern_price = %pattern_price;
-		@!price_patterns = @price_patterns;
+		$!secret_2000 = @secrets.tail;
+#		@!price_patterns = @price_patterns;
 	}
 
 	method price(Str $pattern --> Int) {
