@@ -70,14 +70,14 @@ class Buyer {
 
 	submethod TWEAK() {
 		my @secrets = ($!secret);
-		my @prices = (Int($!secret.Str.substr(*-1)));
+		my @prices = ($!secret % 10);
 		my @diffs = (0);
 		my %pattern_price = ();
 		my @price_patterns = ();
 		for (1..2000) -> $i {
 			my $secret = pseudo(@secrets[*-1]);
 			@secrets.push($secret);
-			my $price = Int($secret.Str.substr(*-1));
+			my $price = $secret % 10;
 			@prices.push($price);
 			@diffs.push(@prices[*-1] - @prices[*-2]);
 			if @diffs.elems < 4 { next }
