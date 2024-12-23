@@ -22,13 +22,11 @@ exit( 0 );
 sub solve_part_one() {
 	my %groups = ();
 	for %lan.kv -> $computer, @connected_to {
-		for (0..@connected_to.end-1) -> $i {
-			for ($i+1..@connected_to.end) -> $j {
-				my @group = ($computer, @connected_to[$i], @connected_to[$j]).sort();
-				if are_interconnected(@group) {
-					my $joined = @group.join(',');
-					%groups{@group.join(',')} = 1;
-				}
+		for @connected_to.combinations(2) -> @combo {
+			my @group = ($computer, @combo.Slip).sort();
+			if are_interconnected(@group) {
+				my $joined = @group.join(',');
+				%groups{@group.join(',')} = 1;
 			}
 		}
 	}
@@ -70,7 +68,6 @@ sub are_interconnected(@computers --> Bool) {
 			}
 		}
 	}
-	#say "$joined are interconnected";
 	%cache{$joined} = True;
 	True;
 }
@@ -85,8 +82,5 @@ sub parse_connections(@input --> Hash) {
 		$c = %connections{$computer2} ~~ Array ?? %connections{$computer2}.elems !! 0;
 		%connections{$computer2}[$c] = $computer1;
 	}
-	#for %connections.kv -> $key, @values {
-	#	say "$key is connected to " ~ @values.join(', ');
-	#}
 	%connections;
 }
