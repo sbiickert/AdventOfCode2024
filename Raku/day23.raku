@@ -30,10 +30,7 @@ sub solve_part_one() {
 			}
 		}
 	}
-	my @t_groups = ();
-	for %groups.keys -> $group {
-		@t_groups.push($group) if $group ~~ / t\w /;
-	}
+	my @t_groups = %groups.keys.grep( ->$group {$group ~~ / t\w /} );
 
 	say "Part One: the number of groups with a t* computer is " ~ @t_groups.elems;
 }
@@ -60,12 +57,10 @@ sub are_interconnected(@computers --> Bool) {
 	my $joined = @computers.join(',');
 	return %cache{$joined} if %cache{$joined}:exists;
 	
-	for (0..@computers.end-1) -> $i {
-		for ($i+1..@computers.end) -> $j {
-			if !(@computers[$j] (elem) %lan{@computers[$i]}) {
-				%cache{$joined} = False;
-				return False
-			}
+	for @computers.combinations(2) -> @combo {
+		if !(@combo[0] (elem) %lan{@combo[1]}) {
+			%cache{$joined} = False;
+			return False
 		}
 	}
 	%cache{$joined} = True;
