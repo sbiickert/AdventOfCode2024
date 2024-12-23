@@ -15,7 +15,7 @@ say "Advent of Code 2024, Day 23: LAN Party";
 my %lan = parse_connections(@input);
 
 solve_part_one();
-#solve_part_two(@input);
+solve_part_two();
 
 exit( 0 );
 
@@ -24,8 +24,9 @@ sub solve_part_one() {
 	for %lan.kv -> $computer, @connected_to {
 		for (0..@connected_to.end-1) -> $i {
 			for ($i+1..@connected_to.end) -> $j {
-				if @connected_to[$j] (elem) %lan{@connected_to[$i]} {
-					my @group = ($computer, @connected_to[$i], @connected_to[$j]).sort();
+				my @group = ($computer, @connected_to[$i], @connected_to[$j]).sort();
+				if are_interconnected(@group) {
+					my $joined = @group.join(',');
 					%groups{@group.join(',')} = 1;
 				}
 			}
@@ -39,8 +40,39 @@ sub solve_part_one() {
 	say "Part One: the number of groups with a t* computer is " ~ @t_groups.elems;
 }
 
-sub solve_part_two(@input) {
+sub solve_part_two() {
+	my $password = '';
+	my $largest_group_size = 3;
+	for %lan.kv -> $computer, @connected_to {
+		for @connected_to.combinations($largest_group_size) -> @combo {
+			my @group = ($computer, @combo.Slip).sort();
+			if are_interconnected(@group) {
+				$largest_group_size++;
+				$password = @group.join(',');
+				last;
+			}
+		}
+	}
+
+	say "Part Two: the LAN password is $password";
+}
+
+my %cache = ();
+sub are_interconnected(@computers --> Bool) {
+	my $joined = @computers.join(',');
+	return %cache{$joined} if %cache{$joined}:exists;
 	
+	for (0..@computers.end-1) -> $i {
+		for ($i+1..@computers.end) -> $j {
+			if !(@computers[$j] (elem) %lan{@computers[$i]}) {
+				%cache{$joined} = False;
+				return False
+			}
+		}
+	}
+	#say "$joined are interconnected";
+	%cache{$joined} = True;
+	True;
 }
 
 sub parse_connections(@input --> Hash) {
