@@ -30,3 +30,11 @@ As is usual, the difficulty in the puzzles is ramping up. Days 11, 12 and 13 hav
 My comfort with Raku is growing, but I still think that the collections are the biggest pain in the butt. What good is having Sets, HashSets, Bags, etc. if you spend more time than it's worth fighting compiler errors? I'm sticking to Arrays and Hashes. Early on, I focused on the FP, but the last few days it's been more procedural and OO. Today in particular I leaned on OO to keep my sanity.
 
 Over halfway!
+
+## Day 23 - Nearly There
+
+Today is practically a day off. We had a lot of stuff to get done for Christmas, so I made a point of trying to solve today before bed last night. And considering it's Day 23, the fact that I solved both parts in about an hour was a thrill. I was practically punching the air and had trouble falling asleep.
+
+Day 21 was one that broke me (and a lot of others, it seems). I worked from after the ride through until after supper. I don't think it had anything to do with my choice of language or editor, it was just trying to get the logic optimized. I had it "working" almost immediately, but not optimal pathfinding, which meant my answers were wrong.
+
+As I'm getting deeper and deeper into AoC, I'm leveraging more and more of Raku. Last night I looked up combinations() for the first time and used it extensively for Day 23. I also used the Set (elems) operator. I wouldn't say I'm a master of the language by a long shot, but I'm proficient now. Also proficient with nano, although I still have to think when I want to copy something.
