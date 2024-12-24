@@ -6,8 +6,8 @@ use AOC::Util;
 #use AOC::Grid;
 
 my $INPUT_PATH = '../Input';
-my $INPUT_FILE = 'day24_test.txt';
-#my $INPUT_FILE = 'day24_challenge.txt';
+#my $INPUT_FILE = 'day24_test.txt';
+my $INPUT_FILE = 'day24_challenge.txt';
 my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2024, Day 24: Crossed Wires";
@@ -16,7 +16,6 @@ class Gate {...}
 
 my %inputs = parse_inputs(@input[0]);
 my %structure = parse_structure(@input[1]);
-
 
 solve_part_one(%inputs.clone, %structure);
 solve_part_two(%inputs.clone, %structure);
@@ -29,39 +28,41 @@ sub solve_part_one(%values, %structure) {
 	say "Part One: the value in the z outputs is $z_value";
 }
 
+# https://www.reddit.com/r/adventofcode/comments/1hl698z/comment/m3llouk/
 sub solve_part_two(%values, %structure) {
-	my $x_value = get_value(%values, 'x');
-	my $y_value = get_value(%values, 'y');
+	my @bad_gates = ();
 
+	# z?? should be output of XOR, except $msb
 	my @output_wires = %structure.keys;
-
-#	say @output_wires.combinations(8).elems;
-	my $result = '';
-	
-	for @output_wires.combinations(4) -> @set4 {
-		my %copy = %structure.clone;
-		say @set4;
-		for @set4.combinations(2) -> @pair0 {
-			my @pair1 = (@set4 (-) @pair0).keys;
-			say "Swapping " ~ @pair0 ~ ' and ' ~ @pair1;
-			my $temp = %copy{@pair0[0]};
-			%copy{@pair0[0]} = %copy{@pair0[1]};
-			%copy{@pair0[1]} = $temp;
-			$temp = %copy{@pair1[0]};
-			%copy{@pair1[0]} = %copy{@pair1[1]};
-			%copy{@pair1[1]} = $temp;
-			
-			my $z_value = calculate(%values.clone, %copy);
-			say "$x_value +& $y_value = $z_value";
-			if $z_value == $x_value +& $y_value {
-				$result = @set4.sort().join(',');
-				last;
-			}
-		}
-		last if $result.chars > 0;
+	my @z_output_wires = @output_wires.grep( -> $o { $o.starts-with('z') }).sort();
+	my $msb = @z_output_wires[*-1];
+	for @z_output_wires -> $z {
+		next if $z eq $msb;
+		my $gate = %structure{$z};
+		@bad_gates.push($z) if $gate.op ne 'XOR';
 	}
-	
-	say "Part Two: the names of the swapped wires is $result";
+
+	# all XOR should have x??, y?? for input, or z?? for output
+	for %structure.kv -> $out, $gate {
+		if $gate.op eq 'XOR' {
+			my $are_inputs = $gate.has_xy_inputs;
+			my $is_z_output = $out.starts-with('z');
+			@bad_gates.push($out) if !$are_inputs && !$is_z_output;
+		}
+	}
+
+	# input of OR should be always output of AND except for LSB
+	my @inputs_of_or = ();
+	my @outputs_of_and = ();
+	for %structure.kv -> $out, $gate {
+		@inputs_of_or.push($gate.inputA, $gate.inputB) if $gate.op eq 'OR';
+		@outputs_of_and.push($out) if $gate.op eq 'AND' && !$gate.has_first_bit_inputs;
+	}
+	my $x = @inputs_of_or (^) @outputs_of_and;
+	@bad_gates.push($x.keys.Slip);	
+	my $result = @bad_gates.Set.keys.sort().join(',');
+
+	say "Part Two: the names of the swapped wires are $result";
 }
 
 sub parse_inputs(@input --> Hash) {
@@ -119,6 +120,9 @@ class Gate {
 	has Int $.valueB is rw = -1;
 	has Int $.output is rw = -1;
 
+	multi infix:<eqv>(Gate $l, Gate $r --> Bool) {
+		$l.inputA eq $r.inputA && $l.inputB eq $r.inputB && $l.op eq $r.op;
+	} 
 	method calculate_output() {
 		die if $.valueA < 0;
 		die if $.valueB < 0;
@@ -131,6 +135,15 @@ class Gate {
 			}
 		}
 		#say self.debug_str;
+	}
+
+	method has_xy_inputs( --> Bool) {
+		$.inputA.starts-with('x') && $.inputB.starts-with('y') ||
+			$.inputB.starts-with('x') && $.inputA.starts-with('y');
+	}
+
+	method has_first_bit_inputs( --> Bool) {
+		$.inputA.ends-with('00') && $.inputB.ends-with('00');
 	}
 
 	method debug_str(--> Str) {
