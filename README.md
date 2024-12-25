@@ -38,3 +38,35 @@ Today is practically a day off. We had a lot of stuff to get done for Christmas,
 Day 21 was one that broke me (and a lot of others, it seems). I worked from after the ride through until after supper. I don't think it had anything to do with my choice of language or editor, it was just trying to get the logic optimized. I had it "working" almost immediately, but not optimal pathfinding, which meant my answers were wrong.
 
 As I'm getting deeper and deeper into AoC, I'm leveraging more and more of Raku. Last night I looked up combinations() for the first time and used it extensively for Day 23. I also used the Set (elems) operator. I wouldn't say I'm a master of the language by a long shot, but I'm proficient now. Also proficient with nano, although I still have to think when I want to copy something.
+
+## Day 25 - Done
+
+And Advent of Code is over for another year. It was a good year, I think. Only one day was spent banging my head against the wall. No indication on the website that this is the end (10 years might have been an opportunity for Eric to go out on top).
+
+### Raku Exit Interview
+
+When I was putting together my AoC libraries in Raku earlier this year, I really didn't think that I was going to use the language. There were too many challenges, it seemed. But I took the plunge anyways. 
+
+The main things that were hindrances:
+- No debugger/profiler. I can get by without an interactive debugger (I've done AoC in Perl before) but not having a profiler was annoying. Sometimes you want to know definitively where the time is being lost.
+- I couldn't get multithreaded processing working. There were a handful of challenges this year that could have been accelerated with multiple threads working in parallel. I did additional solves in Swift for days 6 and 7 for that reason.
+- Documentation and community are thin. I think it's fair to say that there isn't a huge community working in Raku. The core docs are good, but there aren't a lot of blogs covering language aspects with examples. Where the documentation doesn't cover it, the second tier is a little empty. [Raku Guide](https://raku.guide)
+- Collections seem to get in the way. Raku adds Lists, Bags, Sets, Sequences and others, but for the few times that they helped, they got in the way more. Expecting an Array when you get a List or a Sequence is frustrating. Perl's core set of Scalar, Array and Hash really are good enough.
+
+The positives:
+- The core language and standard library of functions are vast. Other than my AoC libraries, I never had to look for an add-in library. GCD, LCM, combinations, print-debug, cloning and others are all in the language. Heck, the Rat type was worth it right there. No issues with floating-point crap at all this month.
+- The sigils ($, @, %) were odd at first after using Perl and PHP, but I liked the consistency.
+- Having Array.end (the last valid index) and Array.elems (the count of items) was nice.
+- I had the option to use Procedural, Functional and Object-Oriented programming throughout the month. I really appreciated that. FP made for very concise code, but I find that OOP is still the way I think.
+
+I don't know that I will use Raku much for other things, but I'm glad to have tried it. It's not like when I finished 2019 in Java and I never wanted to see the language or NetBeans again. My unofficial ranking:
+1. Swift. Now that Regex is core language syntax, most of it is so easy it feels like cheating. The only hiccup is String indexing is always complex.
+2. Perl. With the new OOP, I wouldn't hesitate to tackle AoC. I've got a list of CPAN modules to use, and it's got a profiler.
+3. Raku. If I understood the Collections better, if it had a profiler, and if editor support were broader... it might be #1.
+4. Objective-C. Surprisingly powerful, when you've got NSArray, NSSet, NSDictionary. A lot of typing to do though, with the verbosity of the language.
+5. PHP. I think I could do well with it. There's good OOP and some FP support. The main issue is that the standard library is a hot mess.
+6. Python. Really, this is cheating.
+7. Ruby. Like the love child of Pascal and Python. I would like some type support in the language. If only to catch the odd oopsie and save debugging time.
+8. Java. Verbose and creaky. I really came to hate NetBeans. I would consider doing Java again but only in a different editor, like BBEdit.
+9. C++. I had fun doing some re-solving of 2020 in CodeWarrior on my Powerbook G4. Modern C++ probably would be a lot of fun to try, but a daunting task.
+10. Pascal. I really liked doing some re-solving with Pascal, but I don't think I would ever do an initial solve with it. The poor support for Regex and the lack of a definitive Hash/Dictionary are real show-stoppers.
