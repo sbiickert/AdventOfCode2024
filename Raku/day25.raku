@@ -53,33 +53,22 @@ sub parse_keys_and_locks(@input) {
 	for @input -> @group {
 		my $grid = Grid.new(default => 'X', rule => AdjacencyRule::ROOK);
 		$grid.load(@group);
-		if $grid.get(Coord.origin) eq '.' {
-			my %key = (grid => $grid);
-			my @heights = ();
-			for (0..$grid.extent.max.x) -> $col {
-				for (0..$grid.extent.max.y) -> $row {
-					if $grid.get(Coord.from_ints($col,$row)) eq '#' {
-						@heights.push($grid.extent.max.y - $row);
-						last;
-					}
+		my $is_key = $grid.get(Coord.origin) eq '.';
+		
+		my %thing = (grid => $grid);
+		my @heights = ();
+		for (0..$grid.extent.max.x) -> $col {
+			for (0..$grid.extent.max.y) -> $y {
+				my $row = $is_key ?? $y !! $grid.extent.max.y - $y;
+				if $grid.get(Coord.from_ints($col,$row)) eq '#' {
+					my $h = $is_key ?? $grid.extent.max.y - $row !! $row;
+					@heights.push($h);
+					last;
 				}
 			}
-			%key{'h'} = @heights;
-			@keys.push(%key);
 		}
-		else {
-			my %lock = (grid => $grid);
-			my @heights = ();
-			for (0..$grid.extent.max.x) -> $col {
-				for (0..$grid.extent.max.y) -> $row {
-					if $grid.get(Coord.from_ints($col,$row)) eq '.' {
-						@heights.push($row-1);
-						last;
-					}
-				}
-			}		
-			%lock{'h'} = @heights;
-			@locks.push(%lock);
-		}			
+		%thing{'h'} = @heights;
+		if $is_key { @keys.push(%thing) }
+		else       { @locks.push(%thing) }
 	}
 }
