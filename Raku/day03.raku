@@ -12,63 +12,30 @@ my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2024, Day 3: Mull It Over";
 
-solve_part_one(@input[0]);
-solve_part_two(@input[0]);
+my $joined = @input[0].join('');
+solve_part_one($joined);
+solve_part_two($joined);
 
 exit( 0 );
 
-sub solve_part_one(@input) {
-	my $sum = 0;
-	for @input -> $line {
-		given $line {
-			m:global/ mul \( (\d+) \, (\d+) \) /
-				==> map( -> $m { $m[0] * $m[1] })
-				==> sum()
-				==> my @line_sum;
-			$sum += @line_sum.first;
-		}
-	}
+sub solve_part_one(Str $input) {
+	my $sum = sum_for_line($input);
 	say "Part One: the sum is $sum";
 }
 
-sub solve_part_two(@input) {
-	my $sum = 0;
-	my $on = True;
-	for @input -> $line {
-		given $line {
-			# Have to keep the original matches and locations
-			my @mul_matches = m:global/ mul \( (\d+) \, (\d+) \) /;
-			my @mul = @mul_matches.map( -> $m { $m.from } );
-			
-			m:global/ do \( \) /
-				==> map( -> $m { $m.from } )
-				==> my @do;
-			
-			m:global/ don \'t \( \) /
-				==> map( -> $m { $m.from } )
-				==> my @dont;
-
-			# arbitrary indexes after string end
-			@do.push(100000);
-			@dont.push(100000);
-
-			while @mul.elems > 0 {
-				if @mul.first < @do.first && @mul.first < @dont.first {
-					my $m = @mul_matches.shift(); # Match
-					@mul.shift(); # Discard index
-					$sum += $m[0] * $m[1] if $on;
-				}
-				elsif @do.first < @dont.first {
-					$on = True;
-					@do.shift(); # Discard index
-				}
-				else {
-					$on = False;
-					@dont.shift(); # Discard index
-				}
-			}
-		}
-	}
+sub solve_part_two(Str $input) {
+	$input.split('do()', :skip-empty)
+		==> map( -> $s { $s.split("don't()", :skip-empty).first } )
+		==> my @enabled_sections;
+	my $line = @enabled_sections.join('');
+	my $sum = sum_for_line($line);	
 	say "Part Two: the sum is $sum";
 }
 
+sub sum_for_line(Str $line --> Int) {
+	$line ~~ m:global/ mul \( (\d+) \, (\d+) \) /
+		==> map( -> $m { $m[0] * $m[1] })
+		==> sum()
+		==> my @line_sum;
+	@line_sum[0];
+}
