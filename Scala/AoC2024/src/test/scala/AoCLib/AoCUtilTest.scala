@@ -20,3 +20,12 @@ class AoCUtilTest extends AnyFunSuite:
     assert(input.map(_.size) == List(3,2,3))
     assert(input(2)(2) == "G2, L2")
   }
+
+  test("cartesian") {
+    val a = Seq(1,2).toList
+    val b = List("hello", "world", "bye")
+    val c = AoCUtil.cartesian(a,b)
+    assert(c.size == 6)
+    assert(c.head._1 == 1)
+    assert(c.head._2 == "hello")
+  }

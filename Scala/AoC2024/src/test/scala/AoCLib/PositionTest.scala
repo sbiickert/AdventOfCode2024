@@ -7,15 +7,19 @@ import org.scalatest.funsuite.AnyFunSuite
 class PositionTest extends AnyFunSuite:
   test("create") {
     val pDefault = Position()
-    assert(pDefault.coord === Coord.origin, pDefault.direction === N)
+    assert(pDefault.coord === Coord.origin)
+    assert(pDefault.direction === N)
 
     val e = Position(Coord(5,5), E)
-    assert(e.coord == Coord(5,5), e.direction === E)
+    assert(e.coord == Coord(5,5))
+    assert(e.direction === E)
     var p = Position.withString(Coord(5,5), directionStr = "W")
-    assert(e.coord == Coord(5, 5), e.direction === W)
+    assert(p.coord == Coord(5, 5))
+    assert(p.direction === W)
     try
       p = Position.withString(Coord(5,5), "Q")
-      assert(e.coord == Coord(5, 5), e.direction === W)
+      assert(e.coord == Coord(5, 5))
+      assert(e.direction === W)
     catch
       case iae: IllegalArgumentException => println(iae.getMessage)
   }
@@ -38,7 +42,9 @@ class PositionTest extends AnyFunSuite:
   test("moving") {
     var p = Position(Coord.origin, S)
     p = p.moveForward()
-    assert(p.coord.x == 0, p.coord.y == 1)
+    assert(p.coord.x == 0)
+    assert(p.coord.y == 1)
     p = p.moveForward(100)
-    assert(p.coord.x == 0, p.coord.y == 101)
+    assert(p.coord.x == 0)
+    assert(p.coord.y == 101)
   }

@@ -9,10 +9,12 @@ import org.scalactic.Tolerance.convertNumericToPlusOrMinusWrapper
 class CoordTest extends AnyFunSuite:
   test("create") {
     val c = Coord(10,30)
-    assert(c.x == 10, c.y == 30)
+    assert(c.x == 10)
+    assert(c.y == 30)
     assert(c.toString == "[10,30]")
     val copied = c.copy(y = -40)
-    assert(copied.x == 10, copied.y == -40)
+    assert(copied.x == 10)
+    assert(copied.y == -40)
     assert(copied.toString == "[10,-40]")
     val fromStr = Coord.fromString(copied.toString)
     assert(fromStr === Some(Coord(10,-40)))
@@ -32,7 +34,8 @@ class CoordTest extends AnyFunSuite:
     val c1 = Coord(10,30)
     val c2 = Coord(5,20)
     val sum = c1 + c2
-    assert(sum.x == 15, sum.y == 50)
+    assert(sum.x == 15)
+    assert(sum.y == 50)
     var delta = c1.delta(c2)
     assert(delta.x == -5, delta.y == -10)
   }

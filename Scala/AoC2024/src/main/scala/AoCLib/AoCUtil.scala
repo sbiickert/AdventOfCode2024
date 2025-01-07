@@ -39,3 +39,5 @@ object AoCUtil:
 
     groups.toList
 
+  def cartesian(aList: List[Any], bList: List[Any]) =
+    aList.flatMap(a => bList.map(b => (a, b)))
