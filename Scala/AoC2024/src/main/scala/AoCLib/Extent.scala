@@ -25,21 +25,21 @@ case class Extent(min: Coord, max: Coord):
   def SW: Coord = Coord(min.x, max.y)
   def SE: Coord = max
 
-  val width: Int = max.x - min.x + 1
-  val height: Int = max.y - min.y + 1
-  val area: Int = width * height
+  val width: Long = max.x - min.x + 1
+  val height: Long = max.y - min.y + 1
+  val area: Long = width * height
 
   def allCoords: List[Coord] =
     val xs = (min.x to max.x).toList
     val ys = (min.y to max.y).toList
     AoCUtil.cartesian(ys,xs) // to get reading order
-      .map((y:Any, x:Any) => (x.asInstanceOf[Int], y.asInstanceOf[Int]))
+      .map((y:Any, x:Any) => (x.asInstanceOf[Long], y.asInstanceOf[Long]))
       .map((x, y) => Coord(x,y))
 
   def contains(coord: Coord): Boolean =
     min.x <= coord.x && coord.x <= max.x && min.y <= coord.y && coord.y <= max.y
 
-  def inset(inset: Int): Extent =
+  def inset(inset: Long): Extent =
     Extent.fromInts(min.x + inset, min.y + inset, max.x - inset, max.y - inset)
 
   def intersect(other: Extent): Option[Extent] =
@@ -100,7 +100,7 @@ case class Extent(min: Coord, max: Coord):
     mResult.toList
 
 object Extent:
-  def fromInts(xmin: Int, ymin: Int, xmax: Int, ymax: Int): Extent =
+  def fromInts(xmin: Long, ymin: Long, xmax: Long, ymax: Long): Extent =
     Extent.fromCoords(List(Coord(xmin, ymin), Coord(xmax, ymax)))
 
   def fromCoords(coords: List[Coord]): Extent =

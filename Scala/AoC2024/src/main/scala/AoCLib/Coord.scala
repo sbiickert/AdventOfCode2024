@@ -3,9 +3,9 @@ package AoCLib
 import AoCLib.AdjacencyRule._
 import Direction._
 
-case class Coord(x: Int, y: Int):
-  def col:Int = x
-  def row:Int = y
+case class Coord(x: Long, y: Long):
+  def col:Long = x
+  def row:Long = y
 
   override def toString: String = s"[$x,$y]"
 
@@ -35,8 +35,8 @@ case class Coord(x: Int, y: Int):
         manhattanDistanceTo(other) == 1 ||
           (Math.abs(x - other.x) == 1 && Math.abs(y - other.y) == 1)
 
-  def manhattanDistanceTo(other: Coord): Int =
-    Math.abs(x - other.x) + Math.abs(y - other.y)
+  def manhattanDistanceTo(other: Coord): Long =
+    math.abs(x - other.x) + math.abs(y - other.y)
 
   def distanceTo(other: Coord): Double =
     val del = delta(other)
