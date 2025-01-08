@@ -9,7 +9,7 @@ class Day01(day: Int, name: String) extends AoCLib.Solution(day, name):
         val pattern = """(\d+)\s+(\d+)""".r
         line match
           case pattern(d1, d2) => List(d1.toInt, d2.toInt)
-          case _ => throw IllegalStateException(s"Could not parse $line"))
+          case _ => throw IllegalArgumentException(s"Could not parse $line"))
     var pivot = AoCUtil.pivotMatrix(input)
 
     solvePartOne(pivot)
