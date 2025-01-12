@@ -1,4 +1,5 @@
 import AoCLib.AoCUtil
+import scala.util.boundary, boundary.break
 
 class Day02(day: Int, name: String) extends AoCLib.Solution(day, name):
   override def solve(test: Boolean, index: Int): Unit =
@@ -6,32 +7,47 @@ class Day02(day: Int, name: String) extends AoCLib.Solution(day, name):
     val reports = input.map(line => line.split(" ").map( _.toInt))
 
     solvePartOne(reports)
+    solvePartTwo(reports)
 
   def solvePartOne(input: List[Array[Int]]): Unit =
-    val safeReports = input.map( _.toArray)
-      .filter(isReportSafe)
-      .map(_.toList)
-    println(safeReports)
-
-    val count = safeReports.size
+    val trends = input.map(reportToTrends)
+    val safeTrends = trends.filter(findUnsafeValue(_) < 0)
+    val count = safeTrends.size
     println(s"Part One: the total number of safe reports is $count")
 
-  def isReportSafe(report: Array[Int]): Boolean =
+  def solvePartTwo(input: List[Array[Int]]): Unit =
+    var safeCount = 0
+    for report <- input do
+      val unsafeIndex = findUnsafeValue(reportToTrends(report))
+      if unsafeIndex < 0 then
+        safeCount += 1
+      else
+        // Bad value is either at unsafeIndex-1, unsafeIndex or unsafeIndex+1
+        boundary {
+          for i <- -1 to 1 do
+            val r0 = report.patch(unsafeIndex + i, Nil, 1)
+            if findUnsafeValue(reportToTrends(r0)) < 0 then
+              safeCount += 1
+              break()
+        }
+
+    println(s"Part Two: the total number of safe reports is $safeCount")
+
+  private def reportToTrends(report:Array[Int]):List[Int] =
     val indexed = report.zipWithIndex
-    var trends = indexed.map(reportElem =>
+    val trends = indexed.map(reportElem =>
       val idx = reportElem(1)
       if idx > 0 then
-        indexed(idx)(0) - indexed(idx-1)(0)
+        indexed(idx)(0) - indexed(idx - 1)(0)
       else
         0
     )
-    trends = trends.tail
-    println(trends.toList)
-    if trends.head == 0 then return false
+    trends.toList.tail
+
+  private def findUnsafeValue(trends: List[Int]): Int =
+    if trends.head == 0 then return 0
     val isUpward = trends.head > 0
     if isUpward then
-      !trends.exists(v => {v < 1 || v > 3})
+      trends.indexWhere(v => { v < 1 || v > 3 })
     else
-      !trends.exists(v => {v > -1 || v < -3})
-
-  def isReportUnsafe(report: Array[Int]): Boolean = !isReportSafe(report)
+      trends.indexWhere(v => { v > -1 || v < -3 })
