@@ -77,3 +77,16 @@ class Grid(var default: Any = ".", var rule: AdjacencyRule = Rook):
       row.addOne("\n")
       sb ++= row.mkString(" ")
     sb.mkString
+
+object Grid:
+  def load(data: Iterable[String], default: String = ".", rule: AdjacencyRule = Rook): Grid =
+    val grid = Grid(default, rule)
+    var y = 0
+    for line <- data do
+      var x = 0
+      for value <- line.split("") do
+        grid.set(Coord(x,y), value)
+        x += 1
+      y += 1
+
+    grid
