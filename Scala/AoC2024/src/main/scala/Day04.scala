@@ -4,9 +4,10 @@ class Day04(day: Int, name: String) extends AoCLib.Solution(day, name):
   override def solve(test: Boolean, index: Int): Unit =
     val input = AoCUtil.readInput(AoCUtil.fileName(day, test))
     val grid = Grid.load(input)
+    grid.rule = AdjacencyRule.Bishop
 
     solvePartOne(grid)
-  //solvePartTwo(grid)
+    solvePartTwo(grid)
 
   def solvePartOne(grid: Grid): Unit =
     val xCoords = grid.coords(withValue = Some("X"))
@@ -21,5 +22,12 @@ class Day04(day: Int, name: String) extends AoCLib.Solution(day, name):
     println(s"Part One: the total number of XMAS is $count")
 
   def solvePartTwo(grid: Grid): Unit =
-
-    println(s"Part Two: ")
+    val validSet = Set("MMSS", "MSSM", "SSMM", "SMMS")
+    val aCoords = grid.coords(withValue = Some("A")).toList
+    val count = aCoords.map(ac =>
+        grid.neighbors(ac)
+          .map(grid.getString)
+          .mkString)
+      .count(validSet.contains)
+    
+    println(s"Part Two: the total number of X-MAS is $count")
