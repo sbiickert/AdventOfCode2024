@@ -13,12 +13,10 @@ def solvePartOne(input: String): Unit =
   println(s"Part One: the sum of mul statements is $sum")
 
 def solvePartTwo(input: String): Unit =
-  var sum = 0
-  val doBlocks = input.split("""do\(\)""")
-  for doBlock <- doBlocks do
-    val untilDont = doBlock.split("""don't\(\)""").head
-    sum += sumIn(untilDont)
-
+  val sum = input.split("""do\(\)""")                    // Split on do()
+    .map(doBlock => doBlock.split("""don't\(\)""").head) // Only analyze up to don't()
+    .map(sumIn)                                          // Sum for each do() block
+    .sum                                                 // Grand total
   println(s"Part Two: the sum of mul statements is $sum")
 
 def sumIn(str: String): Int =
