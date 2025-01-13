@@ -1,0 +1,16 @@
+import AoCLib.AoCUtil
+
+class DayXX(day: Int, name: String) extends AoCLib.Solution(day, name):
+  override def solve(test: Boolean, index: Int): Unit =
+    val input = AoCUtil.readInput(AoCUtil.fileName(day, test))
+
+    solvePartOne(input)
+    //solvePartTwo(input)
+
+  def solvePartOne(input: List[String]): Unit =
+
+    println(s"Part One: ")
+
+  def solvePartTwo(input: String): Unit =
+
+    println(s"Part Two: ")
