@@ -11,14 +11,14 @@ class Day02(day: Int, name: String) extends AoCLib.Solution(day, name):
 
   def solvePartOne(input: List[Array[Int]]): Unit =
     val trends = input.map(reportToTrends)
-    val safeTrends = trends.filter(findUnsafeValue(_) < 0)
+    val safeTrends = trends.filter(indexOfUnsafeValue(_) < 0)
     val count = safeTrends.size
     println(s"Part One: the total number of safe reports is $count")
 
   def solvePartTwo(input: List[Array[Int]]): Unit =
     var safeCount = 0
     for report <- input do
-      val unsafeIndex = findUnsafeValue(reportToTrends(report))
+      val unsafeIndex = indexOfUnsafeValue(reportToTrends(report))
       if unsafeIndex < 0 then
         safeCount += 1
       else
@@ -26,7 +26,7 @@ class Day02(day: Int, name: String) extends AoCLib.Solution(day, name):
         boundary {
           for i <- -1 to 1 do
             val r0 = report.patch(unsafeIndex + i, Nil, 1)
-            if findUnsafeValue(reportToTrends(r0)) < 0 then
+            if indexOfUnsafeValue(reportToTrends(r0)) < 0 then
               safeCount += 1
               break()
         }
@@ -42,12 +42,13 @@ class Day02(day: Int, name: String) extends AoCLib.Solution(day, name):
       else
         0
     )
-    trends.toList.tail
+    trends.toList.tail // head is zero
 
-  private def findUnsafeValue(trends: List[Int]): Int =
+  // Returns -1 if all values are safe
+  private def indexOfUnsafeValue(trends: List[Int]): Int =
     if trends.head == 0 then return 0
     val isUpward = trends.head > 0
     if isUpward then
       trends.indexWhere(v => { v < 1 || v > 3 })
     else
-      trends.indexWhere(v => { v > -1 || v < -3 })
+      trends.indexWhere(v => { v < -3 || v > -1 })
