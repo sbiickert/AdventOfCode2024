@@ -7,4 +7,6 @@ lazy val root = (project in file("."))
     name := "AoC2024"
   )
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % Test
+libraryDependencies +=
+  "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0"
