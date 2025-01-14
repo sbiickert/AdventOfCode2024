@@ -29,5 +29,5 @@ class Day04(day: Int, name: String) extends AoCLib.Solution(day, name):
           .map(grid.getString)
           .mkString)
       .count(validSet.contains)
-    
+
     println(s"Part Two: the total number of X-MAS is $count")
