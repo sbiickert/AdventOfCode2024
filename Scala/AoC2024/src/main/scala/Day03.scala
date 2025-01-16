@@ -15,7 +15,7 @@ def solvePartOne(input: String): Unit =
 def solvePartTwo(input: String): Unit =
   val sum = input.split("""do\(\)""")                    // Split on do()
     .map(doBlock => doBlock.split("""don't\(\)""").head) // Only analyze up to don't()
-    .map(sumIn)                                          // Sum for each do() block
+    .map(sumIn)                                         // Sum for each do() block
     .sum                                                 // Grand total
   println(s"Part Two: the sum of mul statements is $sum")
 
