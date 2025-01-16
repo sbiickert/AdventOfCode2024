@@ -1,4 +1,7 @@
 import AoCLib.AoCUtil
+
+import java.time.LocalDateTime
+import scala.collection.parallel.CollectionConverters.*
 import scala.collection.mutable
 
 class Day07(day: Int, name: String) extends AoCLib.Solution(day, name):
@@ -12,15 +15,15 @@ class Day07(day: Int, name: String) extends AoCLib.Solution(day, name):
     solvePartTwo(numbers)
 
   def solvePartOne(input: List[Array[Long]]): Unit =
-    val possibles = input.filter(isValuePossible1)
-    val sum = possibles.map(_.head)
-      .sum
+    // Parallel processing
+    val possibles = input.par.filter(isValuePossible1)
+    val sum = possibles.map(_.head).sum
     println(s"Part One: the sum of possibles is $sum")
 
   def solvePartTwo(input: List[Array[Long]]): Unit =
-    val possibles = input.filter(isValuePossible2)
-    val sum = possibles.map(_.head)
-      .sum
+    // Parallel processing
+    val possibles = input.par.filter(isValuePossible2)
+    val sum = possibles.map(_.head).sum
     println(s"Part Two: the sum of possibles is $sum")
 
   private def isValuePossible1(formula: Array[Long]): Boolean =
