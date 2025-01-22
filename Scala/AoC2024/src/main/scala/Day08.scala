@@ -10,11 +10,11 @@ class Day08(day: Int, name: String) extends AoCLib.Solution(day, name):
 
     //grid.print()
     solvePartOne(coordsByValue, grid.extent.get)
-  //solvePartTwo(input)
+    solvePartTwo(coordsByValue, grid.extent.get)
 
   def solvePartOne(nodes: Map[String, Iterable[Coord]], extent: Extent): Unit =
     val antiNodes = Grid()
-    for (k, coords) <- nodes do
+    for (_, coords) <- nodes do
       for combo <- coords.toList.combinations(2) do
         val antiNode0 = combo(0) + combo(1).delta(combo(0))
         val antiNode1 = combo(1) + combo(0).delta(combo(1))
@@ -25,6 +25,26 @@ class Day08(day: Int, name: String) extends AoCLib.Solution(day, name):
     val antiNodeCount = antiNodes.coords(withValue = Some("#")).size
     println(s"Part One: the number of antinodes is $antiNodeCount")
 
-  def solvePartTwo(input: String): Unit =
 
-    println(s"Part Two: ")
+def solvePartTwo(nodes: Map[String, Iterable[Coord]], extent: Extent): Unit =
+  val antiNodes = Grid()
+  for (_, coords) <- nodes do
+    for combo <- coords.toList.combinations(2) do
+      antiNodes.set(combo(0), "#")
+      antiNodes.set(combo(1), "#")
+      val delta0 = combo(1).delta(combo(0))
+      val delta1 = combo(0).delta(combo(1))
+      
+      var antiNode = combo(0) + delta0
+      while extent.contains(antiNode) do
+        antiNodes.set(antiNode, "#")
+        antiNode = antiNode + delta0
+
+      antiNode = combo(1) + delta1
+      while extent.contains(antiNode) do
+        antiNodes.set(antiNode, "#")
+        antiNode = antiNode + delta1
+
+  //antiNodes.print()
+  val antiNodeCount = antiNodes.coords(withValue = Some("#")).size
+  println(s"Part Two: the number of antinodes is $antiNodeCount")
