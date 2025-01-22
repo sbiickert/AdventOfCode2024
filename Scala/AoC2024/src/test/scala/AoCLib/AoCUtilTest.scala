@@ -29,3 +29,14 @@ class AoCUtilTest extends AnyFunSuite:
     assert(c.head._1 == 1)
     assert(c.head._2 == "hello")
   }
+
+  test("gcd") {
+    assert(AoCUtil.gcd(2,4) == 2)
+    assert(AoCUtil.gcd(15, 20) == 5)
+    assert(AoCUtil.gcd(13, 20) == 1)
+  }
+
+  test("lcm") {
+    assert(AoCUtil.lcm(List(2,3,4)) == 12)
+    assert(AoCUtil.lcm(List(3,4,13)) == 156)
+  }

@@ -1,5 +1,6 @@
 package AoCLib
 
+import scala.annotation.tailrec
 import scala.io.Source
 import scala.collection.mutable
 
@@ -43,7 +44,8 @@ object AoCUtil:
 
     groups.toList
 
-  // Returns the cartesian product of two Lists. Like python itertools.product
+  // Returns the cartesian product of two Lists.
+  // Like python itertools.product
   def cartesian[A](aList: List[A], bList: List[A]): List[(A, A)] =
     aList.flatMap(a => bList.map(b => (a, b)))
 
@@ -61,3 +63,26 @@ object AoCUtil:
         col += 1
 
     pivot
+
+  // Greatest Common Divisor between x and y
+  def gcd(x: Long, y: Long): Long =
+    var a = 0L
+    var b = math.max(x, y)
+    var r = math.min(x, y)
+    while r != 0 do
+      a = b
+      b = r
+      r = a % b
+    b
+  
+  // Least Common Multiple among an arbitrary list of Longs
+  @tailrec
+  def lcm(values: List[Long]): Long =
+    if values.isEmpty then return 0L
+    var running:Long = values.head
+    if values.size == 1 then return running
+
+    val next = values.tail.head
+    running = running / gcd(running, next) * next
+    val nextValues:List[Long] = List(List(running), values.tail.tail).flatten()
+    lcm(nextValues)

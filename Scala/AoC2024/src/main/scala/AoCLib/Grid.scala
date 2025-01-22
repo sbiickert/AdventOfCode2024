@@ -48,7 +48,10 @@ class Grid(var default: Any = ".", var rule: AdjacencyRule = Rook):
   def histogram(includeUnset: Boolean = false): Map[String, Int] =
     if extent.isEmpty then return Map.empty[String, Int]
     val ext = extent.get
-    val coordsToSum = if includeUnset then ext.allCoords else coords()
+    val coordsToSum = if includeUnset then
+      ext.allCoords
+    else
+      coords().filterNot(get(_) == default)
 
     coordsToSum.toList
       .map((c:Coord) => this.getString(c))
