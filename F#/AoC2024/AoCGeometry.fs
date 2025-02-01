@@ -8,8 +8,6 @@ module Geometry =
             y: int64
         }
 
-    let pt = {x = 10; y = 20}
-
     type AdjacencyRule =
         | Rook
         | Bishop
@@ -46,6 +44,11 @@ module Geometry =
             max: Coord
         }
 
+    let mkCoord x y =
+        {x = x; y = y}
+
+    let origin = mkCoord 0 0 
+
     let add a b =
         {x = a.x + b.x; y = a.y + b.y}
     
@@ -70,6 +73,13 @@ module Geometry =
         | Direction.W  -> {x = -1; y =  0}
         | Direction.NW -> {x = -1; y = -1}
 
+    let directionsFor rule = 
+        if rule = AdjacencyRule.Rook then [Direction.N; Direction.E; Direction.S; Direction.W]
+        elif rule = AdjacencyRule.Bishop then [Direction.NE; Direction.SE; Direction.SW; Direction.NW]
+        else
+            [Direction.N; Direction.NE; Direction.E; Direction.SE; 
+             Direction.S; Direction.SW; Direction.W; Direction.NW]
+
     let offset a dir (size: int64) =
         let off = directionOffset dir
         if size = 0 then a
@@ -84,4 +94,9 @@ module Geometry =
         | AdjacencyRule.Bishop -> abs(a.x - b.x) = 1 && abs(a.y - b.y) = 1
         | AdjacencyRule.Queen -> manhattanDistance a b = 1 || (abs(a.x - b.x) = 1 && abs(a.y - b.y) = 1)
 
-    
+    let adjacentCoords c (rule:AdjacencyRule) =
+        let adjacent =
+            directionsFor rule
+            |> List.map (fun dir -> directionOffset dir)
+            |> List.map (fun off -> add c off)
+        adjacent
