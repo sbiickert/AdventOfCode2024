@@ -4,11 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Day00.fs" />
-    <Compile Include="AoCGrid.fs" />
-    <Compile Include="AoCGeometry.fs" />
     <Compile Include="AoCUtil.fs" />
+    <Compile Include="AoCGeometry.fs" />
+    <Compile Include="AoCGrid.fs" />
     <Compile Include="worksheet.fsx" />
+    <Compile Include="Day00.fs" />
+    <Compile Include="Day01.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 </Project>

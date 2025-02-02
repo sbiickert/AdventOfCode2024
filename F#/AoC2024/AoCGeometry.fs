@@ -14,14 +14,14 @@ module Geometry =
         | Queen
 
     type Direction =
-        | N = 0
-        | NE = 1
-        | E = 2
-        | SE = 3
-        | S = 4
-        | SW = 5
-        | W = 6
-        | NW = 7
+        | N
+        | NE
+        | E
+        | SE
+        | S
+        | SW
+        | W
+        | NW
 
     type RotationDirection =
         | CW
