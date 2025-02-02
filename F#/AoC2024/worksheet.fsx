@@ -6,7 +6,7 @@ open AoC.Geometry
 
 let pt = {x = 10; y = 20}
 
-let neighbors = adjacentCoords pt AdjacencyRule.Queen
+let neighbors = Coord.adjacentCoords pt AdjacencyRule.Queen
 
 open AoC.Util
 let filePath = inputFileName 0 true
@@ -22,3 +22,19 @@ gcd 13 20
 
 lcm [2;3;4]
 lcm [3;4;13]
+
+let pos = mkPos Coord.origin Direction.N
+Position.turn pos RotationDirection.CW
+
+Position.moveForward pos 16L
+
+let dOpt = Direction.fromString "w"
+match dOpt with
+| Some(d) -> Some(mkPos Coord.origin d)
+| None -> None
+
+let aList = [1;2;3;4]
+let bList = ["a"; "b"; "c"]
+let cp = AoC.Util.cartesian aList bList
+
+mkExtI 1 2 3 4

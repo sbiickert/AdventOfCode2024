@@ -57,3 +57,6 @@ module Util =
             let running = values.Head / g * next
             let nextValues = running :: values.Tail.Tail
             lcm nextValues
+    
+    let cartesian aList bList =
+        List.collect (fun a -> List.map (fun b ->  a,b) bList) aList
