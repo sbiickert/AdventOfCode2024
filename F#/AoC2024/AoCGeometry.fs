@@ -45,7 +45,7 @@ module Geometry =
             max: Coord
         }
 
-    let mkCoord x y =
+    let mkCoord (x:int64) (y:int64) =
         {x = x; y = y}
 
     let mkPos coord dir =
@@ -120,8 +120,7 @@ module Geometry =
             let del = delta a b
             sqrt (double del.x ** 2 + double del.y ** 2)
 
-
-        let offset a dir (size: int64) =
+        let offset dir (size: int64) a =
             let off = Direction.offset dir
             if size = 0 then a
             elif size = 1 then add a off
@@ -196,16 +195,6 @@ module Geometry =
 
         let expandToFit ext (coords: list<Coord>) =
             expandExtentToFit ext coords
-            // if coords.IsEmpty then ext
-            // else
-            //     let minX = min ext.min.x coords.Head.x
-            //     let minY = min ext.min.y coords.Head.y
-            //     let newMin = mkCoord minX minY
-            //     let maxX = max ext.max.x coords.Head.x
-            //     let maxY = max ext.max.y coords.Head.y
-            //     let newMax = mkCoord maxX maxY
-            //     let expanded = {min = newMin; max = newMax}
-                // expandToFit expanded coords.Tail
         
         let NW ext = ext.min
         let NE ext = {x = ext.max.x; y = ext.min.y}
@@ -233,3 +222,66 @@ module Geometry =
             mkExtI (ext.min.x + inset)  (ext.min.y + inset) 
                 (ext.max.x - inset)  (ext.max.y - inset)
             
+        let intersect ext1 ext2 =
+            let commonMinX = max ext1.min.x ext2.min.x
+            let commonMaxX = min ext1.max.x ext2.max.x
+            let commonMinY = max ext1.min.y ext2.min.y
+            let commonMaxY = min ext1.max.y ext2.max.y
+            if commonMaxX < commonMinX then None
+            elif commonMaxY < commonMinY then None
+            else Some(mkExtI commonMinX commonMinY commonMaxX commonMaxY)
+
+        let union ext1 ext2 =
+            let intersectResult = intersect ext1 ext2
+            if ext1 = ext2 then [ext1]
+            elif intersectResult.IsNone then [ext1; ext2]
+            else
+                let mResult = ResizeArray<Extent>()
+                let eInt = intersectResult.Value
+                mResult.Add eInt
+
+                for e in [ext1; ext2] do
+                    if e <> eInt then
+                        //There are eight "edges" & "corners"
+                        // West edge
+                        let nwToW = NW eInt |> Coord.offset Direction.W 1
+                        if contains e nwToW then
+                            let newE = mkExtI (NW e).x (NW eInt).y ((NW eInt).x-1L) (SW eInt).y
+                            mResult.Add newE
+                        // NW corner
+                        let nwToNW = NW eInt |> Coord.offset Direction.NW 1
+                        if contains e nwToNW  then
+                            let newE = mkExtI (NW e).x (NW e).y ((NW eInt).x-1L) ((NW eInt).y-1L)
+                            mResult.Add newE
+                        // North edge
+                        let nwToN = NW eInt |> Coord.offset Direction.N 1
+                        if contains e nwToN then
+                            let newE = mkExtI (NW eInt).x (NW e).y (NE eInt).x ((NE eInt).y-1L)
+                            mResult.Add newE
+                        // NE corner
+                        let neToNE = NE eInt |> Coord.offset Direction.NE 1
+                        if contains e neToNE then
+                            let newE = mkExtI ((NE eInt).x+1L) (NE e).y (SE e).x ((NE eInt).y-1L)
+                            mResult.Add newE
+                        // East edge
+                        let seToE = SE eInt |> Coord.offset Direction.E 1
+                        if contains e seToE then
+                            let newE = mkExtI ((SE eInt).x+1L) (NE eInt).y (SE e).x (SE eInt).y
+                            mResult.Add newE
+                        // SE corner
+                        let seToSE = SE eInt |> Coord.offset Direction.SE 1
+                        if contains e seToSE then
+                            let newE = mkExtI ((SE eInt).x+1L) ((SE eInt).y+1L) (SE e).x (SE e).y
+                            mResult.Add newE
+                        // South edge
+                        let seToS = SE eInt |> Coord.offset Direction.S 1
+                        if contains e seToS then
+                            let newE = mkExtI (SW eInt).x ((SW eInt).y+1L) (SE eInt).x (SW e).y
+                            mResult.Add newE
+                        // SW corner
+                        let swToSW = SW eInt |> Coord.offset Direction.SW 1
+                        if contains e swToSW then
+                            let newE = mkExtI (SW e).x ((SW eInt).y+1L) ((SW eInt).x-1L) (SW e).y
+                            mResult.Add newE
+                Seq.toList mResult
+

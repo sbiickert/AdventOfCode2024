@@ -37,4 +37,5 @@ let aList = [1;2;3;4]
 let bList = ["a"; "b"; "c"]
 let cp = AoC.Util.cartesian aList bList
 
-mkExtI 1 2 3 4
+let ext =mkExtI 1 2 13 14
+let ins = Extent.inset ext 2

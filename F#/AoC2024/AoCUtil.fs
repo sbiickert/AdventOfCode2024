@@ -60,3 +60,6 @@ module Util =
     
     let cartesian aList bList =
         List.collect (fun a -> List.map (fun b ->  a,b) bList) aList
+
+    let approxEqual (tolerance:double) d1 d2 =
+        abs(d1-d2) < tolerance
