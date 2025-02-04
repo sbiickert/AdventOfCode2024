@@ -53,7 +53,7 @@ module Grid =
 
         let newExtentOpt = 
             if resetExtent then
-                let coords = List.ofSeq grid.data.Keys
+                let coords = List.ofSeq newData.Keys
                 Some(mkExtent coords)
             else
                 grid.extent
@@ -68,19 +68,39 @@ module Grid =
             |> Seq.filter (fun coord -> getString grid coord = value)
             |> List.ofSeq
     
-    // TODO: histogram
+    let histogram grid includeUnset: Map<string,int> =
+        if grid.extent.IsNone then Map.empty
+        else
+            let ext = grid.extent.Value
+            let coordsToSum =
+                if includeUnset then
+                    Extent.allCoordsIn ext
+                else
+                    coords grid None
+
+            coordsToSum
+            |> List.map (fun coord -> getString grid coord)
+            |> Seq.groupBy id
+            |> Seq.map (fun (c, cs) -> c, Seq.length cs)
+            |> Map
 
     let neighbors grid coord =
         Coord.adjacentCoords coord grid.rule
 
-    // TODO: row line breaks, markers
     let sprintGrid (grid:Grid) (markers:Map<Coord,string> option) =
         if grid.extent.IsNone then ""
         else
             let ext = grid.extent.Value
-            cartesian [ext.min.y .. ext.max.y] [ext.min.x .. ext.max.x]
+            cartesian [ext.min.y .. ext.max.y] [ext.min.x .. ext.max.x+1L] // +1 to extend outside ext
             |> List.map (fun (y, x) -> mkCoord x y)
-            |> List.map (fun coord -> getString grid coord)
+            |> List.map (fun coord -> 
+                if Extent.contains ext coord then
+                    if markers.IsSome && markers.Value.ContainsKey coord then
+                        markers.Value.Item coord
+                    else
+                        getString grid coord
+                else
+                    "\n")
             |> List.fold (+) ""
 
     let printGrid grid (markers:Map<Coord,string> option) =
