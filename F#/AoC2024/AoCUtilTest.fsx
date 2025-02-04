@@ -47,6 +47,20 @@ let testCartesian () =
 
 testCartesian ()
 
+let testPivot () =
+    let source = [[1;2];[3;4];[5;6]]
+    let pivot = pivotMatrix source
+    assertEqual [[1; 3; 5]; [2; 4; 6]] pivot
+
+testPivot()
+
+let testFrequencyMap () =
+    let source = [1;2;3;4;5;2;3;4;4;5;5]
+    let fm = frequencyMap source
+    assertEqual (Map [(1,1);(2,2);(3,2);(4,3);(5,3)]) fm
+
+testFrequencyMap()
+
 let testApproxEqual () =
     let value = 1.2345
     assertTrue (AoC.Util.approxEqual 0.1 1.21 value)

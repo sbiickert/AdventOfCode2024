@@ -61,9 +61,32 @@ module Util =
     let cartesian aList bList =
         List.collect (fun a -> List.map (fun b ->  a,b) bList) aList
 
+    let pivotMatrix<'T>(source:list<list<'T>>): list<list<'T>> =
+        let pivot = ResizeArray<ResizeArray<'T>>()
+        for _ in [0 .. source.Head.Length-1] do
+            let row = ResizeArray<'T>()
+            pivot.Add row
+
+        for row in source do
+            let mutable col = 0
+            for value in row do
+                (pivot.Item col).Add value
+                col <- col + 1
+        
+        pivot
+        |> Seq.map (fun row -> List.ofArray(row.ToArray()))
+        |> Seq.toList
+
+    let frequencyMap source =
+        source
+        |> Seq.groupBy id
+        |> Seq.map (fun (c, cs) -> c, Seq.length cs)
+        |> Map
+
     let approxEqual (tolerance:double) d1 d2 =
         abs(d1-d2) < tolerance
 
+    // For unit testing
     let assertEqual a b =
         if a <> b then failwith $"Value '{a}' does not equal '{b}'."
 

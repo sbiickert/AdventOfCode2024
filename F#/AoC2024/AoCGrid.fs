@@ -80,9 +80,7 @@ module Grid =
 
             coordsToSum
             |> List.map (fun coord -> getString grid coord)
-            |> Seq.groupBy id
-            |> Seq.map (fun (c, cs) -> c, Seq.length cs)
-            |> Map
+            |> AoC.Util.frequencyMap
 
     let neighbors grid coord =
         Coord.adjacentCoords coord grid.rule

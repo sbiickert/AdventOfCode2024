@@ -7,9 +7,12 @@
     <Compile Include="AoCUtil.fs" />
     <Compile Include="AoCGeometry.fs" />
     <Compile Include="AoCGrid.fs" />
-    <Compile Include="worksheet.fsx" />
     <Compile Include="Day00.fs" />
     <Compile Include="Day01.fs" />
+    <Compile Include="worksheet.fsx" />
+    <Compile Include="AoCUtilTest.fsx" />
+    <Compile Include="AoCGeometryTest.fsx" />
+    <Compile Include="AoCGridTest.fsx" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 </Project>
