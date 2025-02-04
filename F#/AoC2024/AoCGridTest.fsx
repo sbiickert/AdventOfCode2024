@@ -81,4 +81,13 @@ let testGrid () =
 
 testGrid()
 
+let testLoad () =
+    let input = ["abcd";"efgh";"ijkl"]
+    let grid = loadGrid input "." AdjacencyRule.Rook
+    let gridStr = sprintGrid grid None
+    assertEqual "abcd\nefgh\nijkl\n" gridStr
+    assertEqual (getString grid Coord.origin) "a"
+
+testLoad()
+
 printfn $"**** All tests passed. ****"

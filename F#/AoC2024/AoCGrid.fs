@@ -20,8 +20,7 @@ module Grid =
 
     let mkGrid defaultValue rule =
         {data = Map.empty; extent = None; rule = rule; defaultValue = defaultValue}
-    
-   
+       
     let getValue grid coord = 
         if grid.data.ContainsKey coord then
             grid.data.Item coord
@@ -47,6 +46,17 @@ module Grid =
             else
                 Extent.expandToFit grid.extent.Value [coord]
         {grid with data = newData; extent = Some(newExtent)}
+
+    let loadGrid (input: string list) defaultValue rule =
+        let mutable grid = mkGrid defaultValue rule
+
+        let yseq = seq { for y in [0 .. input.Length-1] -> (y, input[y]) }
+        for (y, line) in yseq do
+            let chars = Seq.toList line |> List.map (fun c -> c.ToString())
+            let xseq = seq { for x in [0 .. chars.Length-1] -> (x, chars[x]) }
+            for (x, c) in xseq do
+                grid <- setValue grid {x = x; y = y} (Glyph c)
+        grid
     
     let clear grid coord resetExtent =
         let newData = grid.data.Remove coord
