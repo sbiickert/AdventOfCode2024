@@ -1,7 +1,6 @@
 #load "AoCUtil.fs"
 
-let assertEqual a b =
-    if a <> b then failwith $"Value '{a}' does not equal '{b}'."
+open AoC.Util
 
 let testReadInput() = 
     let inFileNameTest = AoC.Util.inputFileName 0 true
@@ -41,5 +40,18 @@ let testLCM() =
     assertEqual 156L (AoC.Util.lcm [3;4;13])
 
 testLCM ()
+
+let testCartesian () = 
+    let product = AoC.Util.cartesian ["a";"b"] [1;2]
+    assertEqual [("a",1); ("a",2); ("b",1); ("b",2)] product
+
+testCartesian ()
+
+let testApproxEqual () =
+    let value = 1.2345
+    assertTrue (AoC.Util.approxEqual 0.1 1.21 value)
+    assertFalse (AoC.Util.approxEqual 0.01 1.21 value)
+
+testApproxEqual()
 
 printfn $"**** All tests passed. ****"

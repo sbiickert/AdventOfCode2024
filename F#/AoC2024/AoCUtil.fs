@@ -63,3 +63,12 @@ module Util =
 
     let approxEqual (tolerance:double) d1 d2 =
         abs(d1-d2) < tolerance
+
+    let assertEqual a b =
+        if a <> b then failwith $"Value '{a}' does not equal '{b}'."
+
+    let assertTrue a =
+        if a <> true then failwith $"Assertion was not true."
+        
+    let assertFalse a =
+        if a <> false then failwith $"Assertion was not false."
