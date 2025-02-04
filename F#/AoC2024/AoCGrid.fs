@@ -1,6 +1,89 @@
 namespace AoC
 
 open AoC.Util
+open AoC.Geometry
 
 module Grid =
-    let a = 2
+
+    type GridData = 
+        | Glyph of glyph: string
+        | Value of value: int64
+        | Complex of glyph: string * value:obj
+
+    type Grid =
+        {
+            data: Map<Coord, GridData>
+            extent: Extent option
+            rule: AdjacencyRule
+            defaultValue: string
+        }
+
+    let mkGrid defaultValue rule =
+        {data = Map.empty; extent = None; rule = rule; defaultValue = defaultValue}
+    
+   
+    let getValue grid coord = 
+        if grid.data.ContainsKey coord then
+            grid.data.Item coord
+        else
+            Glyph grid.defaultValue
+    
+    let getString grid coord =
+        if grid.data.ContainsKey coord then
+            let d = grid.data.Item coord
+            match d with
+            | Glyph g -> g
+            | Value i -> i.ToString()
+            | Complex (glyph, _) -> glyph
+        else
+            grid.defaultValue
+
+    let setValue grid coord value =
+        let newData = grid.data.Add (coord,value)
+        
+        let newExtent = 
+            if grid.extent.IsNone then
+                mkExtent [coord]
+            else
+                Extent.expandToFit grid.extent.Value [coord]
+        {grid with data = newData; extent = Some(newExtent)}
+    
+    let clear grid coord resetExtent =
+        let newData = grid.data.Remove coord
+
+        let newExtentOpt = 
+            if resetExtent then
+                let coords = List.ofSeq grid.data.Keys
+                Some(mkExtent coords)
+            else
+                grid.extent
+        {grid with data = newData; extent = newExtentOpt}
+    
+    let coords grid (withValue: string option) =
+        if withValue.IsNone then
+            List.ofSeq grid.data.Keys
+        else
+            let value = withValue.Value
+            grid.data.Keys
+            |> Seq.filter (fun coord -> getString grid coord = value)
+            |> List.ofSeq
+    
+    // TODO: histogram
+
+    let neighbors grid coord =
+        Coord.adjacentCoords coord grid.rule
+
+    // TODO: row line breaks, markers
+    let sprintGrid (grid:Grid) (markers:Map<Coord,string> option) =
+        if grid.extent.IsNone then ""
+        else
+            let ext = grid.extent.Value
+            cartesian [ext.min.y .. ext.max.y] [ext.min.x .. ext.max.x]
+            |> List.map (fun (y, x) -> mkCoord x y)
+            |> List.map (fun coord -> getString grid coord)
+            |> List.fold (+) ""
+
+    let printGrid grid (markers:Map<Coord,string> option) =
+        let str = sprintGrid grid markers
+        printfn $"{str}"
+
