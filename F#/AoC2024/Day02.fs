@@ -37,8 +37,25 @@ let getTrends reports =
     reports
     |> List.map getTrend
 
+// Turns a trend into a report starting at 0
+// which doesn't matter because all that's important is increases and decreases
 let mkReport trend =
     trend |> List.scan (fun acc t -> acc + t) 0 
+
+let canBeMadeSafe trend: bool =
+    let badIndex = findUnsafeValueIndex trend
+    let report = mkReport trend
+    let imin = max 0 (badIndex-1)
+    let imax = badIndex+1
+    [imin .. imax]
+    |> List.map (fun i ->
+        let before = List.take i report
+        let after = List.skip (i+1) report
+        let modifiedReport = before @ after
+        getTrend modifiedReport)
+    |> List.map isSafe
+    |> List.contains true
+
 
 let solvePartOne (reports: int list list) =
     let trends = getTrends reports
@@ -48,27 +65,10 @@ let solvePartOne (reports: int list list) =
 let solvePartTwo (reports: int list list) pt1SafeCount =
     let trends = getTrends reports
     let unsafeTrends = trends |> List.filter (isSafe >> not)
+    let unsafeMadeSafe = List.filter canBeMadeSafe unsafeTrends
+    let pt2SafeCount = unsafeMadeSafe.Length
+    pt1SafeCount + pt2SafeCount
 
-    let mutable countUnsafeMadeSafe = 0
-    for trend in unsafeTrends do
-        let mutable canBeMadeSafe = false
-        let badIndex = findUnsafeValueIndex trend
-        //printfn $"The bad index in {trend} is {badIndex}"
-        let report = mkReport trend
-        let imin = max 0 (badIndex-1)
-        let imax = badIndex+1
-        for i in imin .. imax do
-            let before = List.take i report
-            let after = List.skip (i+1) report
-            let modifiedReport = before @ after
-            let modifiedTrend = getTrend modifiedReport
-            if isSafe modifiedTrend then
-                //printfn $"Removing number at {i} made {modifiedReport} safe."
-                canBeMadeSafe <- true
-        if canBeMadeSafe then
-            countUnsafeMadeSafe <- countUnsafeMadeSafe + 1
-
-    pt1SafeCount + countUnsafeMadeSafe
 
 let solveDay02 isTest: Unit =
     let day = 2
@@ -84,5 +84,3 @@ let solveDay02 isTest: Unit =
 
     let solution2 = solvePartTwo reports solution1
     printfn $"The number of safe reports with dampening is {solution2}"
-
-    printfn "All done."

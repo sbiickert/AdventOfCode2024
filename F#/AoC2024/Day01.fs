@@ -49,5 +49,3 @@ let solveDay01 isTest: Unit =
 
     let solution2 = solvePartTwo pivot
     printfn $"The total similarity is {solution2}"
-
-    printfn "All done."
