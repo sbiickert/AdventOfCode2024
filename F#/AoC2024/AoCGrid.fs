@@ -55,7 +55,8 @@ module Grid =
             let chars = Seq.toList line |> List.map (fun c -> c.ToString())
             let xseq = seq { for x in [0 .. chars.Length-1] -> (x, chars[x]) }
             for (x, c) in xseq do
-                grid <- setValue grid {x = x; y = y} (Glyph c)
+                if c <> grid.defaultValue then
+                    grid <- setValue grid {x = x; y = y} (Glyph c)
         grid
     
     let clear grid coord resetExtent =

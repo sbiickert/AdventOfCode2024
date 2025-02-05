@@ -6,3 +6,4 @@ open AoC
 // Solutions
 solveDay00 true |> ignore
 solveDay01 false |> ignore
+solveDay02 false |> ignore

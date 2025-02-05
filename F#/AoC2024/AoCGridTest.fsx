@@ -82,11 +82,12 @@ let testGrid () =
 testGrid()
 
 let testLoad () =
-    let input = ["abcd";"efgh";"ijkl"]
+    let input = ["abcd";"e.gh";"ijkl"]
     let grid = loadGrid input "." AdjacencyRule.Rook
     let gridStr = sprintGrid grid None
-    assertEqual "abcd\nefgh\nijkl\n" gridStr
+    assertEqual "abcd\ne.gh\nijkl\n" gridStr
     assertEqual (getString grid Coord.origin) "a"
+    assertEqual 11 (coords grid None).Length // The "." would not be set during load
 
 testLoad()
 

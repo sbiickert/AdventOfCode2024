@@ -9,6 +9,7 @@
     <Compile Include="AoCGrid.fs" />
     <Compile Include="Day00.fs" />
     <Compile Include="Day01.fs" />
+    <Compile Include="Day02.fs" />
     <Compile Include="worksheet.fsx" />
     <Compile Include="AoCUtilTest.fsx" />
     <Compile Include="AoCGeometryTest.fsx" />
