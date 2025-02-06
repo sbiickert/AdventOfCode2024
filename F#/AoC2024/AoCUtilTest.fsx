@@ -4,9 +4,17 @@ open AoC.Util
 
 let testReadInput() = 
     let inFileNameTest = AoC.Util.inputFileName 0 true
-    assertEqual inFileNameTest "/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Input/day00_test.txt"
+
+    let path =
+        if System.Environment.OSVersion.Platform = System.PlatformID.MacOSX then
+            "/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Input/"
+        else
+            """C:\Users\sjb\source\repos\sbiickert\AdventOfCode2024\Input\"""
+
+    assertEqual inFileNameTest (path + "day00_test.txt")
     let inFileNameChall = AoC.Util.inputFileName 0 false
-    assertEqual inFileNameChall "/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Input/day00_challenge.txt"
+    assertEqual inFileNameChall (path + "day00_challenge.txt")
+
     let inputWithEmpty = AoC.Util.readInput inFileNameTest false
     assertEqual 10 inputWithEmpty.Length
     assertEqual "G0, L0" inputWithEmpty.Head

@@ -1,14 +1,18 @@
 namespace AoC
 
 module Util = 
-    let inputPath = "/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Input"
+    let inputPath = 
+        if System.Environment.OSVersion.Platform = System.PlatformID.MacOSX then
+            "/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Input/"
+        else
+            """C:\Users\sjb\source\repos\sbiickert\AdventOfCode2024\Input\"""
 
     let inputFileName (day:int) isTest =
         let dayStr = sprintf "%02d" day
         if isTest then
-            $"{inputPath}/day{dayStr}_test.txt"
+            $"{inputPath}day{dayStr}_test.txt"
         else
-            $"{inputPath}/day{dayStr}_challenge.txt"
+            $"{inputPath}day{dayStr}_challenge.txt"
 
     let readInput fileName removeEmptyLines =
         let lines  = System.IO.File.ReadLines(fileName)
