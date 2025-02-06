@@ -42,6 +42,11 @@ let getTrends reports =
 let mkReport trend =
     trend |> List.scan (fun acc t -> acc + t) 0 
 
+let modifyReport report indexToRemove =
+    let before = List.take indexToRemove report
+    let after = List.skip (indexToRemove+1) report
+    before @ after
+
 let canBeMadeSafe trend: bool =
     let badIndex = findUnsafeValueIndex trend
     let report = mkReport trend
@@ -49,9 +54,7 @@ let canBeMadeSafe trend: bool =
     let imax = badIndex+1
     [imin .. imax]
     |> List.map (fun i ->
-        let before = List.take i report
-        let after = List.skip (i+1) report
-        let modifiedReport = before @ after
+        let modifiedReport = modifyReport report i
         getTrend modifiedReport)
     |> List.map isSafe
     |> List.contains true
