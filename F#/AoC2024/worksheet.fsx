@@ -5,3 +5,4 @@
 #load "Day02.fs"
 #time
 solveDay02 false |> ignore
+#time

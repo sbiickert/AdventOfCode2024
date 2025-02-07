@@ -26,18 +26,18 @@ class Day08(day: Int, name: String) extends AoCLib.Solution(day, name):
     println(s"Part One: the number of antinodes is $antiNodeCount")
 
 
-def solvePartTwo(nodes: Map[String, Iterable[Coord]], extent: Extent): Unit =
-  val antiNodes = Grid()
-  for (_, coords) <- nodes do
-    for combo <- coords.toList.combinations(2) do
-      setAntinodes(antiNodes, combo(0), combo(1).delta(combo(0)), extent)
-      setAntinodes(antiNodes, combo(1), combo(0).delta(combo(1)), extent)
+  def solvePartTwo(nodes: Map[String, Iterable[Coord]], extent: Extent): Unit =
+    val antiNodes = Grid()
+    for (_, coords) <- nodes do
+      for combo <- coords.toList.combinations(2) do
+        setAntinodes(antiNodes, combo(0), combo(1).delta(combo(0)), extent)
+        setAntinodes(antiNodes, combo(1), combo(0).delta(combo(1)), extent)
 
-  val antiNodeCount = antiNodes.coords(withValue = Some("#")).size
-  println(s"Part Two: the number of antinodes is $antiNodeCount")
+    val antiNodeCount = antiNodes.coords(withValue = Some("#")).size
+    println(s"Part Two: the number of antinodes is $antiNodeCount")
 
 @tailrec
-def setAntinodes(grid: Grid, coord: Coord, delta: Coord, limit: Extent):Unit =
+private def setAntinodes(grid: Grid, coord: Coord, delta: Coord, limit: Extent):Unit =
   if !limit.contains(coord) then return
   grid.set(coord, "#")
   setAntinodes(grid, coord + delta, delta, limit)
