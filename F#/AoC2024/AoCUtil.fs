@@ -2,7 +2,7 @@ namespace AoC
 
 module Util = 
     let inputPath = 
-        if System.Environment.OSVersion.Platform = System.PlatformID.MacOSX then
+        if System.Environment.OSVersion.Platform = System.PlatformID.Unix then
             "/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Input/"
         else
             """C:\Users\sjb\source\repos\sbiickert\AdventOfCode2024\Input\"""

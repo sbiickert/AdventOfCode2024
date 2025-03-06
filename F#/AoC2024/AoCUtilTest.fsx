@@ -6,11 +6,12 @@ let testReadInput() =
     let inFileNameTest = AoC.Util.inputFileName 0 true
 
     let path =
-        if System.Environment.OSVersion.Platform = System.PlatformID.MacOSX then
+        if System.Environment.OSVersion.Platform = System.PlatformID.Unix then
             "/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Input/"
         else
             """C:\Users\sjb\source\repos\sbiickert\AdventOfCode2024\Input\"""
 
+    printfn $"{System.Environment.OSVersion.Platform}"
     assertEqual inFileNameTest (path + "day00_test.txt")
     let inFileNameChall = AoC.Util.inputFileName 0 false
     assertEqual inFileNameChall (path + "day00_challenge.txt")
