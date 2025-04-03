@@ -7,16 +7,17 @@ import scala.collection.mutable
 class AoCUtil()
 
 object AoCUtil:
-  val year = 2024
-  val inputFolder = s"/Users/sjb/Developer/Advent of Code/$year/AdventOfCode$year/Input"
+  val sep: String = System.getProperty("file.separator")
+  val inputFolder: String =
+    val components = List(System.getProperty("user.dir"), "..", "..", "Input")
+    components.mkString(sep)
 
   def fileName(day: Int, test: Boolean): String =
     val challengeTest = if test then "test" else "challenge"
     "day%02d_%s.txt".format(day, challengeTest)
 
   def readInput(fileName: String, removeEmptyLines: Boolean = true): List[String] =
-    val bufferedSource = Source.fromFile(s"$inputFolder/$fileName")
-    //println(s"$inputFolder/$fileName")
+    val bufferedSource = Source.fromFile(List(inputFolder, fileName).mkString(sep))
     val lines = bufferedSource.getLines()
     var input = lines.toList
     if removeEmptyLines then
