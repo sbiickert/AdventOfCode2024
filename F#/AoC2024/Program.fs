@@ -8,3 +8,4 @@ open AoC
 //solveDay00 true |> ignore
 solveDay01 false |> ignore
 solveDay02 false |> ignore
+solveDay03 false |> ignore
