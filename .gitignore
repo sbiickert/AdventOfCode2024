@@ -26,3 +26,5 @@ Swift/AoC2024/.DS_Store
 /F\#/AoC2024/.vs
 Pascal/*.ppu
 Pascal/*.o
+*.o
+*.ppu
