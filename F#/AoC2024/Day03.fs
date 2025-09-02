@@ -4,15 +4,15 @@ module Day03
 open AoC.Util
 open System.Text.RegularExpressions
 
+let mul (m:Match) =
+    int m.Groups[1].Value * int m.Groups[2].Value
 
 let sumForLine line =
     let rx = Regex(@"mul\((\d+)\,(\d+)\)")
-    let matches = rx.Matches(line)
-    let mSeq = Seq.cast matches
-
-    Seq.map (fun (a:Match) -> int a.Groups[1].Value * int a.Groups[2].Value) mSeq
-        |> Seq.sum
-
+    rx.Matches(line)
+    |> Seq.cast
+    |> Seq.map mul
+    |> Seq.sum
 
 let solvePartOne input =
     sumForLine input
