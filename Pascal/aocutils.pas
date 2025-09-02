@@ -55,6 +55,7 @@ Procedure PushInt(var input: AoCIntArray; value: Integer);
 Function InitIntArray(size, value: Integer): AoCIntArray;
 Procedure SortIntArray(var arr: AoCIntArray; ascending: Boolean);
 Function SliceIntArray(input: AoCIntArray; start: Integer; length: Integer): AoCIntArray;
+Function FrequencyMap(values: AoCStringArray): AoCIntegerMap;
 
 Function GCD(a, b: Int64): Int64;
 Function LCM(values: AoCIntArray): Int64;
@@ -265,6 +266,19 @@ begin
 		result[i+offset] := input[i];
 end;
 
+Function FrequencyMap(values: AoCStringArray): AoCIntegerMap;
+var
+	i, index: Integer;
+begin
+	result := AoCIntegerMap.Create;
+	
+	for i := Low(values) to High(values) do
+	begin
+		if result.IndexOf(values[i]) = -1 then
+			result[values[i]] := 0;
+		result[values[i]] := result[values[i]] + 1;
+	end
+end;
 
 // Sorting Arrays of Integer
 
@@ -422,7 +436,6 @@ begin
 		nextValues := Concat([running], SliceIntArray(values, 2, Length(values) - 2)); 
 		result := LCM(nextValues)
 	end
-// 	result := b * (a div GCD(a, b));
 end;
 
 End.

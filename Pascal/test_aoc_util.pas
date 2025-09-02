@@ -40,6 +40,7 @@ Var
 	iArr,iArr2,iArrCopy: AoCIntArray;
 	sList: TStringList;
 	s: string;
+	iMap: AoCIntegerMap;
 Begin
 	sArr := ['1', '2', '3'];
 	iArr := StrArrayToIntArray(sArr);
@@ -79,8 +80,6 @@ Begin
 	AssertIntEqual(Length(iArrCopy), 2, 'Checking length of array slice');
 	AssertIntEqual(iArrCopy[0], 2, 'Checking first value of array slice');
 	AssertIntEqual(Length(iArr), 5, 'Checking original array is unchanged');
-// 	WriteLn(JoinStrArray(',', IntArrayToStrArray(iArr)));
-// 	WriteLn(JoinStrArray(',', IntArrayToStrArray(iArrCopy)));
 	sArr := IntArrayToStrArray(iArrCopy);
 	s := JoinStrArray(',', sArr);
 	AssertStrEqual(s, '2,3', 'Check array slice');
@@ -89,6 +88,13 @@ Begin
 	sArr := IntArrayToStrArray(iArrCopy);
 	s := JoinStrArray(',', sArr);
 	AssertStrEqual(s, '13,14,1,2,3', 'Check concatenating to slice');
+	
+	sArr := ['a','b','c','a','b','a','x'];
+	iMap := FrequencyMap(sArr);
+	AssertIntEqual(iMap['a'], 3, 'Checking frequency of a');
+	AssertIntEqual(iMap['b'], 2, 'Checking frequency of b');
+	AssertIntEqual(iMap['x'], 1, 'Checking frequency of x');
+
 End;
 
 Procedure TestMath;
