@@ -1,7 +1,7 @@
 Program AocTest;
 
 Uses
-	AoCUtils, AoCSpatialUtils, Classes;
+	AoCUtils, Classes;
 
 Const
 	INPUT_DAY = 0;

@@ -2,7 +2,7 @@
 {$mode objfpc} // directive to be used for defining classes
 {$m+}          // directive to be used for using constructor
 
-Unit aocutils;
+Unit AoCUtils;
 
 Interface
 
