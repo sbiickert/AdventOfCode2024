@@ -169,6 +169,41 @@ begin
 	AssertTrue(sZero.Direction = Dir2D.NO_DIR, 'Checking zero seg has no direction');
 end;
 
+Procedure TestExtentCreate();
+var
+	c1,c2,c3,c4: Coord2D;
+	e1,e2: Extent2D;
+begin
+	c1 := Coord2D.Create(-1,1);
+	c2 := Coord2D.Create(2,8);
+	c3 := Coord2D.Create(3,3);
+	c4 := Coord2D.Create(4,4);
+	e1 := Extent2D.Create([c1,c2]);
+	AssertTrue(e1.GetMin.IsEqualTo( Coord2D.Create(-1,1) ), 'Checking e1 min');
+	AssertTrue(e1.GetMax.IsEqualTo( Coord2D.Create(2,8) ), 'Checking e1 max');
+	e2 := Extent2D.Create([c3,c2,c1]);
+	AssertTrue(e2.GetMin.IsEqualTo( Coord2D.Create(-1,1) ), 'Checking e2 min');
+	AssertTrue(e2.GetMax.IsEqualTo( Coord2D.Create(3,8) ), 'Checking e2 max');
+	e2.ExpandToFit(c4);
+	AssertTrue(e2.GetMin.IsEqualTo( Coord2D.Create(-1,1) ), 'Checking expanded min');
+	AssertTrue(e2.GetMax.IsEqualTo( Coord2D.Create(4,8) ), 'Checking expanded max');
+end;
+
+Procedure TestExtentBounds();
+var
+	e0,e1,e2: Extent2D;
+begin
+	e0 := MkExtent2D(-1,1,2,8);
+	AssertIntEqual(e0.GetWidth, 4, 'Checking ext width');
+	AssertIntEqual(e0.GetHeight, 8, 'Checking ext height');
+	e1 := MkExtent2D(-1,1,3,8);
+	AssertIntEqual(e1.GetArea, 40, 'Checking ext area');
+	e2 := MkExtent2D(-2,-3,5,6);
+	AssertTrue(e2.NW.IsEqualTo(Coord2D.Create(-2,-3)), 'Checking ext NW');
+	AssertTrue(e2.NE.IsEqualTo(Coord2D.Create(5,-3)), 'Checking ext NE');
+	AssertTrue(e2.SW.IsEqualTo(Coord2D.Create(-2,6)), 'Checking ext SW');
+	AssertTrue(e2.SE.IsEqualTo(Coord2D.Create(5,6)), 'Checking ext SE');
+end;
 
 Begin
 	TestDirection;
@@ -184,4 +219,7 @@ Begin
 	
 	TestSegmentLength;
 	TestSegmentDirection;
+	
+	TestExtentCreate;
+	TestExtentBounds;
 End.

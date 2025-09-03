@@ -66,6 +66,7 @@ Type
     		Constructor Create(cLocation: Coord2D; dDirection: Dir2D);
     		Property Location: Coord2D Read _location Write SetLocation;
     		Property Direction: Dir2D Read _direction Write SetDirection;
+            Function IsEqualTo(other: Pos2D): Boolean;
     		procedure Turn(dir: Rot2D);
     		procedure MoveForward(iDistance: Integer);
     		procedure Print();
@@ -83,6 +84,7 @@ Type
     		Constructor Create(a,b:Coord2D);
     		Property A: Coord2D Read _a Write SetA;
     		Property B: Coord2D Read _b Write SetB;
+            Function IsEqualTo(other: Seg2D): Boolean;
     		Function Length(): Integer;
     		Function IsHorizontal(): Boolean;
     		Function IsVertical(): Boolean;
@@ -96,8 +98,13 @@ Type
     		_min, _max:	Coord2D;
     	Public
     		Constructor Create(coords: Coord2DArray);
+            Function IsEqualTo(other: Extent2D): Boolean;
     		Function GetMin(): Coord2D;
     		Function GetMax(): Coord2D;
+    		Function NW(): Coord2D;
+    		Function SW(): Coord2D;
+    		Function NE(): Coord2D;
+    		Function SE(): Coord2D;
     		Function GetWidth(): Integer;
     		Function GetHeight(): Integer;
     		Function GetArea(): Integer;
@@ -107,6 +114,8 @@ Type
     		Procedure Print();
     end;
     Extent2DPtr = ^Extent2D;
+	
+	Function MkExtent2D(xmin,ymin,xmax,ymax: Integer): Extent2D;
 
     Procedure PushCoord(coord: Coord2D; var arr: Coord2DArray);
 	Procedure PushCoord(coord: Coord3D; var arr: Coord3DArray);
@@ -293,6 +302,11 @@ begin
     _direction := val;
 end;
 
+Function Pos2D.IsEqualTo(other: Pos2D): Boolean;
+begin
+	result := (_location.IsEqualTo(other.Location)) and (_direction = other.Direction);
+end;
+
 procedure Pos2D.Turn(dir: Rot2D);
 begin
 	if dir = Rot2D.CW then
@@ -396,6 +410,11 @@ begin
 	_b := val;
 end;
 
+Function Seg2D.IsEqualTo(other: Seg2D): Boolean;
+begin
+	result := (_a.IsEqualTo(other.A)) and (_b.IsEqualTo(other.B));
+end;
+
 Function Seg2D.Length(): Integer;
 begin
 	result := _a.MDistanceTo(_b);
@@ -470,6 +489,11 @@ begin
 	_max := Coord2D.Create(xmax, ymax);
 end;
 
+Function Extent2D.IsEqualTo(other: Extent2D): Boolean;
+begin
+	result := (_min.IsEqualTo(other.GetMin)) and (_max.IsEqualTo(other.GetMax));
+end;
+
 Function Extent2D.GetMin(): Coord2D;
 begin
 	result := _min;
@@ -478,6 +502,26 @@ end;
 Function Extent2D.GetMax(): Coord2D;
 begin
 	result := _max;
+end;
+
+Function Extent2D.NW(): Coord2D;
+begin
+	result := GetMin;
+end;
+
+Function Extent2D.SW(): Coord2D;
+begin
+	result := Coord2D.Create(_min.x, _max.y);
+end;
+
+Function Extent2D.NE(): Coord2D;
+begin
+	result := Coord2D.Create(_max.x, _min.y);
+end;
+
+Function Extent2D.SE(): Coord2D;
+begin
+	result := GetMax;
 end;
 
 Function Extent2D.GetWidth(): Integer;
@@ -520,15 +564,15 @@ begin
 end;
 
 Procedure Extent2D.ExpandToFit(coord: Coord2D);
+var
+	xmin,xmax,ymin,ymax: Integer;
 begin
-	if coord.X < _min.X then
-		_min := Coord2D.Create(coord.X, _min.Y);
-	if coord.X > _max.X then
-		_max := Coord2D.Create(coord.X, _min.Y);
-	if coord.Y < _min.Y then
-		_min := Coord2D.Create(_min.X, coord.Y);
-	if coord.Y > _max.Y then
-		_max := Coord2D.Create(_max.X, coord.Y);
+	xmin := Min(coord.x, _min.x);
+	ymin := Min(coord.y, _min.y);
+	xmax := Max(coord.x, _max.x);
+	ymax := Max(coord.y, _max.y);
+	_min := Coord2D.Create(xmin, ymin);
+	_max := Coord2D.Create(xmax, ymax);
 end;
 
 Procedure Extent2D.Print();
@@ -541,5 +585,9 @@ begin
 	WriteLn(')');
 end;
 
+Function MkExtent2D(xmin,ymin,xmax,ymax: Integer): Extent2D;
+begin
+	result := Extent2D.Create([Coord2D.Create(xmin,ymin), Coord2D.Create(xmax,ymax)]);
+end;
 
 end.

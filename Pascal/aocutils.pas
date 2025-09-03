@@ -269,7 +269,7 @@ end;
 
 Function FrequencyMap(values: AoCStringArray): AoCIntegerMap;
 var
-	i, index: Integer;
+	i: Integer;
 begin
 	result := AoCIntegerMap.Create;
 	
