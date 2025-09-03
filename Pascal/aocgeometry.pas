@@ -9,7 +9,7 @@ Interface
 Uses SysUtils, StrUtils, Math, AoCUtils, ContNrs;
 
 Type
-	Dir2D = (NORTH, SOUTH, EAST, WEST, NW, SW, NE, SE, UP, DOWN, LEFT, RIGHT, NO_DIR);
+	Dir2D = (NORTH, SOUTH, EAST, WEST, NW, SW, NE, SE, NO_DIR); //, UP, DOWN, LEFT, RIGHT);
 	Rot2D = (CW, CCW, NO_ROT);
     Adjacency = (rook, bishop, queen);
     
@@ -72,6 +72,24 @@ Type
     end;
     Pos2DArray = array of Pos2D;
     Pos2DPtr = ^Pos2D;
+    
+    Seg2D = class
+    	Private
+    		_a: Coord2D;
+    		_b: Coord2D;
+    		Procedure SetA(val: Coord2D);
+    		Procedure SetB(val: Coord2D);
+    	Public
+    		Constructor Create(a,b:Coord2D);
+    		Property A: Coord2D Read _a Write SetA;
+    		Property B: Coord2D Read _b Write SetB;
+    		Function Length(): Integer;
+    		Function IsHorizontal(): Boolean;
+    		Function IsVertical(): Boolean;
+    		Function Direction(): Dir2D;
+    end;
+    Seg2DArray = array of Seg2D;
+    Seg2DPtr = ^Seg2D;
     
     Extent2D = Class
     	Private
@@ -161,10 +179,10 @@ begin
 	SW: 	result := Coord2D.Create(-1 * size,  1 * size);
 	NE: 	result := Coord2D.Create( 1 * size, -1 * size);
 	SE: 	result := Coord2D.Create( 1 * size,  1 * size);
-	UP: 	result := Coord2D.Create( 0, -1 * size);
-	DOWN: 	result := Coord2D.Create( 0,  1 * size);
-	LEFT: 	result := Coord2D.Create(-1 * size,  0);
-	RIGHT: 	result := Coord2D.Create( 1 * size,  0);
+// 	UP: 	result := Coord2D.Create( 0, -1 * size);
+// 	DOWN: 	result := Coord2D.Create( 0,  1 * size);
+// 	LEFT: 	result := Coord2D.Create(-1 * size,  0);
+// 	RIGHT: 	result := Coord2D.Create( 1 * size,  0);
 	else 	result := Coord2D.Create(0,0);
 	end;
 end;
@@ -355,6 +373,76 @@ begin
 	len := Length(arr)+1;
 	SetLength(arr, len);
 	arr[len-1] := coord;
+end;
+
+
+// -------------------------------------------------------
+// Seg2D
+// -------------------------------------------------------
+
+Constructor Seg2D.Create(a,b: Coord2D);
+begin
+	_a := a;
+	_b := b;
+end;
+
+Procedure Seg2D.SetA(val: Coord2D);
+begin
+	_a := val;
+end;
+
+Procedure Seg2D.SetB(val: Coord2D);
+begin
+	_b := val;
+end;
+
+Function Seg2D.Length(): Integer;
+begin
+	result := _a.MDistanceTo(_b);
+end;
+
+Function Seg2D.IsHorizontal(): Boolean;
+begin
+	result := (_a.y = _b.y) and (_a.x <> _b.x);
+end;
+
+Function Seg2D.IsVertical(): Boolean;
+begin
+	result := (_a.y <> _b.y) and (_a.x = _b.x);
+end;
+
+Function Seg2D.Direction(): Dir2D;
+begin
+	if (Length = 0) then
+		result := Dir2D.NO_DIR
+	else if IsHorizontal then
+	begin
+		if _a.x < _b.x then
+			result := Dir2D.EAST
+		else
+			result := Dir2D.WEST;
+	end
+	else if IsVertical then
+	begin
+		if _a.y < _b.y then
+			result := Dir2D.SOUTH
+		else
+			result := Dir2D.NORTH;
+	end
+	else if _a.x < _b.x then
+	begin
+		if _a.y < _b.y then
+			result := Dir2D.SE
+		else
+			result := Dir2D.NE;
+	end
+	else
+	begin
+		if _a.y < _b.y then
+			result := Dir2D.SW
+		else
+			result := Dir2D.NW;
+	end;
 end;
 
 

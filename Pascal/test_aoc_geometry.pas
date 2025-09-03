@@ -1,7 +1,7 @@
 Program AocTest;
 
 Uses
-	AoCUtils, AoCGeometry, Classes;
+	AoCUtils, AoCGeometry, SysUtils, Classes;
 
 Const
 	INPUT_DAY = 0;
@@ -69,7 +69,7 @@ end;
 
 Procedure TestCoordAdjacency();
 var
-	o,cHorz,cDiag,cFar,c: Coord2D;
+	o,cHorz,cDiag,cFar: Coord2D;
 	rookAdj,bishopAdj,queenAdj: Coord2DArray;
 begin
 	o := Coord2D.Origin;
@@ -98,10 +98,90 @@ begin
  	//	c.Print;
 end;
 
+Procedure TestPositionCreate();
+var
+	p: Pos2D;
+begin
+	p := Pos2D.Create(Coord2D.Create(5,6), Dir2D.EAST);
+	AssertIntEqual( p.Location.x, 5, 'Checking Pos2D location x');
+	AssertIntEqual( p.Location.y, 6, 'Checking Pos2D location y');
+	AssertTrue(p.Direction = Dir2D.EAST, 'Checking Pos2D direction');
+end;
+
+Procedure TestPositionTurn();
+var
+	p1: Pos2D;
+	i: Integer;
+begin
+	p1 := Pos2D.Create( Coord2D.Origin, Dir2D.NORTH );
+	p1.Turn(Rot2D.CW);
+	AssertTrue(p1.Direction = Dir2D.EAST, 'Checking single CW rotation');
+	p1.Turn(Rot2D.CCW);
+	AssertTrue(p1.Direction = Dir2D.NORTH, 'Checking single CCW rotation');
+	
+	for i := 1 to 5 do
+		p1.Turn(Rot2D.CW);
+	AssertTrue(p1.Direction = Dir2D.EAST, 'Checking multiple CW rotation');
+end;
+
+Procedure TestPositionMove();
+var
+	p: Pos2D;
+begin
+	p := Pos2D.Create( Coord2D.Origin, Dir2D.SOUTH );
+	p.MoveForward(1);
+	AssertTrue(p.Location.IsEqualTo(Coord2D.Create(0,1)), 'Checking moving 1 step');
+	p.MoveForward(99);
+	AssertTrue(p.Location.IsEqualTo(Coord2D.Create(0,100)), 'Checking moving 99 steps');
+end;
+
+Procedure TestSegmentLength();
+var
+	s,sZero: Seg2D;
+begin
+	s := Seg2D.Create( Coord2D.Origin, Coord2D.Create(5,6) );
+	AssertIntEqual(s.Length, 11, 'Checking segment length');
+
+	sZero := Seg2D.Create( Coord2D.Create(5,6), Coord2D.Create(5,6) );
+	AssertIntEqual(sZero.Length, 0, 'Checking zero length segment');
+end;
+
+Procedure TestSegmentDirection();
+var
+	s,sZero: Seg2D;
+	d: Dir2D;
+begin
+	for d in Dir2D do
+	begin
+		s := Seg2D.Create( Coord2D.Origin, Coord2D.Origin.Offset(d));
+		AssertTrue(s.Direction = d, Format('Checking seg direction %d', [d]));
+	end;
+	
+	s := Seg2D.Create( Coord2D.Origin, Coord2D.Create(-2,0) );
+	AssertTrue(s.IsHorizontal, 'Checking seg horizontal');
+	AssertTrue(s.Direction = Dir2D.WEST, 'Checking seg direction');
+	
+	s := Seg2D.Create( Coord2D.Origin, Coord2D.Create(0,-2) );
+	AssertTrue(s.IsVertical, 'Checking seg vertical');
+	AssertTrue(s.Direction = Dir2D.NORTH, 'Checking seg direction');
+
+	sZero := Seg2D.Create( Coord2D.Create(5,6), Coord2D.Create(5,6) );
+	AssertTrue(sZero.Direction = Dir2D.NO_DIR, 'Checking zero seg has no direction');
+end;
+
+
 Begin
 	TestDirection;
+	
 	TestCoordCreate;
 	TestCoordAddSub;
 	TestCoordDistance;
 	TestCoordAdjacency;
+	
+	TestPositionCreate;
+	TestPositionTurn;
+	TestPositionMove;
+	
+	TestSegmentLength;
+	TestSegmentDirection;
 End.
