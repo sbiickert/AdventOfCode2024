@@ -59,6 +59,7 @@ Function FrequencyMap(values: AoCStringArray): AoCIntegerMap;
 
 Function GCD(a, b: Int64): Int64;
 Function LCM(values: AoCIntArray): Int64;
+Function ApproxEqual(d1, d2, allowance: Double): Boolean;
 
 Implementation
 
@@ -436,6 +437,11 @@ begin
 		nextValues := Concat([running], SliceIntArray(values, 2, Length(values) - 2)); 
 		result := LCM(nextValues)
 	end
+end;
+
+Function ApproxEqual(d1, d2, allowance: Double): Boolean;
+begin
+	result := Abs(d1-d2) <= allowance;
 end;
 
 End.

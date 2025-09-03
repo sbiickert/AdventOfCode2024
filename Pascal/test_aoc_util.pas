@@ -100,6 +100,8 @@ End;
 Procedure TestMath;
 var
 	iArr: AoCIntArray;
+const
+	dVal = 1.2345;
 begin
 	AssertIntEqual( GCD(2, 4), 2, 'Check GCD of 2 and 4');
 	AssertIntEqual( GCD(15, 20), 5, 'Check GCD of 15 and 20');
@@ -108,6 +110,9 @@ begin
 	AssertIntEqual( LCM(iArr), 12, 'Check LCM of 2,3,4');
 	iArr := [3,4,13];
 	AssertIntEqual( LCM(iArr), 156, 'Check LCM of 3,4,13');
+	
+	AssertTrue( ApproxEqual(dVal, 1.21, 0.1), 'Checking approximation');
+	AssertFalse( ApproxEqual(dVal, 1.21, 0.01), 'Checking approximation');
 end;
 
 Begin

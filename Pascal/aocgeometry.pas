@@ -11,7 +11,11 @@ Uses SysUtils, StrUtils, Math, AoCUtils, ContNrs;
 Type
 	Dir2D = (NORTH, SOUTH, EAST, WEST, NW, SW, NE, SE, UP, DOWN, LEFT, RIGHT, NO_DIR);
 	Rot2D = (CW, CCW, NO_ROT);
-	
+    Adjacency = (rook, bishop, queen);
+    
+    Coord2D = class; // Forward declaration
+    Coord2DArray =   array Of Coord2D;
+    
 	Coord2D = Class
         Private
             _x, _y:   Integer;
@@ -25,16 +29,17 @@ Type
             Property Row: Integer Read _y Write SetY;
             Property Col: Integer Read _x Write SetX;
             Class Function Origin: Coord2D;
-            Class Function Offset(direction: Dir2D): Coord2D;
+            Class Function Offset(direction: Dir2D; size:Integer = 1): Coord2D;
             Function IsEqualTo(other: Coord2D): Boolean;
             Function Add(other: Coord2D):Coord2D;
             Function DeltaTo(other: Coord2D): Coord2D;
             Function DistanceTo(other: Coord2D): Double;
             Function MDistanceTo(other: Coord2D): Integer;
+            Function IsAdjacentTo(other: Coord2D; rule: Adjacency): Boolean;
+            Function AdjacentCoords(rule: Adjacency): Coord2DArray; // Needed forward declaration
             Procedure Print(); Virtual;
             Function AsKey(): String; Virtual;
     end;
-    Coord2DArray =   array Of Coord2D;
     Coord2DPtr = ^Coord2D;
     
     Coord3D = class(Coord2D)
@@ -85,8 +90,6 @@ Type
     end;
     Extent2DPtr = ^Extent2D;
 
-    Adjacency = (rook, bishop, queen);
-    
     Procedure PushCoord(coord: Coord2D; var arr: Coord2DArray);
 	Procedure PushCoord(coord: Coord3D; var arr: Coord3DArray);
 
@@ -147,21 +150,21 @@ begin
 	result := Coord2D.Create(0,0);
 end;
 
-Class Function Coord2D.Offset(direction: Dir2D): Coord2D;
+Class Function Coord2D.Offset(direction: Dir2D; size:Integer = 1): Coord2D;
 begin
 	case direction of
-	NORTH: 	result := Coord2D.Create( 0, -1);
-	SOUTH: 	result := Coord2D.Create( 0,  1);
-	WEST: 	result := Coord2D.Create(-1,  0);
-	EAST: 	result := Coord2D.Create( 1,  0);
-	NW: 	result := Coord2D.Create(-1, -1);
-	SW: 	result := Coord2D.Create(-1,  1);
-	NE: 	result := Coord2D.Create( 1, -1);
-	SE: 	result := Coord2D.Create( 1,  1);
-	UP: 	result := Coord2D.Create( 0, -1);
-	DOWN: 	result := Coord2D.Create( 0,  1);
-	LEFT: 	result := Coord2D.Create(-1,  0);
-	RIGHT: 	result := Coord2D.Create( 1,  0);
+	NORTH: 	result := Coord2D.Create( 0, -1 * size);
+	SOUTH: 	result := Coord2D.Create( 0,  1 * size);
+	WEST: 	result := Coord2D.Create(-1 * size,  0);
+	EAST: 	result := Coord2D.Create( 1 * size,  0);
+	NW: 	result := Coord2D.Create(-1 * size, -1 * size);
+	SW: 	result := Coord2D.Create(-1 * size,  1 * size);
+	NE: 	result := Coord2D.Create( 1 * size, -1 * size);
+	SE: 	result := Coord2D.Create( 1 * size,  1 * size);
+	UP: 	result := Coord2D.Create( 0, -1 * size);
+	DOWN: 	result := Coord2D.Create( 0,  1 * size);
+	LEFT: 	result := Coord2D.Create(-1 * size,  0);
+	RIGHT: 	result := Coord2D.Create( 1 * size,  0);
 	else 	result := Coord2D.Create(0,0);
 	end;
 end;
@@ -199,6 +202,35 @@ begin
     delta := DeltaTo(other);
     result := Abs(delta.X) + Abs(delta.Y);
 end;
+
+Function Coord2D.IsAdjacentTo(other: Coord2D; rule: Adjacency): Boolean;
+begin
+	case rule of
+	ROOK:	result := MDistanceTo(other) = 1;
+	BISHOP:	result := (Abs(x - other.x) = 1) and (Abs(y - other.y) = 1);
+	QUEEN:	result := (MDistanceTo(other) = 1) or (Abs(x - other.x) = 1) and (Abs(y - other.y) = 1);
+	end;
+end;
+
+Function Coord2D.AdjacentCoords(rule: Adjacency): Coord2DArray;
+begin
+	result := [];
+	if (rule = Adjacency.QUEEN) or (rule = Adjacency.ROOK) then
+	begin
+		PushCoord(Offset(Dir2D.NORTH), result);
+		PushCoord(Offset(Dir2D.EAST), result);
+		PushCoord(Offset(Dir2D.SOUTH), result);
+		PushCoord(Offset(Dir2D.WEST), result);
+	end;
+	if (rule = Adjacency.QUEEN) or (rule = Adjacency.BISHOP) then
+	begin
+		PushCoord(Offset(Dir2D.NE), result);
+		PushCoord(Offset(Dir2D.SE), result);
+		PushCoord(Offset(Dir2D.SW), result);
+		PushCoord(Offset(Dir2D.NW), result);
+	end;
+end;
+
 
 Procedure Coord2D.Print;
 begin
