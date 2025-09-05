@@ -29,7 +29,8 @@ Type
             Property Row: Integer Read _y Write SetY;
             Property Col: Integer Read _x Write SetX;
             Class Function Origin: Coord2D;
-            Class Function Offset(direction: Dir2D; size:Integer = 1): Coord2D;
+            Class Function XOffset(direction: Dir2D; size:Integer = 1): Coord2D;
+            Function Offset(direction: Dir2D; size:Integer = 1): Coord2D;
             Function IsEqualTo(other: Coord2D): Boolean;
             Function Add(other: Coord2D):Coord2D;
             Function DeltaTo(other: Coord2D): Coord2D;
@@ -117,6 +118,7 @@ Type
     		Procedure ExpandToFit(coord: Coord2D);
     		Function Inset(i: Integer): Extent2D;
     		Function Intersect(other: Extent2D): Extent2DArray;
+    		Function Union(other: Extent2D): Extent2DArray;
     		Procedure Print();
     end;
     Extent2DPtr = ^Extent2D;
@@ -126,6 +128,7 @@ Type
 
     Procedure PushCoord(coord: Coord2D; var arr: Coord2DArray);
 	Procedure PushCoord(coord: Coord3D; var arr: Coord3DArray);
+	Procedure PushExtent(ext: Extent2D; var arr: Extent2DArray);
 
 	Function StrToDir2D(s: String):Dir2D;
 
@@ -184,7 +187,7 @@ begin
 	result := Coord2D.Create(0,0);
 end;
 
-Class Function Coord2D.Offset(direction: Dir2D; size:Integer = 1): Coord2D;
+Class Function Coord2D.XOffset(direction: Dir2D; size:Integer = 1): Coord2D;
 begin
 	case direction of
 	NORTH: 	result := Coord2D.Create( 0, -1 * size);
@@ -198,6 +201,12 @@ begin
 	else 	result := Coord2D.Create(0,0);
 	end;
 end;
+
+Function Coord2D.Offset(direction: Dir2D; size:Integer = 1): Coord2D;
+begin
+	result := Self.Add(Coord2D.XOffset(direction, size));
+end;
+
 
 Function Coord2D.IsEqualTo(other: Coord2D):   Boolean;
 begin
@@ -339,7 +348,7 @@ var
 	i: Integer;
 begin
 	for i := 1 to iDistance do
-		_location := _location.Add(Coord2D.Offset(_direction));
+		_location := _location.Add(Coord2D.XOffset(_direction));
 end;
 
 Procedure Pos2D.Print;
@@ -549,9 +558,9 @@ end;
 
 Function Extent2D.Contains(coord: Coord2D): Boolean;
 begin
-	result := (GetMin.X <= coord.X)
+	result := (coord.X >= GetMin.X)
 		and (coord.X <= GetMax.X)
-		and (GetMin.Y <= coord.Y)
+		and (coord.Y >= GetMin.Y)
 		and (coord.Y <= GetMax.Y);
 end;
 
@@ -601,6 +610,51 @@ begin
 	else result := [MkExtent2D(commonXMin,commonYMin,commonXMax,commonYMax)];
 end;
 
+Function Extent2D.Union(other: Extent2D): Extent2DArray;
+var
+	intersectResult: Extent2DArray;
+	eInt, e: Extent2D;
+	
+begin
+	intersectResult := Intersect(other);
+	if IsEqualTo(other) then result := [other]
+	else if Length(intersectResult) = 0 then result := [Self, other]
+	else
+	begin
+		eInt := intersectResult[0];
+		result := [eInt];
+		
+		for e in [Self,other] do
+			if e.IsEqualTo(eInt) = False then
+			begin
+				// West Edge
+				if e.Contains(eInt.NW.Offset(Dir2D.WEST)) then
+					PushExtent(MkExtent2D(e.NW.x, eInt.NW.y, (eInt.NW.x-1), eInt.SW.y), result);
+				// NW Corner
+				if e.Contains(eInt.NW.Offset(Dir2D.NW)) then
+					PushExtent(MkExtent2D(e.NW.x, e.NW.y, (eInt.NW.x-1), (eInt.NW.y-1)), result);
+				// North Edge
+				if e.Contains(eInt.NW.Offset(Dir2D.NORTH)) then
+					PushExtent(MkExtent2D(eInt.NW.x, e.NW.y, eInt.NE.x, (eInt.NE.y-1)), result);
+				// NE Corner
+				if e.Contains(eInt.NE.Offset(Dir2D.NE)) then
+					PushExtent(MkExtent2D((eInt.NE.x+1), e.NE.y, e.SE.x, (eInt.NE.y-1)), result);
+				// East Edge
+				if e.Contains(eInt.SE.Offset(Dir2D.EAST)) then
+					PushExtent(MkExtent2D((eInt.SE.x+1), eInt.NE.y, e.SE.x, eInt.SE.y), result);
+				// SE Corner
+				if e.Contains(eInt.SE.Offset(Dir2D.SE)) then
+					PushExtent(MkExtent2D((eInt.SE.x+1), (eInt.SE.y+1), e.SE.x, e.SE.y), result);
+				// South Edge
+				if e.Contains(eInt.SE.Offset(Dir2D.SOUTH)) then
+					PushExtent(MkExtent2D(eInt.SW.x, (eInt.SW.y+1), eInt.SE.x, e.SW.y), result);
+				// SW Corner
+				if e.Contains(eInt.SW.Offset(Dir2D.SW)) then
+					PushExtent(MkExtent2D(e.SW.x, (eInt.SW.y+1), (eInt.SW.x-1), e.SW.y), result);
+			end;
+	end;
+end;
+
 
 Procedure Extent2D.Print();
 begin
@@ -611,6 +665,16 @@ begin
 	GetMax.Print;
 	WriteLn(')');
 end;
+
+Procedure PushExtent(ext: Extent2D; var arr: Extent2DArray);
+Var
+	len: Integer;
+begin
+	len := Length(arr)+1;
+	SetLength(arr, len);
+	arr[len-1] := ext;
+end;
+
 
 Function MkExtent2D(xmin,ymin,xmax,ymax: Integer): Extent2D;
 begin

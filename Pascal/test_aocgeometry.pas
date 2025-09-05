@@ -11,11 +11,11 @@ Var
 	n,sw: Coord2D;
 	dir: Dir2D;
 Begin
-	n := Coord2D.Offset(Dir2D.NORTH);
+	n := Coord2D.XOffset(Dir2D.NORTH);
 	AssertTrue( n.IsEqualTo( Coord2D.Create(0, -1) ), 'Checking NORTH offset');
-	sw := Coord2D.Offset(Dir2D.SW);
+	sw := Coord2D.XOffset(Dir2D.SW);
 	AssertTrue( sw.IsEqualTo( Coord2D.Create(-1, 1) ), 'Checking SW offset');
-	sw := Coord2D.Offset(Dir2D.SW, 5);
+	sw := Coord2D.XOffset(Dir2D.SW, 5);
 	AssertTrue( sw.IsEqualTo( Coord2D.Create(-5, 5) ), 'Checking big SW offset');
 
 	dir := StrToDir2D('n');
@@ -255,6 +255,42 @@ begin
 	AssertTrue(eArr5[0].IsEqualTo(MkExtent2D(1,10,10,10)), 'Checking intersect 5 result');
 end;
 
+// Procedure PrintExtents(arr: Extent2DArray);
+// var
+// 	e: Extent2D;
+// begin
+// 	for e in arr do
+// 		e.Print;
+// end;
+
+Procedure TestExtentUnion();
+var
+	ext: Extent2D;
+	products,expected: Extent2DArray;
+begin
+	ext := MkExtent2D(1,1,10,10);
+	
+	products := ext.Union(MkExtent2D(5,5,12,12));
+	expected := [MkExtent2D(5,5,10,10),MkExtent2D(1,5,4,10),MkExtent2D(1,1,4,4),MkExtent2D(5,1,10,4),MkExtent2D(11,5,12,10),MkExtent2D(11,11,12,12),MkExtent2D(5,11,10,12)];
+	AssertIntEqual(Length(products), Length(expected), 'Checking union result count');
+	
+	products := ext.Union(MkExtent2D(5,5,7,7));
+	expected := [MkExtent2D(5,5,7,7),MkExtent2D(1,5,4,7),MkExtent2D(1,1,4,4),MkExtent2D(5,1,7,4),MkExtent2D(8,1,10,4),MkExtent2D(8,5,10,7),MkExtent2D(8,8,10,10),MkExtent2D(5,8,7,10),MkExtent2D(1,8,4,10)];
+	AssertIntEqual(Length(products), Length(expected), 'Checking union result count');
+	
+	products := ext.Union(MkExtent2D(1,1,12,2));
+	expected := [MkExtent2D(1,1,10,2),MkExtent2D(1,3,10,10),MkExtent2D(11,1,12,2)];
+	AssertIntEqual(Length(products), Length(expected), 'Checking union result count');
+	
+	products := ext.Union(MkExtent2D(11,11,12,12));
+	expected := [ext,MkExtent2D(11,11,12,12)];
+	AssertIntEqual(Length(products), Length(expected), 'Checking union result count');
+	
+	products := ext.Union(MkExtent2D(1,10,10,20));
+	expected := [MkExtent2D(1,10,10,10),MkExtent2D(1,1,10,9),MkExtent2D(1,11,10,20)];
+	AssertIntEqual(Length(products), Length(expected), 'Checking union result count');
+end;
+
 Begin
 	TestDirection;
 	
@@ -275,4 +311,5 @@ Begin
 	TestExtentCoords;
 	TestExtentInset;
 	TestExtentIntersect;
+	TestExtentUnion;
 End.
