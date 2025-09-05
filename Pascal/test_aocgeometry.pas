@@ -205,6 +205,20 @@ begin
 	AssertTrue(e2.SE.IsEqualTo(Coord2D.Create(5,6)), 'Checking ext SE');
 end;
 
+Procedure TestExtentCoords();
+var
+	e1: Extent2D;
+	cArr: Coord2DArray;
+begin
+	e1 := MkExtent2D(-1,1,3,8);
+	cArr := e1.AllCoords;
+	AssertIntEqual(Length(cArr), e1.GetArea, 'Checking the number of coords in extent are correct');
+	// Check reading order
+	AssertTrue(cArr[0].IsEqualTo(MkCoord2D(-1,1))
+		and cArr[1].IsEqualTo(MkCoord2D(0,1))
+		and cArr[High(cArr)].IsEqualTo(MkCoord2D(3,8)), 'Checking reading order');
+end;
+
 Begin
 	TestDirection;
 	
@@ -222,4 +236,5 @@ Begin
 	
 	TestExtentCreate;
 	TestExtentBounds;
+	TestExtentCoords;
 End.

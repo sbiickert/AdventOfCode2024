@@ -109,12 +109,13 @@ Type
     		Function GetHeight(): Integer;
     		Function GetArea(): Integer;
     		Function Contains(coord: Coord2D): Boolean;
-    		Function AllContainedCoords(): Coord2DArray;
+    		Function AllCoords(): Coord2DArray;
     		Procedure ExpandToFit(coord: Coord2D);
     		Procedure Print();
     end;
     Extent2DPtr = ^Extent2D;
 	
+	Function MkCoord2D(x,y: Integer): Coord2D;
 	Function MkExtent2D(xmin,ymin,xmax,ymax: Integer): Extent2D;
 
     Procedure PushCoord(coord: Coord2D; var arr: Coord2DArray);
@@ -280,6 +281,11 @@ begin
 	len := Length(arr)+1;
 	SetLength(arr, len);
 	arr[len-1] := coord;
+end;
+
+Function MkCoord2D(x,y: Integer): Coord2D;
+begin
+	result := Coord2D.Create(x, y);
 end;
 
 // -------------------------------------------------------
@@ -547,7 +553,7 @@ begin
 		and (coord.Y <= GetMax.Y);
 end;
 
-Function Extent2D.AllContainedCoords(): Coord2DArray;
+Function Extent2D.AllCoords(): Coord2DArray;
 Var
 	i, x, y: Integer;
 begin
@@ -555,8 +561,8 @@ begin
 	SetLength(result, GetArea);
 	i := 0;
 	
-	For x := GetMin.X To GetMax.X Do
-		For y := GetMin.Y To GetMax.Y Do
+	For y := GetMin.Y To GetMax.Y Do
+		For x := GetMin.X To GetMax.X Do
 		begin
 			result[i] := Coord2D.Create(x,y);
 			inc(i);
