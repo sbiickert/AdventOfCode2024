@@ -9,7 +9,7 @@ Interface
 Uses SysUtils, StrUtils, Math, AoCUtils, ContNrs;
 
 Type
-	Dir2D = (NORTH, SOUTH, EAST, WEST, NW, SW, NE, SE, NO_DIR); //, UP, DOWN, LEFT, RIGHT);
+	Dir2D = (NORTH, SOUTH, EAST, WEST, NW, SW, NE, SE, NO_DIR);
 	Rot2D = (CW, CCW, NO_ROT);
     Adjacency = (rook, bishop, queen);
     
@@ -93,6 +93,10 @@ Type
     Seg2DArray = array of Seg2D;
     Seg2DPtr = ^Seg2D;
     
+    
+	Extent2D = class; // Forward declaration
+    Extent2DArray = array of Extent2D;
+
     Extent2D = Class
     	Private
     		_min, _max:	Coord2D;
@@ -105,12 +109,14 @@ Type
     		Function SW(): Coord2D;
     		Function NE(): Coord2D;
     		Function SE(): Coord2D;
-    		Function GetWidth(): Integer;
-    		Function GetHeight(): Integer;
-    		Function GetArea(): Integer;
+    		Function Width(): Integer;
+    		Function Height(): Integer;
+    		Function Area(): Integer;
     		Function Contains(coord: Coord2D): Boolean;
     		Function AllCoords(): Coord2DArray;
     		Procedure ExpandToFit(coord: Coord2D);
+    		Function Inset(i: Integer): Extent2D;
+    		Function Intersect(other: Extent2D): Extent2DArray;
     		Procedure Print();
     end;
     Extent2DPtr = ^Extent2D;
@@ -189,10 +195,6 @@ begin
 	SW: 	result := Coord2D.Create(-1 * size,  1 * size);
 	NE: 	result := Coord2D.Create( 1 * size, -1 * size);
 	SE: 	result := Coord2D.Create( 1 * size,  1 * size);
-// 	UP: 	result := Coord2D.Create( 0, -1 * size);
-// 	DOWN: 	result := Coord2D.Create( 0,  1 * size);
-// 	LEFT: 	result := Coord2D.Create(-1 * size,  0);
-// 	RIGHT: 	result := Coord2D.Create( 1 * size,  0);
 	else 	result := Coord2D.Create(0,0);
 	end;
 end;
@@ -530,19 +532,19 @@ begin
 	result := GetMax;
 end;
 
-Function Extent2D.GetWidth(): Integer;
+Function Extent2D.Width(): Integer;
 begin
 	result := _max.X - _min.X + 1;
 end;
 
-Function Extent2D.GetHeight(): Integer;
+Function Extent2D.Height(): Integer;
 begin
 	result := _max.Y - _min.Y + 1;
 end;
 
-Function Extent2D.GetArea(): Integer;
+Function Extent2D.Area(): Integer;
 begin
-	result := GetWidth * GetHeight;
+	result := Width * Height;
 end;
 
 Function Extent2D.Contains(coord: Coord2D): Boolean;
@@ -558,7 +560,7 @@ Var
 	i, x, y: Integer;
 begin
 	result := [];
-	SetLength(result, GetArea);
+	SetLength(result, Area);
 	i := 0;
 	
 	For y := GetMin.Y To GetMax.Y Do
@@ -580,6 +582,25 @@ begin
 	_min := Coord2D.Create(xmin, ymin);
 	_max := Coord2D.Create(xmax, ymax);
 end;
+
+Function Extent2D.Inset(i: Integer): Extent2D;
+begin
+	result := MkExtent2D(_min.x + i, _min.y + i, _max.x - i, _max.y - i);
+end;
+
+Function Extent2D.Intersect(other: Extent2D): Extent2DArray;
+var
+	commonXMin,commonXMax,commonYMin,commonYMax:Integer;
+begin
+	commonXMin := Max(GetMin.X, other.GetMin.X);
+	commonXMax := Min(GetMax.X, other.GetMax.X);
+	commonYMin := Max(GetMin.Y, other.GetMin.Y);
+	commonYMax := Min(GetMax.Y, other.GetMax.Y);
+	if commonXMax < commonXMin then result := []
+	else if commonYMax < commonYMin then result := []
+	else result := [MkExtent2D(commonXMin,commonYMin,commonXMax,commonYMax)];
+end;
+
 
 Procedure Extent2D.Print();
 begin

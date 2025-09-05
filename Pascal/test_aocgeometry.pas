@@ -194,10 +194,10 @@ var
 	e0,e1,e2: Extent2D;
 begin
 	e0 := MkExtent2D(-1,1,2,8);
-	AssertIntEqual(e0.GetWidth, 4, 'Checking ext width');
-	AssertIntEqual(e0.GetHeight, 8, 'Checking ext height');
+	AssertIntEqual(e0.Width, 4, 'Checking ext width');
+	AssertIntEqual(e0.Height, 8, 'Checking ext height');
 	e1 := MkExtent2D(-1,1,3,8);
-	AssertIntEqual(e1.GetArea, 40, 'Checking ext area');
+	AssertIntEqual(e1.Area, 40, 'Checking ext area');
 	e2 := MkExtent2D(-2,-3,5,6);
 	AssertTrue(e2.NW.IsEqualTo(Coord2D.Create(-2,-3)), 'Checking ext NW');
 	AssertTrue(e2.NE.IsEqualTo(Coord2D.Create(5,-3)), 'Checking ext NE');
@@ -212,11 +212,47 @@ var
 begin
 	e1 := MkExtent2D(-1,1,3,8);
 	cArr := e1.AllCoords;
-	AssertIntEqual(Length(cArr), e1.GetArea, 'Checking the number of coords in extent are correct');
+	AssertIntEqual(Length(cArr), e1.Area, 'Checking the number of coords in extent are correct');
 	// Check reading order
 	AssertTrue(cArr[0].IsEqualTo(MkCoord2D(-1,1))
 		and cArr[1].IsEqualTo(MkCoord2D(0,1))
 		and cArr[High(cArr)].IsEqualTo(MkCoord2D(3,8)), 'Checking reading order');
+end;
+
+Procedure TestExtentInset();
+var
+	e1,eInset: Extent2D;
+begin
+	e1 := MkExtent2D(-1,1,2,8);
+	eInset := e1.Inset(1);
+	AssertTrue(eInset.IsEqualTo(MkExtent2D(0,2,1,7)), 'Checking extent inset 1');
+	eInset := e1.Inset(2);
+	AssertTrue(eInset.IsEqualTo(MkExtent2D(0,3,1,6)), 'Checking extent inset 2');
+	eInset := e1.Inset(-1);
+	AssertTrue(eInset.IsEqualTo(MkExtent2D(-2,0,3,9)), 'Checking extent inset -1');
+end;
+
+Procedure TestExtentIntersect();
+var
+	e1: Extent2D;
+	eArr1,eArr2,eArr3,eArr4,eArr5: Extent2DArray;
+begin
+	e1 := MkExtent2D(1,1,10,10);
+	eArr1 := e1.Intersect(MkExtent2D(5,5,12,12));
+	eArr2 := e1.Intersect(MkExtent2D(5,5,7,7));
+	eArr3 := e1.Intersect(MkExtent2D(1,1,12,2));
+	eArr4 := e1.Intersect(MkExtent2D(11,11,12,12));
+	eArr5 := e1.Intersect(MkExtent2D(1,10,10,20));
+	
+	AssertIntEqual(Length(eArr1), 1, 'Checking intersect 1 was valid.');
+	AssertTrue(eArr1[0].IsEqualTo(MkExtent2D(5,5,10,10)), 'Checking intersect 1 result');
+	AssertIntEqual(Length(eArr2), 1, 'Checking intersect 2 was valid.');
+	AssertTrue(eArr2[0].IsEqualTo(MkExtent2D(5,5,7,7)), 'Checking intersect 2 result');
+	AssertIntEqual(Length(eArr3), 1, 'Checking intersect 3 was valid.');
+	AssertTrue(eArr3[0].IsEqualTo(MkExtent2D(1,1,10,2)), 'Checking intersect 3 result');
+	AssertIntEqual(Length(eArr4), 0, 'Checking intersect 4 was invalid.');
+	AssertIntEqual(Length(eArr5), 1, 'Checking intersect 5 was valid.');
+	AssertTrue(eArr5[0].IsEqualTo(MkExtent2D(1,10,10,10)), 'Checking intersect 5 result');
 end;
 
 Begin
@@ -237,4 +273,6 @@ Begin
 	TestExtentCreate;
 	TestExtentBounds;
 	TestExtentCoords;
+	TestExtentInset;
+	TestExtentIntersect;
 End.
