@@ -3,9 +3,6 @@ Program AocTest;
 Uses
 	AoCUtils, AoCGeometry, SysUtils, Classes;
 
-Const
-	INPUT_DAY = 0;
-
 Procedure TestDirection();
 Var
 	n,sw: Coord2D;
