@@ -29,10 +29,22 @@ End;
 
 Procedure SolvePart2(values: IArr2D);
 Var
-	a, b, c: Integer;
+	i,j,count,similarityScore: Integer;
 Begin
-	WriteLn('Part 2: DESCRIPTION');
-	WriteLn(Format('Part Two Solution: %d', [13]));
+	WriteLn('Part 2: What is the similarity score between the columns?');
+	
+	similarityScore := 0;
+	for i := 0 to High(values[0]) do
+	begin
+		count := 0;
+		for j := 0 to High(values[1]) do
+		begin
+			if values[0,i] = values[1,j] then
+				Inc(count);
+		end;
+		similarityScore := similarityScore + (count * values[0,i]);
+	end;
+	WriteLn(Format('Part Two Solution: %d', [similarityScore]));
 End;
 
 Function ParseColumns(input: TStringList): IArr2D;
@@ -60,7 +72,6 @@ Var
 Begin
 	WriteLn('AoC 2015 Day 01: Historian Hysteria');
 	iFileName := InputFileName(DAY, False);
-	WriteLn(iFileName);
 	input := ReadInput(iFileName);
 	data := ParseColumns(input);
 	SolvePart1(data);

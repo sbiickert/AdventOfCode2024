@@ -7,6 +7,7 @@
 	<key>WorksheetContents</key>
 	<string>cd '/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Pascal'
 
+
 #####################################################
 # Compile
 fpc day01.pas
@@ -18,11 +19,12 @@ fpc day01.pas
 
 #####################################################
 # Clean the directory
-rm *.ppu; rm *.o"
+rm *.ppu; rm *.o
 
 
-./test_str
-./test_aoc
+./test_aocutil
+./test_aocgeometry
+./test_aocgrid
 </string>
 </dict>
 </plist>
