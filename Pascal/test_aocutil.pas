@@ -11,8 +11,10 @@ Var
 	iFileName: String;
 	input: TStringList;
 Begin
+	iFileName := InputFileName(0, False);
+	AssertStrEqual(iFileName, '../Input/day00_challenge.txt', 'Checking challenge input filename creation');
 	iFileName := InputFileName(0, True);
-	AssertStrEqual(iFileName, '../Input/day00_test.txt', 'Checking input filename creation');
+	AssertStrEqual(iFileName, '../Input/day00_test.txt', 'Checking test input filename creation');
 	
 	input := ReadInput(iFileName);
 	AssertIntEqual(input.Count, 10, 'Checking input line count');

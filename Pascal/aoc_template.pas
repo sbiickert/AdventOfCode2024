@@ -7,8 +7,7 @@ Program AOC_2024_Day<##>;
 Uses SysUtils, StrUtils, AoCUtils, Classes;
 
 Const
-	IN_FILE = '../Input/day<##>_test.txt';
-//	IN_FILE = '../Input/day<##>_challenge.txt';
+	DAY = <##>;
 
 Procedure SolvePart1(values: TStringList);
 Var
@@ -30,7 +29,8 @@ Var
 	input: TStringList;
 Begin
 	WriteLn('AoC 2015 Day <##>: <##>');
-	input := ReadGroupedInput(IN_FILE, 0);
+	iFileName := InputFileName(DAY, True);
+	input := ReadInput(iFileName);
 	SolvePart1(input);
 	SolvePart2(input);
 End.

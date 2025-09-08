@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CurrentWorkingDirectory</key>
-	<string>/Users/sjb/Developer/Advent of Code/2015/AdventOfCode2015/Pascal</string>
+	<string>/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Pascal</string>
 	<key>WorksheetContents</key>
-	<string>cd '/Users/sjb/Developer/Advent of Code/2015/AdventOfCode2015/Pascal'
+	<string>cd '/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Pascal'
 
 #####################################################
 # Compile
@@ -14,8 +14,6 @@ fpc day01.pas
 #####################################################
 # Run
 ./day01
-
-
 
 
 #####################################################

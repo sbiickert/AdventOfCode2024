@@ -127,7 +127,7 @@ end;
 Function InputFileName(day:Integer; isTest: Boolean): String;
 Begin
 	If isTest Then result := Format('%s/day%2.2d_test.txt', [INPUT_PATH, day])
-	Else result := Format('day%02d_challenge.txt', [day]);
+	Else result := Format('%s/day%2.2d_challenge.txt', [INPUT_PATH, day]);
 End;
 
 Function ReadInput(inputFilename: String): TStringList;
