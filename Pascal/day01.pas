@@ -38,12 +38,10 @@ Begin
 	begin
 		count := 0;
 		for j := 0 to High(values[1]) do
-		begin
-			if values[0,i] = values[1,j] then
-				Inc(count);
-		end;
+			if values[0,i] = values[1,j] then Inc(count);
 		similarityScore := similarityScore + (count * values[0,i]);
 	end;
+	
 	WriteLn(Format('Part Two Solution: %d', [similarityScore]));
 End;
 
