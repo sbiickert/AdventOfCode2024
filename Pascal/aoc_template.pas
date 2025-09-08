@@ -26,6 +26,7 @@ Begin
 End;
 
 Var
+	iFileName: String;
 	input: TStringList;
 Begin
 	WriteLn('AoC 2015 Day <##>: <##>');
