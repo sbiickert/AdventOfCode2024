@@ -53,6 +53,8 @@ Begin
 	sList.DelimitedText := '14,5,6';
 	iArr := StrListToIntArray(sList);
 	AssertIntEqual(Length(iArr), 3, 'Checking parsed ints length is 3');
+	sArr := StrListToStrArray(sList);
+	AssertIntEqual(Length(sArr), 3, 'Checking string array length is 3');
 	sList.Free;
 
 	AssertIntEqual(SumIntArray(iArr), 25, 'Checking array sum');

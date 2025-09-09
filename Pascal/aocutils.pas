@@ -1,6 +1,7 @@
 // Utility module for Advent of Code
 {$mode objfpc} // directive to be used for defining classes
 {$m+}          // directive to be used for using constructor
+{$H+}		   // directive to be used for ANSI strings
 
 Unit AoCUtils;
 
@@ -44,6 +45,7 @@ Function ReadInput(inputFilename: String):   TStringList;
 Function ReadGroupedInput(inputFilename: String):   AoCStringListGroup;
 Function ReadGroupedInput(inputFilename: String; index: Integer):	TStringList;
 
+Function StrListToStrArray(input: TStringList): AoCStringArray;
 Function StrListToIntArray(input: TStringList): AoCIntArray;
 Function StrArrayToIntArray(var input: AoCStringArray): AoCIntArray;
 Function IntArrayToStrArray(var input: AoCIntArray): AoCStringArray;
@@ -177,6 +179,16 @@ Begin
 	
 	If Length(allGroups) > index Then
 		result := allGroups[index];
+End;
+
+Function StrListToStrArray(input: TStringList): AoCStringArray;
+Var
+	i: Integer;
+Begin
+	result := [];
+	SetLength(result, input.Count);
+	For i := 0 To input.Count-1 Do
+		result[i] := input[i];
 End;
 
 { Utility function to transform an list of strings to array of ints }
