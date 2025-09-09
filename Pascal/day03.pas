@@ -8,42 +8,59 @@ Uses SysUtils, StrUtils, AoCUtils, RegExpr, Classes;
 
 Const
 	DAY = 3;
-
-Procedure SolvePart1(pgm: String);
+	
 Var
 	re: TRegExpr;
-	sum,a,b,product: Integer;
+
+Function GetMul(pgm: String): Integer;
+Var
+	a,b: Integer;
 Begin
-	WriteLn('Part 1: What is the sum of the multiplication commands?');
+	result := 0;
 	
-	WriteLn(pgm);
-	sum := 0;
-	
-	re := TRegExpr.Create('mul\((\d+),(\d+)\)');
 	If re.Exec(pgm) Then
     Begin
     	a := StrToInt(re.Match[1]);
     	b := StrToInt(re.Match[2]);
-    	product := a * b;
-    	sum := product;
+    	result := a * b;
 		While re.ExecNext Do
 		Begin
 			a := StrToInt(re.Match[1]);
 			b := StrToInt(re.Match[2]);
-			product := a * b;
-			sum := sum + product;
+			result := result + a * b;
 		End;
     End;
+End;
+
+Procedure SolvePart1(pgm: String);
+Var
+	sum: Integer;
+Begin
+	WriteLn('Part 1: What is the sum of the multiplication commands?');
+	
+	sum := GetMul(pgm);
 	
 	WriteLn(Format('Part One Solution: %d', [sum]));
 End;
 
 Procedure SolvePart2(pgm: String);
 Var
-	a, b, c: Integer;
+	i,sum: Integer;
+	sections: TStringArray;
+	section: String;
 Begin
-	WriteLn('Part 2: DESCRIPTION');
-	WriteLn(Format('Part Two Solution: %d', [13]));
+	WriteLn('Part 2: What is the sum, taking disabled sections into account?');
+	
+	sum := 0;
+	
+	sections := SplitString(pgm, 'do()');
+	for i := 0 to High(sections) do
+	begin
+		section := SplitString(sections[i], 'don''t()')[0];
+		sum := sum + GetMul(section);
+	end;
+
+	WriteLn(Format('Part Two Solution: %d', [sum]));
 End;
 
 Var
@@ -59,6 +76,9 @@ Begin
 	input := groups[0];
 	sArr := StrListToStrArray(input);
 	singleLine := JoinStrArray('', sArr);
+	
+	re := TRegExpr.Create('mul\((\d+),(\d+)\)');
+
 	SolvePart1(singleLine);
 	SolvePart2(singleLine);
 End.
