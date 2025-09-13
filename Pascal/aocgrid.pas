@@ -1,6 +1,8 @@
 // Utility module for Advent of Code
 {$mode objfpc} // directive to be used for defining classes
 {$m+}          // directive to be used for using constructor
+{$H+}		   // directive to be used for ANSI strings
+
 
 Unit AoCGrid;
 

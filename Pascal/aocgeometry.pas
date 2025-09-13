@@ -1,6 +1,7 @@
 // Utility module for Advent of Code
 {$mode objfpc} // directive to be used for defining classes
 {$m+}          // directive to be used for using constructor
+{$H+}		   // directive to be used for ANSI strings
 
 Unit AoCGeometry;
 
@@ -131,6 +132,7 @@ Type
 	Procedure PushExtent(ext: Extent2D; var arr: Extent2DArray);
 
 	Function StrToDir2D(s: String):Dir2D;
+	Function OppositeDir(d: Dir2D):Dir2D;
 
 Implementation
 
@@ -152,6 +154,22 @@ begin
 		result := Dir2D.NO_DIR;
 	end;
 end;
+
+Function OppositeDir(d: Dir2D):Dir2D;
+begin
+	case d of
+	Dir2D.NORTH: result := Dir2D.SOUTH;
+	Dir2D.SOUTH: result := Dir2D.NORTH;
+	Dir2D.EAST:  result := Dir2D.WEST;
+	Dir2D.WEST:  result := Dir2D.EAST;
+	Dir2D.NE: 	 result := Dir2D.SW;
+	Dir2D.SW: 	 result := Dir2D.NE;
+	Dir2D.NW: 	 result := Dir2D.SE;
+	Dir2D.SE: 	 result := Dir2D.NW;
+	Dir2D.NO_DIR:result := Dir2D.NO_DIR;
+	end;
+end;
+
 
 // -------------------------------------------------------
 // Coord2D

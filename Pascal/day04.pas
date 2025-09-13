@@ -48,10 +48,37 @@ End;
 
 Procedure SolvePart2(grid: Grid2D);
 Var
-	a, b, c: Integer;
+	count,i,j: Integer;
+	ptr: Coord2D;
+	dirs: array of Dir2D;
+	dir1,dir2: Dir2D;
+	str1,str2: String;
 Begin
-	WriteLn('Part 2: DESCRIPTION');
-	WriteLn(Format('Part Two Solution: %d', [13]));
+	WriteLn('Part 2: How many times does an X-MAS appear?');
+	
+	count := 0;
+	dirs := [NW,NE,SE,SW];
+	
+	for ptr in grid.GetExtent.AllCoords do
+		if grid.GetString(ptr) = 'A' then
+			for i := 0 to 3 do
+			begin
+				j := (i + 1) MOD 4;
+				
+				dir1 := dirs[i];
+				dir2 := dirs[j];
+				str1 := GetStringAtCoordWithOffset(grid,
+												   ptr.Add(Coord2D.XOffset(dir1)),
+												   Coord2D.XOffset(OppositeDir(dir1)),
+												   3);
+				str2 := GetStringAtCoordWithOffset(grid,
+												   ptr.Add(Coord2D.XOffset(dir2)),
+												   Coord2D.XOffset(OppositeDir(dir2)),
+												   3);
+				if (str1 = 'MAS') and (str2 = 'MAS') then Inc(count);
+			end;
+	
+	WriteLn(Format('Part Two Solution: %d', [count]));
 End;
 
 Var
@@ -64,7 +91,6 @@ Begin
 	input := ReadInput(iFileName);
 	grid := Grid2D.Create('.', Adjacency.QUEEN);
 	grid.Load(input);
-	grid.Print;
 	SolvePart1(grid);
 	SolvePart2(grid);
 End.
