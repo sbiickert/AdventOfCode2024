@@ -6,7 +6,7 @@ Unit AoCGrid;
 
 Interface
 
-Uses SysUtils, StrUtils, Math, AoCUtils, AoCGeometry, ContNrs;
+Uses SysUtils, StrUtils, Math, AoCUtils, AoCGeometry, ContNrs, Classes;
 
 Type
     //AoCStrPtr = ^String;
@@ -67,6 +67,7 @@ Type
     		Function GetHistogram(includeUnset: Boolean = False): AoCIntegerMap;
     		Function GetNeighbourOffsets(): Coord2DArray;
     		Function GetNeighbourCoords(fromCoord: Coord2D): Coord2DArray;
+    		Procedure Load(input: TStringList);
     		Function SPrint(): String;
     		Procedure Print();
     end;
@@ -378,6 +379,25 @@ begin
 		PushCoord(Coord2D.Create(fromCoord.X+c.X, fromCoord.Y+c.Y), result);
 	end;
 end;
+
+Procedure Grid2D.Load(input: TStringList);
+Var
+	line: String;
+	row,col:Integer;
+	c: Coord2D;
+Begin
+	for row := 0 to input.Count-1 do
+	begin
+		line := input[row];
+		for col := 1 to Length(line) do
+			if line[col] <> Self.Default then
+			begin
+				c := MkCoord2D(col,row);
+				SetString(line[col], c);
+			end;
+	end;
+End;
+
 
 Function Grid2D.SPrint(): String;
 Var

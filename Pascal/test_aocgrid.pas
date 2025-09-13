@@ -122,7 +122,21 @@ begin
 end;
 
 Procedure TestGridLoad();
+var
+	input: TStringList;
+	grid: Grid2D;
+	gridContent: String;
 begin
+	input := TStringList.Create;
+	input.Add('ABCD');
+	input.Add('.G.H');
+	input.Add('IJK..');
+	
+	grid := Grid2D.Create('.', Adjacency.ROOK);
+	grid.Load(input);
+	grid.Print;
+	gridContent := grid.SPrint;
+	AssertStrEqual(gridContent, 'ABCD'+sLineBreak+'.G.H'+sLineBreak+'IJK.'+sLineBreak, 'Checking loaded grid');
 end;
 
 Begin
