@@ -26,6 +26,9 @@ Type
 		
 	AoCRuleMap =       specialize TFPGMap<String, OrderRule>;
 
+Var
+	RULES: AoCRuleMap;
+	
 Constructor OrderRule.Create(page: String);
 Begin
 	_page := page;
@@ -53,22 +56,44 @@ Begin
 	if _follows.IndexOf(other) <> -1 then result := true else result := false;
 End;
 
-Function SortOrder(rules: AoCRuleMap; page1: String; page2: String): Integer;
+Function SortOrder(page1: String; page2: String): Integer;
 Begin
 	result := 0; // No sort defined
-	if (rules.IndexOf(page1) = -1) or (rules.IndexOf(page2) = -1) then exit;
-	if rules[page1].DoesPageFollow(page2) then
+	if (RULES.IndexOf(page1) = -1) or (RULES.IndexOf(page2) = -1) then exit;
+	if RULES[page1].DoesPageFollow(page2) then
 		result := -1
-	else if rules[page2].DoesPageFollow(page1) then
+	else if RULES[page2].DoesPageFollow(page1) then
 		result := 1;
 End;
 
 
-
-Procedure SolvePart1(rules: AoCRuleMap; updates: TStringList);
+Function GetMidValue(pages: AoCStringArray): Integer;
 Var
-	i,j,order,sum,mid: Integer;
-	isCorrect: Boolean;
+	mid: Integer;
+Begin
+	mid := Trunc(Length(pages) / 2);
+	result := StrToInt(pages[mid]);
+End;
+
+Function IsOrderCorrect(pages: AoCStringArray): Boolean;
+Var
+	i,j: Integer;
+Begin
+	result := true;
+	for i := 0 to High(pages)-1 do
+		for j := i+1 to High(pages) do
+		begin
+			if SortOrder(pages[i], pages[j]) = -1 then
+			begin
+				result := false;
+				exit;
+			end;
+		end;
+End;
+
+Procedure SolvePart1(updates: TStringList);
+Var
+	sum: Integer;
 	update: String;
 	pages: AoCStringArray;
 Begin
@@ -78,29 +103,50 @@ Begin
 	
 	for update in updates do
 	begin
-		isCorrect := true;
 		pages := SplitString(update,',');
-		for i := 0 to High(pages)-1 do
-			for j := i+1 to High(pages) do
-			begin
-				if SortOrder(rules, pages[i], pages[j]) = -1 then isCorrect := false;
-			end;
-		if isCorrect then
-		begin
-			mid := Trunc(Length(pages) / 2);
-			sum := sum + StrToInt(pages[mid]);
-		end;
+		if IsOrderCorrect(pages) then
+			sum := sum + GetMidValue(pages);
 	end;
 	
 	WriteLn(Format('Part One Solution: %d', [sum]));
 End;
 
-Procedure SolvePart2(rules: AoCRuleMap; updates: TStringList);
+Procedure SortPages(pages: AoCStringArray);
 Var
-	a, b, c: Integer;
+	i: Integer;
+	temp: String;
 Begin
-	WriteLn('Part 2: DESCRIPTION');
-	WriteLn(Format('Part Two Solution: %d', [13]));
+	while IsOrderCorrect(pages) = false do
+		for i := 0 to High(pages)-1 do
+			if SortOrder(pages[i],pages[i+1]) = -1 then
+			begin
+				temp := pages[i];
+				pages[i] := pages[i+1];
+				pages[i+1] := temp;
+			end;
+End;
+
+Procedure SolvePart2(updates: TStringList);
+Var
+	sum: Integer;
+	update: String;
+	pages: AoCStringArray;
+Begin
+	WriteLn('Part 2: What is the sum of the middle pages of corrected updates?');
+	
+	sum := 0;
+	
+	for update in updates do
+	begin
+		pages := SplitString(update,',');
+		if IsOrderCorrect(pages) = false then
+		begin
+			SortPages(pages);
+			sum := sum + GetMidValue(pages);
+		end;
+	end;
+	
+	WriteLn(Format('Part Two Solution: %d', [sum]));
 End;
 
 Function ParseRules(input: TStringList): AoCRuleMap;
@@ -134,14 +180,13 @@ End;
 Var
 	iFileName: String;
 	input: AoCStringListGroup;
-	rules: AoCRuleMap;
 	updates: TStringList;
 Begin
 	WriteLn('AoC 2015 Day 5: Print Queue');
 	iFileName := InputFileName(DAY, False);
 	input := ReadGroupedInput(iFileName);
-	rules := ParseRules(input[0]);
+	RULES := ParseRules(input[0]);
 	updates := input[1];
-	SolvePart1(rules, updates);
-	SolvePart2(rules, updates);
+	SolvePart1(updates);
+	SolvePart2(updates);
 End.
