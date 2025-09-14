@@ -102,7 +102,8 @@ Var
 	i: Integer;
 	temp: String;
 Begin
-	while IsOrderCorrect(pages) = false do
+	// Simple bubble sort
+	repeat
 		for i := 0 to High(pages)-1 do
 			if SortOrder(pages[i],pages[i+1]) = -1 then
 			begin
@@ -110,6 +111,7 @@ Begin
 				pages[i] := pages[i+1];
 				pages[i+1] := temp;
 			end;
+	until IsOrderCorrect(pages)
 End;
 
 Procedure SolvePart2(updates: TStringList);
