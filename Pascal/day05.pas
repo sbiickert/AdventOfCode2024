@@ -14,14 +14,11 @@ Type
 	OrderRule = Class
 		Private
 			_page: String;
-			_follows:  AoCStringMap; // These numbers follow _page
 			_precedes: AoCStringMap; // These numbers precede _page
 		Public
 			Constructor Create(page: String);
-			Procedure AddPageThatFollows(other: String);
 			Procedure AddPageThatPrecedes(other: String);
 			Function DoesPageFollow(other: String): Boolean;
-			Function DoesPagePrecede(other: String): Boolean;
 	end;
 		
 	AoCRuleMap =       specialize TFPGMap<String, OrderRule>;
@@ -32,13 +29,7 @@ Var
 Constructor OrderRule.Create(page: String);
 Begin
 	_page := page;
-	_follows := AoCStringMap.Create;
 	_precedes := AoCStringMap.Create;
-End;
-
-Procedure OrderRule.AddPageThatFollows(other: String);
-Begin
-	_follows.Add(other,'');
 End;
 
 Procedure OrderRule.AddPageThatPrecedes(other: String);
@@ -49,11 +40,6 @@ End;
 Function OrderRule.DoesPageFollow(other: String): Boolean;
 Begin
 	if _precedes.IndexOf(other) <> -1 then result := true else result := false;
-End;
-
-Function OrderRule.DoesPagePrecede(other: String): Boolean;
-Begin
-	if _follows.IndexOf(other) <> -1 then result := true else result := false;
 End;
 
 Function SortOrder(page1: String; page2: String): Integer;
@@ -159,14 +145,6 @@ Begin
 	for line in input do
 	begin
 		split := SplitString(line, '|');
-		if result.IndexOf(split[0]) = -1 then
-		begin
-			rule := OrderRule.Create(split[0]);
-			result.Add(split[0],rule);
-		end;
-		rule := result[split[0]];
-		rule.AddPageThatFollows(split[1]);
-		
 		if result.IndexOf(split[1]) = -1 then
 		begin
 			rule := OrderRule.Create(split[1]);
