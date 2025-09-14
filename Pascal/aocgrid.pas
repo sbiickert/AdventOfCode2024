@@ -394,7 +394,7 @@ Begin
 		for col := 1 to Length(line) do
 			if line[col] <> Self.Default then
 			begin
-				c := MkCoord2D(col,row);
+				c := MkCoord2D(col,row+1); // string is 1-indexed, TStringList is 0-indexed
 				SetString(line[col], c);
 			end;
 	end;
