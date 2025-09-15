@@ -14,6 +14,45 @@ Begin
 	result := pos.Location.Offset(pos.Direction);
 End;
 
+
+Function DoesPathLoop(grid: Grid2D; ext: Extent2D; startCoord:Coord2D; obstacleLocation: Coord2D): Boolean;
+Var
+	path: TFPHashList; // Much faster than AoCStringMap
+	pos: Pos2D;
+	val: Integer;
+	ptr: Pointer;
+	key: String;
+Begin
+	grid.SetString('#', obstacleLocation);
+	
+	path := TFPHashList.Create;
+	pos := Pos2D.Create(startCoord, Dir2D.NORTH);
+	val := 1;
+	ptr := @val;
+	result := False;
+	
+	while ext.Contains(pos.Location) do
+	begin
+		key: pos.ToStr;
+		if path.FindIndexOf(key) <> -1 then
+		begin
+			result := true;
+			break;
+		end;
+		
+		path.Add(key, ptr);
+		
+		while grid.GetString(CoordInFrontOf(pos)) = '#' do
+			pos.Turn(Rot2D.CW);
+			
+		pos.MoveForward(1);
+	end;
+	
+	path.Free;
+	grid.SetString('.', obstacleLocation);
+End;
+
+
 Function SolvePart1(grid: Grid2D): Coord2DArray;
 Var
 	coords: Coord2DArray;
@@ -46,53 +85,24 @@ Begin
 	WriteLn(Format('Part One Solution: %d', [Length(coords)+1]));
 End;
 
-Procedure SolvePart2(input: TStringList; potentialObstacleLocations: Coord2DArray);
+
+Procedure SolvePart2(grid: Grid2D; potentialObstacleLocations: Coord2DArray);
 Var
-	grid: Grid2D;
 	obstacleLocation: Coord2D;
-	path: TFPHashList;
-	coords: Coord2DArray;
 	startCoord: Coord2D;
-	pos: Pos2D;
 	ext: Extent2D;
 	isLoop: Boolean;
-	val,loopCount: Integer;
-	ptr: Pointer;
+	loopCount: Integer;
 Begin
 	WriteLn('Part 2: How many places could an obstruction be placed to create a loop?');
-
-	grid := Grid2D.Create('.', Adjacency.ROOK);
-	grid.Load(input);
 	
-	coords := grid.GetCoords('^');
-	startCoord := coords[0];
+	startCoord := grid.GetCoords('^')[0];
 	ext := grid.GetExtent;
 	loopCount := 0;
-	val := 1;
-	ptr := @val;
 	
 	for obstacleLocation in potentialObstacleLocations do
 	begin
-		grid.SetString('#', obstacleLocation);
-		
-		path := TFPHashList.Create;
-		pos := Pos2D.Create(startCoord, Dir2D.NORTH);
-		isLoop := False;
-		
-		while ext.Contains(pos.Location) do
-		begin
-			if path.FindIndexOf(pos.ToStr) <> -1 then
-			begin
-				isLoop := true;
-				break;
-			end;
-			
-			path.Add(pos.ToStr, ptr);
-			
-			while grid.GetString(CoordInFrontOf(pos)) = '#' do
-				pos.Turn(Rot2D.CW);
-			pos.MoveForward(1);
-		end;
+		isLoop := DoesPathLoop(grid, ext, startCoord, obstacleLocation);
 		
 		if isLoop then
 		begin
@@ -100,7 +110,6 @@ Begin
 			if loopCount mod 100 = 0 then WriteLn(loopCount);
 		end;
 		
-		grid.SetString('.', obstacleLocation);
 	end;
 	
 	WriteLn(Format('Part Two Solution: %d', [loopCount]));
@@ -115,9 +124,12 @@ Begin
 	WriteLn('AoC 2015 Day 6: Guard Gallivant');
 	iFileName := InputFileName(DAY, False);
 	input := ReadInput(iFileName);
+	
 	grid := Grid2D.Create('.', Adjacency.ROOK);
 	grid.Load(input);
 	coords := SolvePart1(grid);
+	
+	grid := Grid2D.Create('.', Adjacency.ROOK);
 	grid.Load(input);
-	SolvePart2(input, coords);
+	SolvePart2(grid, coords);
 End.

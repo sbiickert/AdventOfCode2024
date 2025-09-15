@@ -28,3 +28,4 @@ Pascal/*.ppu
 Pascal/*.o
 *.o
 *.ppu
+*.lockfile
