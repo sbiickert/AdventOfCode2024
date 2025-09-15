@@ -23,6 +23,10 @@ Begin
 	noColon := ReplaceText(line, ':', '');
 	sArr := SplitString(noColon, ' ');
 	iArr := StrArrayToIntArray(sArr);
+	
+	// Because the recursion works from the end of the array,
+	// but the rules are L to R evaluation, the input numbers need to be reversed
+	// The answer is still at index 0.
 	result := [iArr[0]];
 	for i := High(iArr) downto 1 do PushInt(result, iArr[i]);
 End;
@@ -36,6 +40,7 @@ Begin
 	end;
 End;
 
+// Recursive
 Function IsEquationValid(eq: AoCIntArray; ops: OpD7Array): Boolean;
 Var
 	newEq: AoCIntArray;
@@ -56,51 +61,45 @@ Begin
 	end;
 End;
 
-
-Procedure SolvePart1(values: TStringList);
+Function SolvePart(values: TStringList; ops: OpD7Array): Int64;
 Var
 	eq: AoCIntArray;
-	sum: Int64;
 	line: String;
-	ops: OpD7Array;
 Begin
-	WriteLn('Part 1: What is the sum of the results of valid equations (+ and *)?');
-	
-	sum := 0;
-	ops := [ADD, MUL];
+	result := 0;
 	
 	for line in values do
 	begin
 		eq := ParseLine(line);
 		if IsEquationValid(eq, ops) then
 		begin
-			sum := sum + eq[0];
+			result := result + eq[0];
 		end;
 	end;
+End;
+
+Procedure SolvePart1(values: TStringList);
+Var
+	sum: Int64;
+	ops: OpD7Array;
+Begin
+	WriteLn('Part 1: What is the sum of the results of valid equations (+ and *)?');
+	
+	ops := [ADD, MUL];
+	sum := SolvePart(values, ops);
 	
 	WriteLn(Format('Part One Solution: %d', [sum]));
 End;
 
 Procedure SolvePart2(values: TStringList);
 Var
-	eq: AoCIntArray;
 	sum: Int64;
-	line: String;
 	ops: OpD7Array;
 Begin
-	WriteLn('Part 2: What is the sum of the results of valid equations (including concatenate)?');
+	WriteLn('Part 2: What is the sum of the results of valid equations (including concat)?');
 	
-	sum := 0;
 	ops := [CAT, ADD, MUL];
-	
-	for line in values do
-	begin
-		eq := ParseLine(line);
-		if IsEquationValid(eq, ops) then
-		begin
-			sum := sum + eq[0];
-		end;
-	end;
+	sum := SolvePart(values, ops);
 	
 	WriteLn(Format('Part Two Solution: %d', [sum]));
 End;
