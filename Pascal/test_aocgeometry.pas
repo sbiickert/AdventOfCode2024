@@ -104,7 +104,6 @@ begin
 	AssertIntEqual( p.Location.y, 6, 'Checking Pos2D location y');
 	AssertTrue(p.Direction = Dir2D.EAST, 'Checking Pos2D direction');
 	AssertStrEqual(p.ToStr, 'Pos2D(5,6) -> 2)', 'Checking Pos2D ToStr');
-	WriteLn(p.ToStr);
 end;
 
 Procedure TestPositionTurn();
@@ -132,6 +131,10 @@ begin
 	AssertTrue(p.Location.IsEqualTo(Coord2D.Create(0,1)), 'Checking moving 1 step');
 	p.MoveForward(99);
 	AssertTrue(p.Location.IsEqualTo(Coord2D.Create(0,100)), 'Checking moving 99 steps');
+	p.MoveBackward(1);
+	AssertTrue(p.Location.IsEqualTo(Coord2D.Create(0,99)), 'Checking moving back 1 step');
+	p.MoveBackward(49);
+	AssertTrue(p.Location.IsEqualTo(Coord2D.Create(0,50)), 'Checking moving back 49 steps');
 end;
 
 Procedure TestSegmentLength();

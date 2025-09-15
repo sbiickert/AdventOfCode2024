@@ -71,6 +71,7 @@ Type
             Function IsEqualTo(other: Pos2D): Boolean;
     		procedure Turn(dir: Rot2D);
     		procedure MoveForward(iDistance: Integer);
+    		procedure MoveBackward(iDistance: Integer);
     		Function ToStr(): String;
     		procedure Print();
     end;
@@ -368,6 +369,16 @@ var
 begin
 	for i := 1 to iDistance do
 		_location := _location.Add(Coord2D.XOffset(_direction));
+end;
+
+procedure Pos2D.MoveBackward(iDistance: Integer);
+var
+	i: Integer;
+	dir: Dir2D;
+begin
+	dir := OppositeDir(_direction);
+	for i := 1 to iDistance do
+		_location := _location.Add(Coord2D.XOffset(dir));
 end;
 
 Function Pos2D.ToStr(): String;
