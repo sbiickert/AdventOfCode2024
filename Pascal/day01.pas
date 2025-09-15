@@ -7,7 +7,7 @@ Program AOC_2024_Day01;
 Uses SysUtils, StrUtils, AoCUtils, Classes;
 
 type
-	IArr2D = array of array of Integer;
+	IArr2D = array of AoCIntArray;
 
 Const
 	DAY = 1;

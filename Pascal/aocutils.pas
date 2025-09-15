@@ -15,7 +15,7 @@ Const
 
 Type
     AoCStringArray =     TStringDynArray;
-    AoCIntArray =        TIntegerDynArray;
+    AoCIntArray =        TInt64DynArray;
     AoCStringListGroup = array of TStringList;
     AoCStringMap =       specialize TFPGMap<String, String>;
     AoCIntegerMap =      specialize TFPGMap<String, Integer>;
@@ -51,10 +51,10 @@ Function StrArrayToIntArray(var input: AoCStringArray): AoCIntArray;
 Function IntArrayToStrArray(var input: AoCIntArray): AoCStringArray;
 
 Function JoinStrArray(delim: String; input: AoCStringArray): String;
-Function SumIntArray(var input: AoCIntArray): Integer;
+Function SumIntArray(var input: AoCIntArray): Int64;
 Function CopyIntArray(input: AoCIntArray): AoCIntArray;
-Procedure PushInt(var input: AoCIntArray; value: Integer);
-Function InitIntArray(size, value: Integer): AoCIntArray;
+Procedure PushInt(var input: AoCIntArray; value: Int64);
+Function InitIntArray(size, value: Int64): AoCIntArray;
 Procedure SortIntArray(var arr: AoCIntArray; ascending: Boolean);
 Function SliceIntArray(input: AoCIntArray; start: Integer; length: Integer): AoCIntArray;
 Function FrequencyMap(values: AoCStringArray): AoCIntegerMap;
@@ -199,7 +199,7 @@ Begin
 	result := [];
 	SetLength(result, input.Count);
 	For i := 0 To input.Count-1 Do
-		result[i] := StrToInt(input[i]);
+		result[i] := StrToInt64(input[i]);
 End;
 
 { Utility function to transform an array of strings to array of ints }
@@ -210,7 +210,7 @@ Begin
 	result := [];
     SetLength(result, Length(input));
     For i := 0 To Length(input)-1 Do
-        result[i] := StrToInt(input[i]);
+        result[i] := StrToInt64(input[i]);
 End;
 
 Function IntArrayToStrArray(var input: AoCIntArray): AoCStringArray;
@@ -237,7 +237,7 @@ begin
 	end;
 end;
 
-Function SumIntArray(var input: AoCIntArray): Integer;
+Function SumIntArray(var input: AoCIntArray): Int64;
 Var
 	i: Integer;
 Begin
@@ -251,14 +251,14 @@ begin
 	result := input; // Was passed in by value
 end;
 
-procedure PushInt(var input: AoCIntArray; value: Integer);
+procedure PushInt(var input: AoCIntArray; value: Int64);
 begin
 	SetLength(input, Length(input)+1);
 	input[Length(input)-1] := value;
 end;
 
 
-Function InitIntArray(size, value: Integer): AoCIntArray;
+Function InitIntArray(size, value: Int64): AoCIntArray;
 var
 	i: Integer;
 begin
