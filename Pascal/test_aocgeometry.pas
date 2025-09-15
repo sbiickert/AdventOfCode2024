@@ -103,6 +103,8 @@ begin
 	AssertIntEqual( p.Location.x, 5, 'Checking Pos2D location x');
 	AssertIntEqual( p.Location.y, 6, 'Checking Pos2D location y');
 	AssertTrue(p.Direction = Dir2D.EAST, 'Checking Pos2D direction');
+	AssertStrEqual(p.ToStr, 'Pos2D(5,6) -> 2)', 'Checking Pos2D ToStr');
+	WriteLn(p.ToStr);
 end;
 
 Procedure TestPositionTurn();

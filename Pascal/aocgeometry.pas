@@ -71,6 +71,7 @@ Type
             Function IsEqualTo(other: Pos2D): Boolean;
     		procedure Turn(dir: Rot2D);
     		procedure MoveForward(iDistance: Integer);
+    		Function ToStr(): String;
     		procedure Print();
     end;
     Pos2DArray = array of Pos2D;
@@ -369,9 +370,14 @@ begin
 		_location := _location.Add(Coord2D.XOffset(_direction));
 end;
 
+Function Pos2D.ToStr(): String;
+Begin
+	result := Format('Pos2D(%d,%d) -> %d)', [_location.X, _location.Y, _direction]);
+End;
+
 Procedure Pos2D.Print;
 begin
-    WriteLn('Pos2D(', _location.X, ',', _location.Y, ' -> ', _direction, ')');
+    WriteLn(Self.ToStr);
 end;
 
 
