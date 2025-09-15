@@ -61,16 +61,16 @@ sub walk(Grid $map, Bool $mark_path=True --> Position) {
 		$map.set($pos.coord, 'X') if $mark_path;
 		my $coord_in_front = $pos.coord.offset($pos.dir);
 		if $map.get($coord_in_front) eq "#" {
+			if %positions{$pos}:exists {
+				#looped
+				return $pos;
+			}
+			%positions{$pos} = 1;
 			$pos = $pos.turn('CW');
 		}
 		else {
 			$pos = $pos.move_forward();
 		}
-		if %positions{$pos}:exists {
-			#looped
-			return $pos;
-		}
-		%positions{$pos} = 1;
 	}
 	$pos;
 }
