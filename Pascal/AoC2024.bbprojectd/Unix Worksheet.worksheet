@@ -6,6 +6,28 @@
 	<string>/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Pascal</string>
 	<key>WorksheetContents</key>
 	<string>time ./day06
+AoC 2015 Day 6: Guard Gallivant
+Will read data from: ../Input/day06_challenge.txt
+Part 1: How many distinct positions will the guard visit?
+Part One Solution: 4580
+Part 2: How many places could an obstruction be placed to create a loop?
+100
+200
+300
+400
+500
+600
+700
+800
+900
+1000
+1100
+1200
+1300
+1400
+Part Two Solution: 1480
+./day06  10.03s user 0.23s system 98% cpu 10.469 total
+
 </string>
 </dict>
 </plist>

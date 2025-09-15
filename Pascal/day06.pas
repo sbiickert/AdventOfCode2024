@@ -33,17 +33,18 @@ Begin
 	
 	while ext.Contains(pos.Location) do
 	begin
-		key: pos.ToStr;
+		key := pos.ToStr;
 		if path.FindIndexOf(key) <> -1 then
 		begin
 			result := true;
 			break;
 		end;
 		
-		path.Add(key, ptr);
-		
 		while grid.GetString(CoordInFrontOf(pos)) = '#' do
+		begin
+			path.Add(key, ptr); // Only note the turns: save 6 seconds
 			pos.Turn(Rot2D.CW);
+		end;
 			
 		pos.MoveForward(1);
 	end;
