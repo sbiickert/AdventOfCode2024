@@ -5,50 +5,14 @@
 	<key>CurrentWorkingDirectory</key>
 	<string>/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Pascal</string>
 	<key>WorksheetContents</key>
-	<string>time ./day06
-AoC 2015 Day 6: Guard Gallivant
-Will read data from: ../Input/day06_challenge.txt
-Part 1: How many distinct positions will the guard visit?
-Part One Solution: 4580
-Part 2: How many places could an obstruction be placed to create a loop?
-100
-200
-300
-400
-500
-600
-700
-800
-900
-1000
-1100
-1200
-1300
-1400
-Part Two Solution: 1480
-./day06  4.05s user 0.20s system 89% cpu 4.774 total
-
-AoC 2015 Day 6: Guard Gallivant
-Will read data from: ../Input/day06_challenge.txt
-Part 1: How many distinct positions will the guard visit?
-Part One Solution: 4580
-Part 2: How many places could an obstruction be placed to create a loop?
-100
-200
-300
-400
-500
-600
-700
-800
-900
-1000
-1100
-1200
-1300
-1400
-Part Two Solution: 1480
-./day06  10.03s user 0.23s system 98% cpu 10.469 total
+	<string>time ./day07
+AoC 2015 Day 7: Bridge Repair
+Will read data from: ../Input/day07_challenge.txt
+Part 1: What is the sum of the results of valid equations (+ and *)?
+Part One Solution: 5837374519342
+Part 2: What is the sum of the results of valid equations (including concat)?
+Part Two Solution: 492383931650959
+./day07  1.45s user 0.02s system 88% cpu 1.666 total
 
 </string>
 </dict>

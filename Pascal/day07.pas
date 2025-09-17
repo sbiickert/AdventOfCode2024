@@ -46,6 +46,13 @@ Var
 	newEq: AoCIntArray;
 	op: OpD7;
 Begin
+	// Optimization: if the running result is bigger than the answer, invalid.
+	if eq[High(eq)] > eq[0] then
+	begin
+		result := false;
+		exit;
+	end;
+	
 	if (Length(eq) = 2) then
 	begin
 		result := eq[0] = eq[1];

@@ -367,8 +367,7 @@ procedure Pos2D.MoveForward(iDistance: Integer);
 var
 	i: Integer;
 begin
-	for i := 1 to iDistance do
-		_location := _location.Add(Coord2D.XOffset(_direction));
+	_location := _location.Add(Coord2D.XOffset(_direction, iDistance));
 end;
 
 procedure Pos2D.MoveBackward(iDistance: Integer);
@@ -377,8 +376,7 @@ var
 	dir: Dir2D;
 begin
 	dir := OppositeDir(_direction);
-	for i := 1 to iDistance do
-		_location := _location.Add(Coord2D.XOffset(dir));
+	_location := _location.Add(Coord2D.XOffset(dir, iDistance));
 end;
 
 Function Pos2D.ToStr(): String;
