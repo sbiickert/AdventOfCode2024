@@ -54,6 +54,7 @@ Function JoinStrArray(delim: String; input: AoCStringArray): String;
 Function SumIntArray(var input: AoCIntArray): Int64;
 Function CopyIntArray(input: AoCIntArray): AoCIntArray;
 Procedure PushInt(var input: AoCIntArray; value: Int64);
+Procedure PushString(var input: AoCStringArray; value: String);
 Function InitIntArray(size, value: Int64): AoCIntArray;
 Procedure SortIntArray(var arr: AoCIntArray; ascending: Boolean);
 Function SliceIntArray(input: AoCIntArray; start: Integer; length: Integer): AoCIntArray;
@@ -257,6 +258,11 @@ begin
 	input[Length(input)-1] := value;
 end;
 
+Procedure PushString(var input: AoCStringArray; value: String);
+begin
+	SetLength(input, Length(input)+1);
+	input[Length(input)-1] := value;
+end;
 
 Function InitIntArray(size, value: Int64): AoCIntArray;
 var

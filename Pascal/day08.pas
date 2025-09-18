@@ -124,7 +124,6 @@ Begin
 	input := ReadGroupedInput(iFileName, 0);
 	grid := Grid2D.Create('-', Adjacency.QUEEN);
 	grid.Load(input);
-// 	grid.Print;
 	SolvePart1(grid);
 	SolvePart2(grid);
 End.
