@@ -85,7 +85,7 @@ Begin
 	end;
 End;
 
-Function FindFirstSpace(diskMap: AoCStringArray; requestedSize: Integer): Integer;
+Function FindFirstSpace(diskMap: AoCStringArray; requestedSize: Integer; before: Integer): Integer;
 Var
 	ptrStart,ptr: Integer;
 	id,valueAtPtr: String;
@@ -95,7 +95,7 @@ Begin
 	result := -1;
 	ptrStart := -1;
 	
-	for ptr := 0 to High(diskMap) do
+	for ptr := 0 to before do
 	begin
 		valueAtPtr := diskMap[ptr];
 		if valueAtPtr <> id then
@@ -129,8 +129,8 @@ Begin
 	for i := High(fiArr) downto Low(fiArr) do
 	begin
 		fi := fiArr[i];
-		spaceStart := FindFirstSpace(diskMap, fi.size);
-		if (spaceStart >= 0) and (spaceStart < fi.start) then
+		spaceStart := FindFirstSpace(diskMap, fi.size, fi.start);
+		if spaceStart >= 0 then
 		begin
 			s := spaceStart; f := fi.start;
 			for j := 1 to fi.size do
