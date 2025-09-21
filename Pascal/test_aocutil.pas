@@ -119,9 +119,25 @@ begin
 	AssertFalse( ApproxEqual(dVal, 1.21, 0.01), 'Checking approximation');
 end;
 
+Procedure TestCache;
+var
+	cache: AoCCache;
+	value: Integer;
+	ptr: PInt64;
+begin
+	cache := AoCCache.Create;
+	AssertFalse(cache.KeyExists('boo'), 'Checking nonexistent key does not exist');
+	value := 13;
+	cache.SetKeyValue('boo', value);
+	AssertTrue(cache.KeyExists('boo'), 'Checking key exists');
+	value := cache.GetValue('boo');
+	AssertIntEqual(value, 13, 'Checking cached value');
+end;
+
 Begin
 	TestReadInput;
 	TestReadGroupedInput;
 	TestArrayOperations;
 	TestMath;
+	TestCache;
 End.

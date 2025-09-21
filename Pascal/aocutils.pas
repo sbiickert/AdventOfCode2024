@@ -7,7 +7,7 @@ Unit AoCUtils;
 
 Interface
 
-Uses SysUtils, StrUtils, fgl, Classes, Types;
+Uses SysUtils, StrUtils, fgl, Classes, Types, ContNrs;
 
 Const
 	INPUT_PATH = '../Input';
@@ -18,8 +18,19 @@ Type
     AoCIntArray =        TInt64DynArray;
     AoCStringListGroup = array of TStringList;
     AoCStringMap =       specialize TFPGMap<String, String>;
-    AoCIntegerMap =      specialize TFPGMap<String, Integer>;
+    AoCIntegerMap =      specialize TFPGMap<String, Int64>;
     AoCWordMap =      	 specialize TFPGMap<String, Word>;
+    
+    AoCCache = Class
+    	private
+    		_hash: TFPHashList;
+    	public
+    		Constructor Create();
+    		Procedure SetKeyValue(key: String; value: Int64);
+    		Function GetValue(key: String): Int64;
+    		Function KeyExists(key: String): Boolean;
+    end;
+    
 	TCompareFunc = function (const i1,i2:Integer): Integer;
 
 	TPermutator = Class
@@ -36,7 +47,7 @@ Type
 	end;
 
 Function AssertStrEqual(actual: String; expected: String; description: String): Boolean;
-Function AssertIntEqual(actual: Integer; expected: Integer; description: String): Boolean;
+Function AssertIntEqual(actual: Int64; expected: Int64; description: String): Boolean;
 Function AssertTrue(value: Boolean; description: String): Boolean;
 Function AssertFalse(value: Boolean; description: String): Boolean;
 
@@ -81,7 +92,7 @@ begin
 	end
 end;
 
-Function AssertIntEqual(actual: Integer; expected: Integer; description: String): Boolean;
+Function AssertIntEqual(actual: Int64; expected: Int64; description: String): Boolean;
 begin
 	Write(description, '... ');
 	if actual <> expected then
@@ -461,5 +472,56 @@ Function ApproxEqual(d1, d2, allowance: Double): Boolean;
 begin
 	result := Abs(d1-d2) <= allowance;
 end;
+
+
+Constructor AoCCache.Create();
+Begin
+	_hash := TFPHashList.Create;
+End;
+
+Procedure AoCCache.SetKeyValue(key: String; value: Int64);
+Var
+	idx: Integer;
+	ptr: PInt64;
+Begin
+	New(ptr);
+	If Not Assigned(ptr) Then
+	begin
+		WriteLn('Cache Error - Unable to allocate memory to set ', value, ' at ', key);
+		Exit;
+	end;
+	
+    ptr^ := value;
+	idx := _hash.FindIndexOf(key);
+	If idx <> -1 Then
+		_hash.Delete(idx);
+
+    _hash.Add(key, ptr);
+End;
+
+Function AoCCache.GetValue(key: String): Int64;
+Var
+	idx: Integer;
+	ptr: PInt64;
+Begin
+	idx := _hash.FindIndexOf(key);
+	if idx <> -1 then
+	begin
+		ptr := PInt64(_hash[idx]);
+		result := ptr^;
+	end
+	else
+	begin
+		WriteLn('Key ', key , ' does not exist, returning -1');
+		result := -1;
+	end;
+// 	WriteLn(key, ' ', idx, ' ', result);
+End;
+
+Function AoCCache.KeyExists(key: String): Boolean;
+Begin
+	result := _hash.FindIndexOf(key) <> -1;
+End;
+
 
 End.
