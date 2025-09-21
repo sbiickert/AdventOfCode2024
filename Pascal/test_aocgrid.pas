@@ -1,5 +1,7 @@
 {$mode objfpc} // directive to be used for defining classes
 {$m+}          // directive to be used for using constructor
+{$H+}		   // directive to be used for ANSI strings
+
 Program AocTest;
 
 Uses
@@ -67,6 +69,7 @@ var
 	allCoords,coordsWithB: Coord2DArray;
 	hist: AoCIntegerMap;
 	str: String;
+	i: Integer;
 begin
 	grid := Grid2D.Create('.', Adjacency.ROOK);
 	AssertStrEqual(grid.Default, '.', 'Checking default value');
@@ -119,6 +122,12 @@ begin
 	AssertTrue( str = ('A...' + sLineBreak + '.B..' + sLineBreak +
 					   '..B.' + sLineBreak + 'EGSD' + sLineBreak),
 				'Checking grid string representation');
+	
+	grid.SetString('6', MkCoord2D(2,1));
+	str := grid.GetString(MkCoord2D(2,1));
+	AssertStrEqual(str, '6', 'Checking GetString on stored String');
+	i := grid.GetInteger(MkCoord2D(2,1));
+	AssertIntEqual(i, 6, 'Checking GetInteger on stored String');
 end;
 
 Procedure TestGridLoad();

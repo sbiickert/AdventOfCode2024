@@ -183,7 +183,7 @@ begin
 	begin
 		ptr := _data[idx];
 		data := ptr^;
-		data.IntValue;
+		result := data.IntValue;
 	end;
 end;
 

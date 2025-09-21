@@ -5,23 +5,7 @@
 	<key>CurrentWorkingDirectory</key>
 	<string>/Users/sjb/Developer/Advent of Code/2024/AdventOfCode2024/Pascal</string>
 	<key>WorksheetContents</key>
-	<string>time ./day09
-AoC 2015 Day 09: Disk Fragmenter
-Will read data from: ../Input/day09_challenge.txt
-Part 1: What is the filesystem checksum after compacting blocks?
-Part One Solution: 6301895872542
-Part 2: What is the filesystem checksum after compacting files?
-Part Two Solution: 6323761685944
-./day09  3.22s user 0.06s system 90% cpu 3.614 total
-
-AoC 2015 Day 09: Disk Fragmenter
-Will read data from: ../Input/day09_challenge.txt
-Part 1: What is the filesystem checksum after compacting blocks?
-Part One Solution: 6301895872542
-Part 2: What is the filesystem checksum after compacting files?
-Part Two Solution: 6323761685944
-./day09  4.72s user 0.06s system 92% cpu 5.142 total
-
+	<string>time ./day10
 </string>
 </dict>
 </plist>

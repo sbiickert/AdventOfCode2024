@@ -364,15 +364,12 @@ begin
 end;
 
 procedure Pos2D.MoveForward(iDistance: Integer);
-var
-	i: Integer;
 begin
 	_location := _location.Add(Coord2D.XOffset(_direction, iDistance));
 end;
 
 procedure Pos2D.MoveBackward(iDistance: Integer);
 var
-	i: Integer;
 	dir: Dir2D;
 begin
 	dir := OppositeDir(_direction);
