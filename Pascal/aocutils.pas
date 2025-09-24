@@ -21,7 +21,7 @@ Type
     AoCIntegerMap =      specialize TFPGMap<String, Int64>;
     AoCWordMap =      	 specialize TFPGMap<String, Word>;
     
-    AoCCache = Class
+    AoCMemo = Class
     	private
     		_hash: TFPHashList;
     	public
@@ -474,12 +474,12 @@ begin
 end;
 
 
-Constructor AoCCache.Create();
+Constructor AoCMemo.Create();
 Begin
 	_hash := TFPHashList.Create;
 End;
 
-Procedure AoCCache.SetKeyValue(key: String; value: Int64);
+Procedure AoCMemo.SetKeyValue(key: String; value: Int64);
 Var
 	idx: Integer;
 	ptr: PInt64;
@@ -499,7 +499,7 @@ Begin
     _hash.Add(key, ptr);
 End;
 
-Function AoCCache.GetValue(key: String): Int64;
+Function AoCMemo.GetValue(key: String): Int64;
 Var
 	idx: Integer;
 	ptr: PInt64;
@@ -518,7 +518,7 @@ Begin
 // 	WriteLn(key, ' ', idx, ' ', result);
 End;
 
-Function AoCCache.KeyExists(key: String): Boolean;
+Function AoCMemo.KeyExists(key: String): Boolean;
 Begin
 	result := _hash.FindIndexOf(key) <> -1;
 End;

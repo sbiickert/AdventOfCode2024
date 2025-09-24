@@ -119,13 +119,13 @@ begin
 	AssertFalse( ApproxEqual(dVal, 1.21, 0.01), 'Checking approximation');
 end;
 
-Procedure TestCache;
+Procedure TestMemo;
 var
-	cache: AoCCache;
+	cache: AoCMemo;
 	value: Integer;
 	ptr: PInt64;
 begin
-	cache := AoCCache.Create;
+	cache := AoCMemo.Create;
 	AssertFalse(cache.KeyExists('boo'), 'Checking nonexistent key does not exist');
 	value := 13;
 	cache.SetKeyValue('boo', value);
@@ -139,5 +139,5 @@ Begin
 	TestReadGroupedInput;
 	TestArrayOperations;
 	TestMath;
-	TestCache;
+	TestMemo;
 End.

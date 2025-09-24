@@ -10,7 +10,7 @@ Const
 	DAY = 11;
 
 Var
-	cache: AoCCache;
+	memo: AoCMemo;
 
 Function CountStones(stone: Int64; blinks: Integer): Int64;
 Var
@@ -24,10 +24,10 @@ Begin
 	stoneStr := IntToStr(stone);
 	key := stoneStr + ' ' + IntToStr(blinks);
 
-	if cache.KeyExists(key) then
+	if memo.KeyExists(key) then
 	begin
-		//WriteLn('cache hit');
-		result := cache.GetValue(key);
+		//WriteLn('memo hit');
+		result := memo.GetValue(key);
 		exit;
 	end;
 
@@ -35,7 +35,7 @@ Begin
 	begin
 		//WriteLn('zero blinks');
 		result := 1;
-		cache.SetKeyValue(key, 1);
+		memo.SetKeyValue(key, 1);
 		exit;
 	end;
 	
@@ -43,7 +43,7 @@ Begin
 	begin
 		//WriteLn('stone zero');
 		result := CountStones(1, blinks-1);
-		cache.SetKeyValue(key, result);
+		memo.SetKeyValue(key, result);
 	end
 	else if Length(stoneStr) mod 2 = 0 then
 	begin
@@ -52,13 +52,13 @@ Begin
 		left := StrToInt(AnsiLeftStr(stoneStr, len));
 		right := StrToInt(AnsiRightStr(stoneStr, len));
 		result := CountStones(left, blinks-1) + CountStones(right, blinks-1);
-		cache.SetKeyValue(key, result);
+		memo.SetKeyValue(key, result);
 	end
 	else
 	begin
 		//WriteLn('multiply by 2024');
 		result := CountStones(stone * 2024, blinks-1);
-		cache.SetKeyValue(key, result);
+		memo.SetKeyValue(key, result);
 	end;
 End;
 
@@ -104,6 +104,6 @@ Begin
 	iFileName := InputFileName(DAY, False);
 	input := ReadGroupedInput(iFileName, 0);
 	stones := ParseStones(input[0]);
-	cache := AoCCache.Create;
+	memo := AoCMemo.Create;
 	SolveParts(stones);
 End.
